@@ -33,16 +33,8 @@ class SearchPost extends SearchDelegate {
         return BlocProvider(
             create: (_) =>
                 SearchBloc(PostService(), query)..add(AllPostFetched()),
-            child: Expanded(
-              child: Container(
-                  margin: const EdgeInsets.only(top: 50),
-                  padding: const EdgeInsets.all(10),
-                  width: double.infinity,
-                  height: 600,
-                  alignment: Alignment.center,
-                  child: AllPostListBySearch(
-                    user: state.user,
-                  )),
+            child: AllPostListBySearch(
+              user: state.user,
             ));
       } else {
         return const LoginPage();

@@ -7,6 +7,7 @@ import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:playfutday_flutter/blocs/allPost/allPost_state.dart';
 import 'package:stream_transform/stream_transform.dart';
 
+import '../../models/models.dart';
 import '../../services/services.dart';
 import 'allPost_event.dart';
 
@@ -26,6 +27,7 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
       transformer: throttleDroppable(throttleDuration),
     );
     on<DeletePost>(_onDeletePost);
+    on<GiveLike>(_onLikedPost);
   }
 
   // ignore: unused_field
@@ -81,16 +83,15 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
     );
   }
 
-  /*
-  Future<void> sendLiked(int id) async {
-    final updatedPosts = await _postService.postLikeByMe(id);
-
+  Future<FutureOr<void>> _onLikedPost(
+      GiveLike event, Emitter<AllPostState> emit) async {
+    final updatedPosts = await _postService.postLikeByMe(event.idPost);
     print(updatedPosts);
     if (updatedPosts == null) {
-      throw Exception('No se pudo actualizar el post con ID $id');
+      throw Exception('No se pudo actualizar el post con ID $event.idPost');
     }
-
-    final updatedPostIndex = state.allPost.indexWhere((post) => post.id == id);
+    final updatedPostIndex =
+        state.allPost.indexWhere((post) => post.id == event.idPost);
     final updatedAllPost = List<Post>.from(state.allPost);
     updatedAllPost[updatedPostIndex] = updatedPosts;
 
@@ -99,7 +100,7 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
       allPost: updatedAllPost,
     ));
   }
-
+/*  
   Future<void> sendCommentarie(String message, int idPost) async {
     final updatedPosts = await _postService.sendCommentaries(message, idPost);
 

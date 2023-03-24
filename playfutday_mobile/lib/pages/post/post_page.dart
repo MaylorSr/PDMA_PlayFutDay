@@ -31,14 +31,15 @@ class _AllPostListState extends State<AllPostList> {
       builder: (context, state) {
         switch (state.status) {
           case AllPostStatus.failure:
-            return Center(
+            return const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  const Icon(Icons.sports_soccer, size: 50),
-                  const SizedBox(height: 20),
-                  const Text(
+                // ignore: unnecessary_const
+                children: const [
+                  Icon(Icons.sports_soccer, size: 50),
+                  SizedBox(height: 10),
+                  Text(
                     'Not found any posts',
                     style: TextStyle(fontSize: 20),
                   )
@@ -72,9 +73,12 @@ class _AllPostListState extends State<AllPostList> {
                             context
                                 .read<AllPostBloc>()
                                 .add(DeletePost(id, widget.user.id.toString()));
+                          },
+                          onLikePressed: (id) {
+                            context.read<AllPostBloc>().add(GiveLike(id));
                           });
                 },
-                scrollDirection: Axis.horizontal,
+                scrollDirection: Axis.vertical,
                 itemCount: state.hasReachedMax
                     ? state.allPost.length
                     : state.allPost.length + 1,

@@ -13,9 +13,10 @@ class StartScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(top: 10),
       child: Column(
+        
         children: [
           SizedBox(
-            height: 80,
+            height: 70,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
@@ -32,7 +33,7 @@ class StartScreen extends StatelessWidget {
               ],
             ),
           ),
-          const Divider(height: 40, color: Colors.black, thickness: 3),
+          const Divider(height: 10, color: Colors.black, thickness: 3),
           BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
               if (state is AuthenticationAuthenticated) {

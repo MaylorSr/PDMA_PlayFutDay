@@ -10,8 +10,14 @@ class AllPostFetched extends AllPostEvent {}
 
 class DeletePost extends AllPostEvent {
   @override
-  DeletePost(int idPost, String idUser);
+  DeletePost(this.idPost, this.idUser);
 
-  late int idPost;
-  late String idUser;
+  final int idPost;
+  final String idUser;
+}
+
+class GiveLike extends AllPostEvent {
+  @override
+  GiveLike(this.idPost);
+  final int idPost;
 }

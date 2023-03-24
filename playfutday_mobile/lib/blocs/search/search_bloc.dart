@@ -6,6 +6,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:stream_transform/stream_transform.dart';
 
+import '../../models/models.dart';
 import '../../services/services.dart';
 import '../blocs.dart';
 
@@ -25,6 +26,7 @@ class SearchBloc extends Bloc<AllPostEvent, AllPostState> {
       transformer: throttleDroppable(throttleDuration),
     );
     on<DeletePost>(_onDeletePost);
+    on<GiveLike>(_onLikedPost);
   }
 
   // ignore: unused_field
@@ -80,6 +82,23 @@ class SearchBloc extends Bloc<AllPostEvent, AllPostState> {
     );
   }
 
+  Future<FutureOr<void>> _onLikedPost(
+      GiveLike event, Emitter<AllPostState> emit) async {
+    final updatedPosts = await _postService.postLikeByMe(event.idPost);
+    print(updatedPosts);
+    if (updatedPosts == null) {
+      throw Exception('No se pudo actualizar el post con ID $event.idPost');
+    }
+    final updatedPostIndex =
+        state.allPost.indexWhere((post) => post.id == event.idPost);
+    final updatedAllPost = List<Post>.from(state.allPost);
+    updatedAllPost[updatedPostIndex] = updatedPosts;
+
+    // ignore: invalid_use_of_visible_for_testing_member
+    emit(state.copyWith(
+      allPost: updatedAllPost,
+    ));
+  }
   /*
   Future<void> sendLiked(int id) async {
     final updatedPosts = await _postService.postLikeByMe(id);
