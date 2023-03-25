@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:injectable/injectable.dart';
+import 'package:playfutday_flutter/models/commentary_request.dart';
 import 'package:playfutday_flutter/models/models.dart';
 
 import '../../config/locator.dart';
@@ -84,7 +85,8 @@ class PostRepository {
   Future<Post> sendComment(String message, int idPost) async {
     String url = "/post/commentary/$idPost";
 
-    var jsonResponse = await _client.post(url, jsonEncode(message));
+    CommentaryRequest request = CommentaryRequest(message: message);
+    var jsonResponse = await _client.post(url, request);
     return Post.fromJson(jsonDecode(jsonResponse));
   }
 /*

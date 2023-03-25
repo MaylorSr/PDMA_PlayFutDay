@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:playfutday_flutter/models/allPost.dart';
 import 'package:playfutday_flutter/services/post_service/post_service.dart';
 
 import '../../blocs/blocs.dart';
@@ -31,17 +32,21 @@ class _AllPostListState extends State<AllPostList> {
       builder: (context, state) {
         switch (state.status) {
           case AllPostStatus.failure:
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                // ignore: prefer_const_literals_to_create_immutables
-                // ignore: unnecessary_const
-                children: const [
-                  Icon(Icons.sports_soccer, size: 50),
-                  SizedBox(height: 10),
-                  Text(
+                children: [
+                  const Icon(Icons.sports_soccer, size: 50),
+                  const SizedBox(height: 10),
+                  const Text(
                     'Not found any posts',
                     style: TextStyle(fontSize: 20),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<AllPostBloc>().add(OnRefresh());
+                    },
+                    child: const Text('Try Again'),
                   )
                 ],
               ),
@@ -54,7 +59,7 @@ class _AllPostListState extends State<AllPostList> {
                   const Center(child: Text('Any posts found!')),
                   ElevatedButton(
                     onPressed: () {
-                      context.read<AllPostBloc>().add(AllPostFetched());
+                      context.read<AllPostBloc>().add(OnRefresh());
                     },
                     child: const Text('Try Again'),
                   ),
@@ -62,7 +67,14 @@ class _AllPostListState extends State<AllPostList> {
               );
             }
             return Expanded(
+                child: RefreshIndicator(
+              onRefresh: () async {
+                BlocProvider.of<AllPostBloc>(context).add(OnRefresh());
+              },
               child: ListView.builder(
+                physics: const BouncingScrollPhysics(
+                    parent: BouncingScrollPhysics(
+                        decelerationRate: ScrollDecelerationRate.fast)),
                 itemBuilder: (BuildContext context, int index) {
                   return index >= state.allPost.length
                       ? const BottomLoader()
@@ -76,6 +88,11 @@ class _AllPostListState extends State<AllPostList> {
                           },
                           onLikePressed: (id) {
                             context.read<AllPostBloc>().add(GiveLike(id));
+                          },
+                          onCommentPressed: (id, message) {
+                            context
+                                .read<AllPostBloc>()
+                                .add(SendComment(id, message));
                           });
                 },
                 scrollDirection: Axis.vertical,
@@ -84,7 +101,7 @@ class _AllPostListState extends State<AllPostList> {
                     : state.allPost.length + 1,
                 controller: _scrollController,
               ),
-            );
+            ));
           case AllPostStatus.initial:
             return const Center(child: CircularProgressIndicator());
         }

@@ -35,7 +35,7 @@ class Post extends Equatable {
   String? tag;
   String? description;
   String? image;
-  late String uploadDate;
+  String? uploadDate;
   late String author;
   late String idAuthor;
   String? authorFile;
@@ -48,7 +48,7 @@ class Post extends Equatable {
       this.tag,
       this.description,
       this.image,
-      required uploadDate,
+      this.uploadDate,
       required this.author,
       required this.idAuthor,
       this.authorFile,
@@ -97,27 +97,17 @@ class Post extends Equatable {
     return data;
   }
 
-  Post copyWith(
-      int? id,
-      String? tag,
-      String? description,
-      String? image,
-      String? uploadDate,
-      String? author,
-      String? idAuthor,
-      String? authorFile,
-      List<String>? likesByAuthor,
-      int? countLikes,
+  Post copyWith(List<String>? likesByAuthor, int? countLikes,
       List<Commentaries>? commentaries) {
     return Post(
-        id: id ?? this.id,
-        tag: tag ?? this.tag,
-        description: description ?? this.description,
-        image: image ?? this.image,
-        uploadDate: uploadDate ?? this.uploadDate,
-        author: author ?? this.author,
-        idAuthor: idAuthor ?? this.idAuthor,
-        authorFile: authorFile ?? this.authorFile,
+        id: id,
+        tag: tag,
+        description: description,
+        image: image,
+        uploadDate: uploadDate,
+        author: author,
+        idAuthor: idAuthor,
+        authorFile: authorFile,
         likesByAuthor: likesByAuthor ?? this.likesByAuthor,
         countLikes: countLikes ?? this.countLikes,
         commentaries: commentaries ?? this.commentaries);
@@ -130,13 +120,17 @@ class Post extends Equatable {
 class Commentaries {
   String? message;
   String? authorName;
+  String? authorFile;
   String? uploadCommentary;
 
-  Commentaries(int? id, {this.message, this.authorName, this.uploadCommentary});
+  Commentaries(int? id,
+      {this.message, this.authorName, this.authorFile, this.uploadCommentary});
 
   Commentaries.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     authorName = json['authorName'];
+    authorFile = json['authorFile'];
+
     uploadCommentary = json['uploadCommentary'];
   }
 
@@ -144,6 +138,7 @@ class Commentaries {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['message'] = this.message;
     data['authorName'] = this.authorName;
+    data['authorFile'] = this.authorFile;
     data['uploadCommentary'] = this.uploadCommentary;
     return data;
   }

@@ -1,13 +1,13 @@
 // ignore_for_file: unused_local_variable, avoid_print
 
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:playfutday_flutter/blocs/allPost/allPost_state.dart';
 import 'package:stream_transform/stream_transform.dart';
 
-import '../../models/models.dart';
 import '../../services/services.dart';
 import 'allPost_event.dart';
 
@@ -28,6 +28,8 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
     );
     on<DeletePost>(_onDeletePost);
     on<GiveLike>(_onLikedPost);
+    on<OnRefresh>(_onRefreshElements);
+    on<SendComment>(_onSendComment);
   }
 
   // ignore: unused_field
@@ -83,40 +85,46 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
     );
   }
 
-  Future<FutureOr<void>> _onLikedPost(
-      GiveLike event, Emitter<AllPostState> emit) async {
-    final updatedPosts = await _postService.postLikeByMe(event.idPost);
-    print(updatedPosts);
-    if (updatedPosts == null) {
-      throw Exception('No se pudo actualizar el post con ID $event.idPost');
-    }
-    final updatedPostIndex =
-        state.allPost.indexWhere((post) => post.id == event.idPost);
-    final updatedAllPost = List<Post>.from(state.allPost);
-    updatedAllPost[updatedPostIndex] = updatedPosts;
+  Future _onLikedPost(GiveLike event, Emitter<AllPostState> emit) async {
+    final updatedPost = await _postService.postLikeByMe(event.idPost);
 
-    // ignore: invalid_use_of_visible_for_testing_member
+    final likeInProgress = state.allPost.map((post) {
+      return post.id == event.idPost
+          ? post.copyWith(
+              post.likesByAuthor = updatedPost?.likesByAuthor,
+              post.countLikes = updatedPost?.countLikes,
+              post.commentaries = updatedPost?.commentaries)
+          : post;
+    }).toList();
+
     emit(state.copyWith(
-      allPost: updatedAllPost,
-    ));
+        status: AllPostStatus.success,
+        allPost: likeInProgress,
+        hasReachedMax: false));
   }
-/*  
-  Future<void> sendCommentarie(String message, int idPost) async {
-    final updatedPosts = await _postService.sendCommentaries(message, idPost);
 
-    print(updatedPosts);
-    if (updatedPosts == null) {
-      throw Exception('No se pudo actualizar el post con ID $idPost');
-    }
+  FutureOr<void> _onRefreshElements(
+      OnRefresh event, Emitter<AllPostState> emit) async {
+    emit(state.copyWith(status: AllPostStatus.initial, allPost: null));
+    add(AllPostFetched());
+  }
 
-    final updatedPostIndex =
-        state.allPost.indexWhere((post) => post.id == idPost);
-    final updatedAllPost = List<Post>.from(state.allPost);
-    updatedAllPost[updatedPostIndex] = updatedPosts;
+  Future _onSendComment(SendComment event, Emitter<AllPostState> emit) async {
+    final updatedPost =
+        await _postService.sendCommentaries(event.message, event.idPost);
 
-    // ignore: invalid_use_of_visible_for_testing_member
+    final commentInProgress = state.allPost.map((post) {
+      return post.id == event.idPost
+          ? post.copyWith(
+              post.likesByAuthor = post.likesByAuthor,
+              post.countLikes = post.countLikes,
+              post.commentaries = updatedPost?.commentaries)
+          : post;
+    }).toList();
+
     emit(state.copyWith(
-      allPost: updatedAllPost,
-    ));
-  }*/
+        status: AllPostStatus.success,
+        allPost: commentInProgress,
+        hasReachedMax: false));
+  }
 }

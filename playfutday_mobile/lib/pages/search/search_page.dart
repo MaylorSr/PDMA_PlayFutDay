@@ -34,7 +34,7 @@ class _AllPostListState extends State<AllPostListBySearch> {
           case AllPostStatus.failure:
             // ignore: prefer_const_constructors
             return Center(
-              child: const Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
@@ -62,30 +62,36 @@ class _AllPostListState extends State<AllPostListBySearch> {
                 ],
               );
             }
-            return Expanded(
-              child: ListView.builder(
-                itemBuilder: (BuildContext context, int index) {
-                  return index >= state.allPost.length
-                      ? const BottomLoader()
-                      : CardScreenPost(
-                          post: state.allPost[index],
-                          user: widget.user,
-                          onDeletePressed: (id) {
-                            context
-                                .read<SearchBloc>()
-                                .add(DeletePost(id, widget.user.id.toString()));
-                          },
-                          onLikePressed: (id) {
-                            context.read<SearchBloc>().add(GiveLike(id));
-                          },
-                        );
-                },
-                scrollDirection: Axis.vertical,
-                itemCount: state.hasReachedMax
-                    ? state.allPost.length
-                    : state.allPost.length + 1,
-                controller: _scrollController,
-              ),
+            return ListView.builder(
+              physics: const BouncingScrollPhysics(
+                  parent: BouncingScrollPhysics(
+                      decelerationRate: ScrollDecelerationRate.fast)),
+              itemBuilder: (BuildContext context, int index) {
+                return index >= state.allPost.length
+                    ? const BottomLoader()
+                    : CardScreenPost(
+                        post: state.allPost[index],
+                        user: widget.user,
+                        onDeletePressed: (id) {
+                          context
+                              .read<SearchBloc>()
+                              .add(DeletePost(id, widget.user.id.toString()));
+                        },
+                        onLikePressed: (id) {
+                          context.read<SearchBloc>().add(GiveLike(id));
+                        },
+                        onCommentPressed: (int idPost, String message) {
+                          context
+                              .read<SearchBloc>()
+                              .add(SendComment(idPost, message));
+                        },
+                      );
+              },
+              scrollDirection: Axis.vertical,
+              itemCount: state.hasReachedMax
+                  ? state.allPost.length
+                  : state.allPost.length + 1,
+              controller: _scrollController,
             );
           case AllPostStatus.initial:
             return const Center(child: CircularProgressIndicator());

@@ -57,7 +57,8 @@ class _NewPostFormState extends State<NewPostForm> {
     );
 
     if (croppedFile != null &&
-        (croppedFile.path == ".png" || croppedFile.path == ".jpg")) {
+        (croppedFile.path.endsWith(".png") ||
+            croppedFile.path.endsWith(".jpg"))) {
       setState(() {
         _image = croppedFile as File;
       });

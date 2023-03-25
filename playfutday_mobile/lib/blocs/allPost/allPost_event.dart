@@ -21,3 +21,12 @@ class GiveLike extends AllPostEvent {
   GiveLike(this.idPost);
   final int idPost;
 }
+
+class SendComment extends AllPostEvent {
+  @override
+  SendComment(this.idPost, this.message);
+  final int idPost;
+  final String message;
+}
+
+class OnRefresh extends AllPostEvent {}

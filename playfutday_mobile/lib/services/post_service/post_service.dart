@@ -1,5 +1,7 @@
 // ignore_for_file: override_on_non_overriding_member, avoid_print
 
+import 'dart:convert';
+
 import 'package:playfutday_flutter/models/models.dart';
 
 import 'package:playfutday_flutter/repositories/post_repository/post_repository.dart';
@@ -39,12 +41,13 @@ class PostService {
   }
 
   @override
-  Future<PostResponse?> getAllPostsByTag([int page = 0, query] ) async {
+  Future<PostResponse?> getAllPostsByTag([int page = 0, query]) async {
     // ignore: avoid_print
     print("get all posts by tag");
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
-      PostResponse response = await _postRepository.allPostByTag(page, query.toString().toUpperCase());
+      PostResponse response = await _postRepository.allPostByTag(
+          page, query.toString().toUpperCase());
       // ignore: avoid_print
       print(response.content);
       return response;
@@ -60,7 +63,6 @@ class PostService {
       await _postRepository.instanceNewPost(tag, description, file, token);
     }
   }
-
 
 /*
   @override
@@ -138,6 +140,7 @@ class PostService {
     }
     return null;
   }
+
   /*
 
   Future<MyFavPost?> postLikeByMeFav(int idPost) async {
@@ -150,6 +153,8 @@ class PostService {
     return null;
   }
 
+  */
+  
   Future<Post?> sendCommentaries(String message, int idPost) async {
     String? token = _localStorageService.getFromDisk('user_token');
 
@@ -159,5 +164,5 @@ class PostService {
       return p;
     }
     return null;
-  }*/
+  }
 }
