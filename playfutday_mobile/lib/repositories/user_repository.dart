@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:playfutday_flutter/models/editProfile.dart';
+
 import '../config/locator.dart';
+import '../models/infoUser.dart';
 import '../models/user.dart';
 import '../rest/rest_client.dart';
 
@@ -20,28 +23,25 @@ class UserRepository {
     return UserResponse.fromJson(jsonDecode(jsonResponse));
   }
 
-  /*
-
-  Future<dynamic> fecthUsersInfo(String uuid) async {
-// ignore: unnecessary_brace_in_string_interps, unused_local_variable
-    String url = "/info/user/${uuid}";
+  Future<dynamic> getProfile(String id) async {
+    String url = "/info/user/$id";
 
     var jsonResponse = await _client.get(url);
-
-    return InfoUser.fromJson(jsonDecode(jsonResponse));
+    return UserInfo.fromJson(jsonDecode(jsonResponse));
   }
+
 
   Future<dynamic> editBioByMe(String biography) async {
     String url = "/edit/bio";
-    EditProfileResponse request = EditProfileResponse(biography: biography);
+    EditDataUser request = EditDataUser(biography: biography);
 
     var jsonResponse = await _client.put(url, request.toJson());
     return jsonResponse;
   }
 
-  Future<http.Response> editPhoneByMe(String phone) async {
+  Future<dynamic> editPhoneByMe(String phone) async {
     String url = "/edit/phone";
-    EditProfileResponse request = EditProfileResponse(phone: phone);
+    EditDataUser request = EditDataUser(phone: phone);
 
     var jsonResponse = await _client.put(url, request.toJson());
     return jsonResponse;
@@ -49,20 +49,15 @@ class UserRepository {
 
   Future<dynamic> editBirthdayByMe(String birthday) async {
     String url = "/edit/birthday";
-    EditProfileResponse request = EditProfileResponse(birthday: birthday);
+    EditDataUser request = EditDataUser(birthday: birthday);
 
     var jsonResponse = await _client.put(url, request.toJson());
     return jsonResponse;
   }
 
-  Future<UserResponseAdmin> getAllUsersByAdmin([int index = 0]) async {
-    String url = "/user?page=$index";
 
-    var jsonResponse = await _client.get(url);
+  
 
-    return UserResponseAdmin.fromJson(jsonDecode(jsonResponse));
-  }
-  */
   Future<void> deleteUser(String userId) async {
     String url = "/user/$userId";
     // ignore: avoid_print

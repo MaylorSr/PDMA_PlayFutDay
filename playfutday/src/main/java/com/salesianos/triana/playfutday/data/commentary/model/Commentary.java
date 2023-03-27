@@ -30,13 +30,20 @@ public class Commentary {
 
     private String message;
 
-    @CreatedDate
+    /**
+     * Al no guardar la entidad en sí, es decir que sólo sirve para almacenarla en una lista,
+     * al ser así no se puede usar el create date ya que no se almacena la entidad
+     */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    private LocalDate updateCommentary = LocalDate.now();
+    private LocalDate updateCommentary;
+
     @ManyToOne()
+
     @JoinColumn(name = "post_id")
     private Post post;
 
     private String author;
+
+    private String authorFile;
 
 }

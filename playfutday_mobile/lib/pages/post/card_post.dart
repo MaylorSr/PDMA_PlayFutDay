@@ -4,12 +4,17 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:playfutday_flutter/blocs/userProfile/user_profile_event.dart';
 import 'package:playfutday_flutter/models/allPost.dart';
 import 'package:playfutday_flutter/pages/post/commentaries/commentary_post.dart';
 import 'package:playfutday_flutter/rest/rest.dart';
+import 'package:playfutday_flutter/services/user_service/user_service.dart';
 import 'package:playfutday_flutter/theme/app_theme.dart';
 
+import '../../blocs/userProfile/user_profile_bloc.dart';
 import '../../models/user.dart';
+import '../user/user_page.dart';
 
 class CardScreenPost extends StatefulWidget {
   const CardScreenPost({
@@ -116,15 +121,34 @@ class _CardScreenPostState extends State<CardScreenPost> {
         children: [
           Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CircleAvatar(
-                  maxRadius: 25,
-                  child: ClipOval(
-                    child: Image.network(
-                      '$urlBase/download/${widget.post.authorFile}',
-                      errorBuilder: (context, error, stackTrace) =>
-                          Image.asset('assets/images/image_notfound.png'),
+              ElevatedButton(
+                style: const ButtonStyle(
+                    elevation: MaterialStatePropertyAll(0),
+                    backgroundColor:
+                        MaterialStatePropertyAll(AppTheme.primary)),
+                onPressed: () {
+                  if (widget.post.idAuthor.toString() !=
+                      widget.user.id.toString()) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return BlocProvider(
+                            create: (_) => UserProfileBloc(UserService())
+                              ..add(UserProfileFetched(widget.post.idAuthor)),
+                            child: UserProfilePage(user: widget.user));
+                      },
+                    ));
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    maxRadius: 25,
+                    child: ClipOval(
+                      child: Image.network(
+                        '$urlBase/download/${widget.post.authorFile}',
+                        errorBuilder: (context, error, stackTrace) =>
+                            Image.asset('assets/images/image_notfound.png'),
+                      ),
                     ),
                   ),
                 ),

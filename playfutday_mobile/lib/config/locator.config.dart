@@ -13,6 +13,7 @@ import 'package:playfutday_flutter/rest/rest_client.dart' as _i3;
 import 'package:playfutday_flutter/services/authentication_service.dart' as _i6;
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
+import 'package:playfutday_flutter/services/user_service/user_service.dart' as _i7;
 import '../repositories/post_repository/post_repository.dart' as _i5;
 import 'package:playfutday_flutter/services/post_service/post_service.dart'
     as _i7;
@@ -39,6 +40,8 @@ extension GetItInjectableX on _i1.GetIt {
     gh.singleton<_i5.UserRepository>(_i5.UserRepository());
     gh.singleton<_i6.JwtAuthenticationService>(_i6.JwtAuthenticationService());
     gh.singleton<_i7.PostService>(_i7.PostService());
+    gh.singleton<_i7.UserService>(_i7.UserService());
+    
 
     return this;
   }

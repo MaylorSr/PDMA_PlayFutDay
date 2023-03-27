@@ -1,11 +1,15 @@
-// ignore_for_file: no_logic_in_create_state, prefer_const_constructors, unused_field, use_build_context_synchronously
+// ignore_for_file: no_logic_in_create_state, prefer_const_constructors, unused_field, use_build_context_synchronously, avoid_print
 
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:playfutday_flutter/services/post_service/post_service.dart';
+import 'package:animate_do/animate_do.dart';
+
+import '../../theme/app_theme.dart';
 
 class NewPostForm extends StatefulWidget {
   const NewPostForm({super.key, required this.postService});
@@ -71,6 +75,117 @@ class _NewPostFormState extends State<NewPostForm> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    void displayDialogAndroid(BuildContext context) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              elevation: 5,
+              // ignore: prefer_const_literals_to_create_immutables
+              content: Column(mainAxisSize: MainAxisSize.min, children: const [
+                SizedBox(height: 10),
+                Text('Please select a option')
+              ]),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25)),
+              actions: [
+                TextButton.icon(
+                  onPressed: () async {
+                    final pickedFile =
+                        await picker.pickImage(source: ImageSource.camera);
+                    // assign selected image to the _image field
+                    setState(() {
+                      if (pickedFile != null) {
+                        _image = File(pickedFile.path);
+                      } else {
+                        print('No image selected.');
+                      }
+                    });
+
+                    Navigator.pop(context);
+                  },
+                  label:
+                      Text('Camara', style: TextStyle(color: AppTheme.primary)),
+                  icon: Icon((Icons.camera_alt_rounded)),
+                ),
+                TextButton.icon(
+                  onPressed: () async {
+                    final pickedFile =
+                        await picker.pickImage(source: ImageSource.gallery);
+                    // assign selected image to the _image field
+                    setState(() {
+                      if (pickedFile != null) {
+                        _image = File(pickedFile.path);
+                      } else {
+                        print('No image selected.');
+                      }
+                    });
+                    Navigator.pop(context);
+                  },
+                  label: Text('Gallery',
+                      style: TextStyle(color: AppTheme.primary)),
+                  icon: Icon((Icons.photo_library_outlined)),
+                )
+              ],
+            );
+          });
+    }
+
+    void displayDialogIos(BuildContext context) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return CupertinoAlertDialog(
+              insetAnimationDuration: const Duration(seconds: 3),
+              content: Column(mainAxisSize: MainAxisSize.min, children: const [
+                SizedBox(height: 10),
+                Text('Please select a option')
+              ]),
+              actions: [
+                TextButton.icon(
+                  onPressed: () async {
+                    final pickedFile =
+                        await picker.pickImage(source: ImageSource.camera);
+                    // assign selected image to the _image field
+                    setState(() {
+                      if (pickedFile != null) {
+                        _image = File(pickedFile.path);
+                      } else {
+                        print('No image selected.');
+                      }
+                    });
+
+                    Navigator.pop(context);
+                  },
+                  label:
+                      Text('Camara', style: TextStyle(color: AppTheme.primary)),
+                  icon: Icon((Icons.camera_alt_outlined)),
+                ),
+                TextButton.icon(
+                  onPressed: () async {
+                    final pickedFile =
+                        await picker.pickImage(source: ImageSource.gallery);
+                    // assign selected image to the _image field
+                    setState(() {
+                      if (pickedFile != null) {
+                        _image = File(pickedFile.path);
+                      } else {
+                        print('No image selected.');
+                      }
+                    });
+                    Navigator.pop(context);
+                  },
+                  label: Text('Gallery',
+                      style: TextStyle(color: AppTheme.primary)),
+                  icon: Icon((Icons.photo_camera_back_outlined)),
+                )
+              ],
+            );
+          });
+    }
+
     return Container(
       height: 600,
       margin: EdgeInsets.all(25),
@@ -125,19 +240,9 @@ class _NewPostFormState extends State<NewPostForm> {
               ),
               SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: () async {
-                  // open gallery to select a photo
-                  final pickedFile =
-                      await picker.pickImage(source: ImageSource.gallery);
-                  // assign selected image to the _image field
-                  setState(() {
-                    if (pickedFile != null) {
-                      _image = File(pickedFile.path);
-                    } else {
-                      print('No image selected.');
-                    }
-                  });
-                },
+                onPressed: () => Platform.isAndroid
+                    ? displayDialogAndroid(context)
+                    : displayDialogIos(context),
                 child: const Text('Select Photo'),
               ),
               SizedBox(height: 16.0),
@@ -160,11 +265,13 @@ class _NewPostFormState extends State<NewPostForm> {
                   if (_formKey.currentState!.validate()) {
                     if (_image == null) {
                       // Show an error message if no image is selected
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                        'Please select a photo.',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )));
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please select a PNG or JPG file.'),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
                     } else {
                       _formKey.currentState!.save();
                       widget.postService.newPost(_tag!, _description!, _image);

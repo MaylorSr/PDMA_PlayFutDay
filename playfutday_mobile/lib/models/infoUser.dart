@@ -1,4 +1,4 @@
-class User {
+class UserInfo {
   String? id;
   String? username;
   String? email;
@@ -8,9 +8,8 @@ class User {
   String? birthday;
   List<MyPost>? myPost;
   List<String>? roles;
-  String? token;
 
-  User(
+  UserInfo(
       {this.id,
       this.username,
       this.email,
@@ -19,10 +18,9 @@ class User {
       this.phone,
       this.birthday,
       this.myPost,
-      this.roles,
-      this.token});
+      this.roles});
 
-  User.fromJson(Map<String, dynamic> json) {
+  UserInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     username = json['username'];
     email = json['email'];
@@ -37,7 +35,6 @@ class User {
       });
     }
     roles = json['roles'].cast<String>();
-    token = json['token'];
   }
 
   Map<String, dynamic> toJson() {
@@ -50,15 +47,10 @@ class User {
     data['phone'] = this.phone;
     data['birthday'] = this.birthday;
     if (this.myPost != null) {
-      data['myPost'] = myPost!.map((v) => v.toJson()).toList();
+      data['myPost'] = this.myPost!.map((v) => v.toJson()).toList();
     }
     data['roles'] = this.roles;
-    data['token'] = this.token;
     return data;
-  }
-
-  copyWith({String? biography, String? birthday, String? phone}) {
-    return User(biography: biography, birthday: birthday, phone: phone);
   }
 }
 
@@ -68,8 +60,12 @@ class MyPost {
   String? image;
   String? uploadDate;
   String? author;
+  String? idAuthor;
+  String? authorFile;
+  List<String>? likesByAuthor;
   int? countLikes;
-  List<UserCommentaries>? commentaries;
+  List<Commentaries>? commentaries;
+  String? description;
 
   MyPost(
       {this.id,
@@ -77,8 +73,12 @@ class MyPost {
       this.image,
       this.uploadDate,
       this.author,
+      this.idAuthor,
+      this.authorFile,
+      this.likesByAuthor,
       this.countLikes,
-      this.commentaries});
+      this.commentaries,
+      this.description});
 
   MyPost.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -86,13 +86,20 @@ class MyPost {
     image = json['image'];
     uploadDate = json['uploadDate'];
     author = json['author'];
+    idAuthor = json['idAuthor'];
+    authorFile = json['authorFile'];
+    likesByAuthor = (json['likesByAuthor'] != null)
+        ? likesByAuthor =
+            (json['likesByAuthor'] as List<dynamic>).cast<String>()
+        : likesByAuthor = (json['likesByAuthor']);
     countLikes = json['countLikes'];
     if (json['commentaries'] != null) {
-      commentaries = <UserCommentaries>[];
+      commentaries = <Commentaries>[];
       json['commentaries'].forEach((v) {
-        commentaries!.add(new UserCommentaries.fromJson(v));
+        commentaries!.add(new Commentaries.fromJson(v));
       });
     }
+    description = json['description'];
   }
 
   Map<String, dynamic> toJson() {
@@ -102,24 +109,31 @@ class MyPost {
     data['image'] = this.image;
     data['uploadDate'] = this.uploadDate;
     data['author'] = this.author;
+    data['idAuthor'] = this.idAuthor;
+    data['authorFile'] = this.authorFile;
+    data['likesByAuthor'] = this.likesByAuthor;
     data['countLikes'] = this.countLikes;
     if (this.commentaries != null) {
       data['commentaries'] = this.commentaries!.map((v) => v.toJson()).toList();
     }
+    data['description'] = this.description;
     return data;
   }
 }
 
-class UserCommentaries {
+class Commentaries {
   String? message;
   String? authorName;
+  String? authorFile;
   String? uploadCommentary;
 
-  UserCommentaries({this.message, this.authorName, this.uploadCommentary});
+  Commentaries(
+      {this.message, this.authorName, this.authorFile, this.uploadCommentary});
 
-  UserCommentaries.fromJson(Map<String, dynamic> json) {
+  Commentaries.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     authorName = json['authorName'];
+    authorFile = json['authorFile'];
     uploadCommentary = json['uploadCommentary'];
   }
 
@@ -127,46 +141,8 @@ class UserCommentaries {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['message'] = this.message;
     data['authorName'] = this.authorName;
+    data['authorFile'] = this.authorFile;
     data['uploadCommentary'] = this.uploadCommentary;
-    return data;
-  }
-}
-
-class UserResponse extends User {
-  UserResponse(id, username, avatar, token, email, biography, phone, birthday,
-      myPost, roles)
-      : super();
-  UserResponse.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    username = json['username'];
-    email = json['email'];
-    biography = json['biography'];
-    phone = json['phone'];
-    birthday = json['birthday'];
-    myPost = json['myPost'] != null
-        ? (json['myPost'] as List<dynamic>)
-            .map((e) => MyPost.fromJson(e))
-            .toList()
-        : [];
-    roles = json['roles'] != null
-        ? (json['roles'] as List<dynamic>).cast<String>()
-        : [];
-    avatar = json['avatar'];
-    token = json['token'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = id;
-    data['username'] = username;
-    data['email'] = email;
-    data['phone'] = phone;
-    data['biography'] = biography;
-    data['birthday'] = birthday;
-    data['myPost'] = myPost;
-    data['roles'] = roles;
-    data['avatar'] = avatar;
-    data['token'] = token;
     return data;
   }
 }

@@ -7,6 +7,7 @@ import 'package:playfutday_flutter/models/commentary_request.dart';
 import 'package:playfutday_flutter/models/models.dart';
 
 import '../../config/locator.dart';
+import '../../models/my_fav_post.dart';
 import '../../rest/rest_client.dart';
 
 @Order(-1)
@@ -50,15 +51,14 @@ class PostRepository {
     var jsonResponse = await _client.newPost(url, request, file, accessToken);
   }
 
-  /*
-  Future<PostFavResponse> allFavPost([int index = 0]) async {
+  Future<PostResponse> allFavPost([int index = 0]) async {
     String url = "/fav/?page=$index";
 
     var jsonResponse = await _client.get(url);
 
-    return PostFavResponse.fromJson(jsonDecode(jsonResponse));
+    return PostResponse.fromJson(jsonDecode(jsonResponse));
   }
-*/
+
   Future<void> deletePost(int idPost, String userId) async {
     String url = "/post/user/$idPost/user/$userId";
     // ignore: avoid_print

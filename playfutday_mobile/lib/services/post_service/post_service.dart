@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:playfutday_flutter/models/models.dart';
 
 import 'package:playfutday_flutter/repositories/post_repository/post_repository.dart';
+import '../../models/my_fav_post.dart';
 import '../localstorage_service.dart';
 
 import 'package:get_it/get_it.dart';
@@ -103,14 +104,14 @@ class PostService {
     return null;
   }
 
-/*
+
   @override
-  Future<PostFavResponse?> fetchPostsFav([int page = 0]) async {
+  Future<PostResponse?> fetchPostsFav([int page = 0]) async {
     // ignore: avoid_print
     print("get fav posts");
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
-      PostFavResponse response = await _postRepository.allFavPost(page);
+      PostResponse response = await _postRepository.allFavPost(page);
       // ignore: avoid_print
       print(response.totalPages);
       print(response.content);
@@ -118,7 +119,7 @@ class PostService {
     }
     return null;
   }
-*/
+
   Future<void> deletePost(int idPost, String userId) async {
     String? token = _localStorageService.getFromDisk('user_token');
     if (token != null) {

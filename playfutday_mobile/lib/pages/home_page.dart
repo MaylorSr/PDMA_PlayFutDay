@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:playfutday_flutter/blocs/blocs.dart';
+import 'package:playfutday_flutter/blocs/userProfile/user_profile_bloc.dart';
 import 'package:playfutday_flutter/models/searchPost.dart';
 import 'package:playfutday_flutter/services/services.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:playfutday_flutter/services/user_service/user_service.dart';
 import 'package:playfutday_flutter/theme/app_theme.dart';
 
+import '../blocs/userProfile/user_profile.dart';
 import 'pages.dart';
 import 'post/new_post.dart';
 
@@ -110,32 +113,20 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
 
-            /*
-            
             case 3:
-              return Scaffold(
-                  appBar: AppBar(
-                    backgroundColor: Color.fromARGB(255, 0, 0, 0),
-                    title: Text('PlayFutDay',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontStyle: FontStyle.italic,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600)),
-                  ),
-                  body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-                    builder: (context, state) {
-                      if (state is AuthenticationAuthenticated) {
-                        return BlocProvider(
-                            create: (_) => UserInfoBloc(widget.userService)
-                              ..add(UserInfoFetched()),
-                            child: UserList(user: state.user));
-                      } else {
-                        return LoginPage();
-                      }
-                    },
-                  ));
-            */
+              return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                builder: (context, state) {
+                  if (state is AuthenticationAuthenticated) {
+                    return BlocProvider(
+                        create: (_) => UserProfileBloc(UserService())
+                          ..add(UserProfileFetched(state.user.id.toString())),
+                        child: UserProfilePage(user: state.user));
+                  } else {
+                    return const LoginPage();
+                  }
+                },
+              );
+
             default:
               return Container();
           }

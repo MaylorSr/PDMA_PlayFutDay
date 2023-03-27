@@ -17,7 +17,7 @@ abstract class AuthenticationService {
 @singleton
 class JwtAuthenticationService extends AuthenticationService {
   late AuthenticationRepository _authenticationRepository;
-  late LocalStorageService _localStorageService;
+  late LocalStorageService _localStorageService = LocalStorageService();
   late UserRepository _userRepository;
 
   JwtAuthenticationService() {

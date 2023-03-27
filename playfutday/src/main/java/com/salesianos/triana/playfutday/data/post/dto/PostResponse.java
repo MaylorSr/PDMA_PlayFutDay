@@ -49,6 +49,7 @@ public class PostResponse {
     protected List<String> likesByAuthor;
     @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class, viewUser.UserDetailsByAdmin.class})
     protected int countLikes;
+
     @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected List<CommentaryResponse> commentaries;
 
