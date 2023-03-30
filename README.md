@@ -15,6 +15,14 @@ Nuevas implementaciones como: ser capaz de subir un post, placeholder, visualiza
 
 La documentación la encontrarás en la carpeta [PlanEmpresa](https://github.com/MaylorSr/PDMA_PlayFutDay/blob/release_1.0/PlanEmpresa/PlayFutDay.pdf) .
 
+Se te proporcionará usuarios para que puedas probarlos:<br>
+ ### ADMIN - NO AFECTA A NIVEL DE INTERFÁZ
+ - username: wbeetham0
+ - password: QUE1chC2Jv
+ ### USER
+ - username: bmacalester1
+ - password: 8dNbnHaX
+
 ___
 ## **DESCRIPCIÓN DEL PROYECTO** :speech_balloon:
 Se trata de una red social la cual se encuentra enfocada en un único tema como lo es el **fútbol**, por ello el objetivo del proyecto es realizar una red social donde puedas ver los post de los demás usuarios, interactuar con cada uno de los post además de poder interactuar con los usuarios, entre otras funcionalidades.
