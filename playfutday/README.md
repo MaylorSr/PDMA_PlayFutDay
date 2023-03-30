@@ -11,7 +11,7 @@ ___
 ## **Documentación**
 
 :point_right: [Dirección SWAGGER-IO](http://localhost:8080/swagger-ui/index.html)<br>
-:point_right: [Dirección FRONTED](https://github.com/MaylorSr/playfutday_flutter)<br>
+:point_right: [Dirección MOBILE](https://github.com/MaylorSr/PDMA_PlayFutDay/tree/main/playfutday_mobile)<br>
 :point_right: Se incluye también una colección de Postman para probar datos.
 
 ## **DESCRIPCIÓN DEL PROYECTO** :speech_balloon:
@@ -25,7 +25,7 @@ El proyecto trata de una **ApiRest** que gestionará la parte del **Backed** de 
  Además de incluír una lógica de negocio de una mezcla entre ambas. Por ello te presentaré a continuación las funcionalidades que se podrán realizar en la **API**.
  
   -Se te proporcionará usuarios para que puedas probarlos:<br>
- ### ADMIN
+ ### ADMIN - AFECTA EN LA TOMA DE PETICIONES A TRAVÉS DE POSTMAN!
  - username: wbeetham0
  - password: QUE1chC2Jv
  ### USER
@@ -33,22 +33,4 @@ El proyecto trata de una **ApiRest** que gestionará la parte del **Backed** de 
  - password: 8dNbnHaX
  <br>En el import.sql encontrarás más usuarios si así deseas probar más, las contraseñas de cada usuario se econtrará comentada por encima del insert de cada uno de estos.
  
- #### USUARIOS ####
-- Subir un post (incluye una imágen, tag y descripción)<br>
-- Borrar su propio post<br>
-- Publicar un comentario en un post
-- Dar/Quitar Like a un post
-- Obtener sus propios posts
-- Crear cuenta de usuario
-- Logearse
-- Modificar datos de su perfil (contraseña, número de teléfono, descripción...)
-- Darse de baja
-- Obtener imágen por su nombre
--Obtener información de un usuario por su id
- #### ADMIN ####
--- APARTE DE TODA LAS FUNCIONALIDADES DEL ROL DE USUARIO, SE AÑADE:
-- Eliminar un post de un usuario
-- Eliminar un usuario
-- Banear a un usuario para que no entre en la App
-- Añadir/Quitar rol de **ADMIN** a un usuario
-- Obtener todos los usuarios que estan registrados en la App
+ 
