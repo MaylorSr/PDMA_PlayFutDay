@@ -92,19 +92,6 @@ public class FileSystemStorageService implements StorageService {
 
 
     @Override
-    public Stream<Path> loadAll() {
-
-        try {
-            return Files.walk(rootLocation, 1)
-                    .filter(path -> !path.equals(rootLocation))
-                    .map(rootLocation::relativize);
-        } catch (IOException e) {
-            throw new StorageException("Error reading all files", e);
-        }
-
-    }
-
-    @Override
     public Path load(String filename) {
         return rootLocation.resolve(filename);
     }
@@ -136,12 +123,5 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
-    @Override
-    public void deleteAll() {
-        try {
-            FileSystemUtils.deleteRecursively(rootLocation);
-        } catch (IOException e) {
-            throw new StorageException("Could not delete all");
-        }
-    }
+
 }

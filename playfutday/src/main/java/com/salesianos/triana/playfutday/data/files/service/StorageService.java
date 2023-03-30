@@ -14,15 +14,13 @@ public interface StorageService {
 
     String store(byte[] file, String filename, String contentType) throws Exception;
 
-    Stream<Path> loadAll();
-
     Path load(String filename);
 
     Resource loadAsResource(String filename);
 
     void deleteFile(String filename);
 
-    void deleteAll();
+
 
 
 }

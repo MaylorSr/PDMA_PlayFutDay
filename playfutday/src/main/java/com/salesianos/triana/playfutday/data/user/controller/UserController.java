@@ -196,7 +196,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "La lista se encuentra vacía", content = @Content)
     })
     @GetMapping("/fav")
-    @JsonView(viewPost.PostLikeMe.class)
+    @JsonView({viewPost.PostResponse.class})
     public PageResponse<PostResponse> findAll(@PageableDefault(size = 5, page = 0) Pageable pageable,
                                               @Parameter(name = "Usuario", description = "Se pasa el token del usuario logeado",
                                                       content = @Content, allowEmptyValue = true)
