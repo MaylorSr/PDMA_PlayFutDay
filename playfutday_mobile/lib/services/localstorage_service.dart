@@ -8,7 +8,6 @@ class LocalStorageService {
   static late LocalStorageService _instance;
   static late SharedPreferences _preferences;
 
-
   static Future<LocalStorageService> getInstance() async {
     print("Aquí se entra");
 

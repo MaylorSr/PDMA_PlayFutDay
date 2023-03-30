@@ -17,7 +17,6 @@ import '../../blocs/myFavPost/my_fav_Post_bloc.dart';
 import '../../blocs/postUser/post_user_bloc.dart';
 import '../../theme/app_theme.dart';
 import '../post/myFavPost/post_pageFav.dart';
-import 'editProfile/edit_profile_page.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({Key? key, this.user, required this.userLoger})

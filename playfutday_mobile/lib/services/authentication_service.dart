@@ -17,7 +17,7 @@ abstract class AuthenticationService {
 @singleton
 class JwtAuthenticationService extends AuthenticationService {
   late AuthenticationRepository _authenticationRepository;
-  late LocalStorageService _localStorageService = LocalStorageService();
+  LocalStorageService _localStorageService = const LocalStorageService();
   late UserRepository _userRepository;
 
   JwtAuthenticationService() {
@@ -63,12 +63,4 @@ class JwtAuthenticationService extends AuthenticationService {
     print("borrando token");
     await _localStorageService.deleteFromDisk("user_token");
   }
-  /*
-  @override
-  Future<http.Response> singUp(String username, String email, String phone,
-      String password, String verifyPassword) async {
-    var response = await _authenticationRepository.singUp(
-        username, email, phone, password, verifyPassword);
-    return response;
-  }*/
 }

@@ -42,6 +42,8 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
         status: UserProfileStatus.success,
         user: user,
       ));
+
+
     } catch (_) {
       emitter(state.copyWith(status: UserProfileStatus.failure));
     }

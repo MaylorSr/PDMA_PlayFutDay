@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:playfutday_flutter/blocs/userProfile/user_profile.dart';
-import 'package:playfutday_flutter/blocs/userProfile/user_profile_bloc.dart';
 import 'package:playfutday_flutter/services/user_service/user_service.dart';
 import 'package:stream_transform/stream_transform.dart';
 
@@ -64,14 +63,12 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
       if (event.userEdit.phone != event.user.phone) {
         await _userService.editPhone(event.userEdit.phone!);
       }
+      final user =
+          await _userService.getCurrentUserInfo(event.user.id.toString());
 
-      final user = state.user!.copyWith(
-        biography: event.userEdit.biography ?? state.user!.biography,
-        birthday: event.userEdit.birthday ?? state.user!.birthday,
-        phone: event.userEdit.phone ?? state.user!.phone,
-      );
     
-    
+      UserProfileBloc(_userService)
+          .add(UserProfileFetched(user!.id.toString()));
     } catch (_) {
       emit(state.copyWith(status: EditProfileStatus.failure));
     }

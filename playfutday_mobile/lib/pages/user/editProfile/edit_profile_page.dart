@@ -10,11 +10,8 @@ import 'package:playfutday_flutter/models/user.dart';
 import 'package:playfutday_flutter/rest/rest.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:playfutday_flutter/services/user_service/user_service.dart';
-
-import '../../../blocs/userProfile/user_profile.dart';
-import '../../../blocs/userProfile/user_profile_bloc.dart';
 import '../../../theme/app_theme.dart';
-import '../user_page.dart';
+
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key, required this.user}) : super(key: key);
