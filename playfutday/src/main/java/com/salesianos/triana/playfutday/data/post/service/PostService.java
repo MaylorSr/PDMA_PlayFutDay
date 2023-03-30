@@ -31,6 +31,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -83,7 +84,7 @@ public class PostService {
 
         return PostResponse.of(
                 repo.save(Post.builder()
-                        .tag(postRequest.getTag().toLowerCase())
+                        .tag(postRequest.getTag().toUpperCase())
                         .image(filename)
                         .author(user)
                         .description(postRequest.getDescription())
@@ -95,11 +96,17 @@ public class PostService {
     public PostResponse giveCommentByUser(Long id, User user, CommentaryRequest request) {
         return repo.findById(id).map(
                 post -> {
-                    post.getCommentaries().add(Commentary.builder()
-                            .post(post)
-                            .author(user.getUsername())
-                            .message(request.getMessage())
-                            .build());
+                    post.getCommentaries().add(
+                            Commentary.builder()
+                                    .post(post)
+                                    .author(user.getUsername())
+                                    .authorFile(user.getAvatar())
+                                    .message(request.getMessage())
+                                    /**
+                                     * Se explica en la entidad comentary el porque el LocalDate.now
+                                     */
+                                    .updateCommentary(LocalDate.now())
+                                    .build());
                     repo.save(post);
                     return PostResponse.of(post);
                 }
@@ -125,6 +132,7 @@ public class PostService {
     /**
      * Metodo que se encarga de eliminar el post de un usuario, es necesario devolver un booleano para que no continue y devuelva la excepción,
      * ya que al borrarlo intenta seguir buscando y devolvera la excepción "GlobalEntityNotFound"
+     *
      * @param id  Es el id del post que vamos a eliminar
      * @param idU Es el id del usuario en cuestion al que se le va a eliminar el post
      * @return Devolverá un booleano en caso de que la ejecución haya sido completada y con exito sin ningún tipo de excepción.
