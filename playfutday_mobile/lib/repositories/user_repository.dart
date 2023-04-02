@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:playfutday_flutter/models/editProfile.dart';
 
@@ -28,6 +29,13 @@ class UserRepository {
 
     var jsonResponse = await _client.get(url);
     return UserInfo.fromJson(jsonDecode(jsonResponse));
+  }
+
+  Future<dynamic> editAvatar(String token, File file ) async{
+    String url = "/edit/avatar";
+    var jsonResponse = await _client.editAvatar(file, token, url);
+    return jsonResponse;
+
   }
 
 

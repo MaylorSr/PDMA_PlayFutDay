@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_null_comparison, avoid_print
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {

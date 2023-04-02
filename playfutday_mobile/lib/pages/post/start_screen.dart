@@ -13,7 +13,6 @@ class StartScreen extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(top: 10),
       child: Column(
-        
         children: [
           SizedBox(
             height: 70,
@@ -63,4 +62,3 @@ class StartScreen extends StatelessWidget {
     );
   }
 }
-

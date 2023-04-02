@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:playfutday_flutter/blocs/blocs.dart';
-import 'package:playfutday_flutter/blocs/userProfile/user_profile_bloc.dart';
 import 'package:playfutday_flutter/models/searchPost.dart';
 import 'package:playfutday_flutter/services/services.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -118,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                 builder: (context, state) {
                   if (state is AuthenticationAuthenticated) {
                     return BlocProvider(
-                        create: (_) => UserProfileBloc(UserService())
+                        create: (context) => UserProfileBloc(UserService())
                           ..add(UserProfileFetched(state.user.id.toString())),
                         child: UserProfilePage(user: state.user));
                   } else {

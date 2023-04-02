@@ -1,5 +1,7 @@
 // ignore_for_file: override_on_non_overriding_member, avoid_print
 
+import 'dart:io';
+
 import 'package:playfutday_flutter/models/infoUser.dart';
 import 'package:playfutday_flutter/models/models.dart';
 
@@ -51,6 +53,14 @@ class UserService {
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
       await _userRepository.editBirthdayByMe(birthday);
+      // ignore: avoid_print
+    }
+  }
+
+  Future<dynamic> editAvatar(File file) async {
+    String? token = _localStorageService.getFromDisk("user_token");
+    if (token != null) {
+      await _userRepository.editAvatar(token, file);
       // ignore: avoid_print
     }
   }

@@ -32,7 +32,9 @@ class _ProfileState extends State<UserProfilePage> {
               appBar: AppBar(title: const Text('Not found the user')),
             ));
           case UserProfileStatus.success:
-            return UserScreen(user: state.user, userLoger : widget.user);
+            return UserScreen(user: state.user, userLoger: widget.user);
+          case UserProfileStatus.editProfile:
+            return EditProfileScreen(user: state.user!);
           case UserProfileStatus.initial:
             return const Center(child: CircularProgressIndicator());
         }

@@ -1,21 +1,20 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:playfutday_flutter/blocs/editProfile/edit_profile.dart';
+import 'package:playfutday_flutter/blocs/userProfile/user_profile.dart';
 import 'package:playfutday_flutter/models/editProfile.dart';
-import 'package:playfutday_flutter/models/user.dart';
+import 'package:playfutday_flutter/models/infoUser.dart';
 import 'package:playfutday_flutter/rest/rest.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:playfutday_flutter/services/user_service/user_service.dart';
 import '../../../theme/app_theme.dart';
-
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key, required this.user}) : super(key: key);
-  final User user;
+  final UserInfo user;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -36,14 +35,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _phoneController.text = widget.user.phone ?? '';
   }
 
-  void saveChange() {
+  void saveChange(BuildContext context) {
     EditDataUser userEdit = EditDataUser(
         phone: _phoneController.text,
         birthday: _birthDateController.text,
-        biography: _descriptionController.text);
-    EditProfileBloc(UserService()).add(EditDataFetched(userEdit, widget.user));
+        biography: _descriptionController.text,
+        avatar: _image);
 
-    Navigator.pop(context);
+    BlocProvider.of<UserProfileBloc>(context)
+        .add(UpdateUser(userEdit, widget.user));
   }
 
   @override
@@ -80,9 +80,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context);
                   },
-                  label:
-                      Text('Camara', style: TextStyle(color: AppTheme.primary)),
-                  icon: Icon((Icons.camera_alt_rounded)),
+                  label: const Text('Camara',
+                      style: TextStyle(color: AppTheme.primary)),
+                  icon: const Icon((Icons.camera_alt_rounded)),
                 ),
                 TextButton.icon(
                   onPressed: () async {
@@ -96,6 +96,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         print('No image selected.');
                       }
                     });
+                    // ignore: use_build_context_synchronously
                     Navigator.pop(context);
                   },
                   label: const Text('Gallery',
@@ -133,9 +134,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                     Navigator.pop(context);
                   },
-                  label:
-                      Text('Camara', style: TextStyle(color: AppTheme.primary)),
-                  icon: Icon((Icons.camera_alt_outlined)),
+                  label: const Text('Camara',
+                      style: TextStyle(color: AppTheme.primary)),
+                  icon: const Icon((Icons.camera_alt_outlined)),
                 ),
                 TextButton.icon(
                   onPressed: () async {
@@ -151,7 +152,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     });
                     Navigator.pop(context);
                   },
-                  label: Text('Gallery',
+                  label: const Text('Gallery',
                       style: TextStyle(color: AppTheme.primary)),
                   icon: Icon((Icons.photo_camera_back_outlined)),
                 )
@@ -182,11 +183,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () => saveChange(context),
                         child: const Text('Cancel'),
                       ),
                       ElevatedButton(
-                        onPressed: () => saveChange(),
+                        onPressed: () => saveChange(context),
                         child: const Text('Save'),
                       ),
                     ],
@@ -204,12 +205,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               child: ClipOval(
                                 child: Container(
                                   child: _image == null
-                                      ? Image.network(
-                                          '$urlBase/download/${widget.user!.avatar}',
-                                          errorBuilder: (context, error,
-                                                  stackTrace) =>
+                                      ? CachedNetworkImage(
+                                          placeholderFadeInDuration:
+                                              const Duration(seconds: 12),
+                                          placeholder: (context, url) =>
+                                              Image.asset(
+                                                  'assets/images/reload.gif'),
+                                          errorWidget: (context, url, error) =>
                                               Image.asset(
                                                   'assets/images/image_notfound.png'),
+                                          imageUrl:
+                                              '$urlBase/download/${widget.user!.avatar}',
                                         ) // set a placeholder image when no photo is set
                                       : Image.file(
                                           _image!,
@@ -265,6 +271,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       SizedBox(
                         height: 100,
                         child: TextFormField(
+                          maxLength: 200,
                           style: const TextStyle(color: Colors.black),
                           cursorColor: Colors.black,
                           maxLines: 5,
@@ -304,6 +311,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       SizedBox(
                         height: 50,
                         child: TextFormField(
+                          maxLength: 9,
                           style: const TextStyle(color: Colors.black),
                           cursorColor: Colors.black,
                           keyboardType: TextInputType.phone,

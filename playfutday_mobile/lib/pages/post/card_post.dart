@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -144,9 +145,15 @@ class _CardScreenPostState extends State<CardScreenPost> {
                   child: CircleAvatar(
                     maxRadius: 25,
                     child: ClipOval(
-                      child: Image.network(
-                        '$urlBase/download/${widget.post.authorFile}',
-                        errorBuilder: (context, error, stackTrace) =>
+                      child: CachedNetworkImage(
+                        useOldImageOnUrlChange: true,
+                        placeholderFadeInDuration: const Duration(seconds: 15),
+                        placeholder: (context, url) =>
+                            Image.asset('assets/images/reload.gif'),
+                        imageUrl: '$urlBase/download/${widget.post.authorFile}',
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorWidget: (context, url, error) =>
                             Image.asset('assets/images/image_notfound.png'),
                       ),
                     ),
@@ -175,23 +182,60 @@ class _CardScreenPostState extends State<CardScreenPost> {
                   ],
                 ),
               ),
-              Visibility(
-                visible: widget.post.author == widget.user.username,
-                child: ElevatedButton(
-                  onPressed: () => Platform.isAndroid
-                      ? displayDialogAndroid(context)
-                      : displayDialogIos(context),
-                  style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(Colors.white),
-                      elevation: MaterialStatePropertyAll(0)),
-                  child: Icon(
-                    Platform.isAndroid
-                        ? Icons.cancel_outlined
-                        : Icons.close_rounded,
-                    color: const Color.fromARGB(255, 131, 10, 2),
-                    size: 30,
-                  ),
-                ),
+              PopupMenuButton(
+                icon: const Icon(Icons.more_horiz_sharp, color: Colors.black),
+                itemBuilder: (BuildContext bc) {
+                  List<PopupMenuItem> items = [];
+                  if (widget.post.author == widget.user.username) {
+                    items.add(
+                      PopupMenuItem(
+                        child: Visibility(
+                          visible: widget.post.author == widget.user.username,
+                          child: ElevatedButton(
+                            onPressed: () => Platform.isAndroid
+                                ? displayDialogAndroid(context)
+                                : displayDialogIos(context),
+                            style: const ButtonStyle(
+                                backgroundColor: MaterialStatePropertyAll(
+                                    Colors.transparent),
+                                elevation: MaterialStatePropertyAll(0)),
+                            child: Icon(
+                              Platform.isAndroid
+                                  ? Icons.cancel_outlined
+                                  : Icons.close_rounded,
+                              color: Color.fromARGB(255, 131, 10, 2),
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  if (widget.post.author != widget.user.username) {
+                    items.add(
+                      PopupMenuItem(
+                        child: Visibility(
+                          visible: widget.post.author != widget.user.username,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            style: const ButtonStyle(
+                                backgroundColor: MaterialStatePropertyAll(
+                                    Colors.transparent),
+                                elevation: MaterialStatePropertyAll(0)),
+                            child: Icon(
+                              Platform.isAndroid
+                                  ? Icons.group_add
+                                  : Icons.group_add_outlined,
+                              color: AppTheme.primary,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  return items;
+                },
               )
             ],
           ),
@@ -203,11 +247,14 @@ class _CardScreenPostState extends State<CardScreenPost> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: Image.network(
-                '$urlBase/download/${widget.post.image}',
-                errorBuilder: (context, error, stackTrace) =>
-                    Image.asset('assets/images/image_notfound.png'),
-              ),
+              child: CachedNetworkImage(
+                  useOldImageOnUrlChange: true,
+                  placeholderFadeInDuration: const Duration(seconds: 10),
+                  placeholder: (context, url) =>
+                      Image.asset('assets/images/reload.gif'),
+                  errorWidget: (context, url, error) =>
+                      Image.asset('assets/images/image_notfound.png'),
+                  imageUrl: '$urlBase/download/${widget.post.image}'),
             ),
           ),
           Padding(

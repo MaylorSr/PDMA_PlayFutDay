@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:playfutday_flutter/models/infoUser.dart';
 
-enum UserProfileStatus { initial, success, failure }
+enum UserProfileStatus { initial, success, failure, editProfile }
 
 class UserProfileState extends Equatable {
   const UserProfileState({
