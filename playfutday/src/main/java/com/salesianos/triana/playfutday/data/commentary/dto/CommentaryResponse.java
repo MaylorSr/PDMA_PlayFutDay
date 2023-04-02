@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -31,6 +32,9 @@ public class CommentaryResponse {
     protected String authorName;
 
     @JsonView({viewCommentary.CommentaryResponse.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    protected String authorFile;
+
+    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     protected LocalDate uploadCommentary;
 
@@ -39,6 +43,7 @@ public class CommentaryResponse {
                 .id(commentary.getId())
                 .message(commentary.getMessage())
                 .authorName(commentary.getAuthor())
+                .authorFile(commentary.getAuthorFile())
                 .uploadCommentary(commentary.getUpdateCommentary())
                 .build();
     }
