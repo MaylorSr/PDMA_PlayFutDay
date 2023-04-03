@@ -77,7 +77,8 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/fav", "/user/{idU}", "/user/changePassword", "/me",
                         "/edit/birthday", "/edit/phone", "/edit/bio", "/edit/avatar",
-                        "/user/changePassword", "/post/**", "/info/user/").hasAnyRole("USER", "ADMIN")
+                        "/user/changePassword", "/post/**", "/info/user/", "/user/follow/{id}",
+                        "/user/followers/{id}", "/user/follows/{id}").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/user", "/banUserByAdmin/{id}", "/changeRole/{id}", "/post/delete/commentary/{id}").hasRole("ADMIN")
                 .anyRequest().authenticated();
 

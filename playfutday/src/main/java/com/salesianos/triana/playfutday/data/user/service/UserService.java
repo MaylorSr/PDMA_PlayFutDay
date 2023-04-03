@@ -18,6 +18,7 @@ import com.salesianos.triana.playfutday.search.page.PageResponse;
 import com.salesianos.triana.playfutday.search.spec.GenericSpecificationBuilder;
 import com.salesianos.triana.playfutday.search.util.SearchCriteria;
 import com.salesianos.triana.playfutday.search.util.SearchCriteriaExtractor;
+import com.sun.tools.jconsole.JConsolePlugin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -123,7 +124,6 @@ public class UserService {
         return res;
     }
 
-
     public PageResponse<UserResponse> search(List<SearchCriteria> params, Pageable pageable) {
         GenericSpecificationBuilder genericSpecificationBuilder = new GenericSpecificationBuilder(params);
         Specification<User> spec = genericSpecificationBuilder.build();
@@ -209,12 +209,81 @@ public class UserService {
     @Transactional()
     public Optional<User> addPostToUser(String username) {
         return userRepository.findByUsername(username);
-
     }
 
     public UserResponse findByIdInfoUser(UUID id) {
         return UserResponse.fromUser(userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("User not found")));
     }
 
+
+    public PageResponse<UserFollow> pageableUser(UUID id, Pageable pageable) {
+        Page<User> followersOfOneUser = userRepository.findAllFollowers(id, pageable);
+        Page<UserFollow> userFollowPage =
+                new PageImpl<>
+                        (followersOfOneUser.stream().toList(), pageable, followersOfOneUser.getTotalPages()).map(UserFollow::of);
+        return new PageResponse<>(userFollowPage);
+    }
+
+
+    public PageResponse<UserFollow> getFollowers(UUID id, Pageable pageable) {
+        userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("The user not exists"));
+        PageResponse<UserFollow> res = pageableUser(id, pageable);
+        if (res.getContent().isEmpty()) {
+            throw new GlobalEntityNotFounException("The list of followers is empty");
+        }
+        return res;
+    }
+
+    /**
+     * PAGINACION AHORA DE LOS FOLLOWS
+     *
+     * @param id       id del usuario que vamos a obtener su lista
+     * @param pageable Page
+     */
+
+
+    public PageResponse<UserFollow> pageableUserFollow(UUID id, Pageable pageable) {
+        Page<User> followsOfOneUser = userRepository.findAllFollows(id, pageable);
+        Page<UserFollow> userFollowPage =
+                new PageImpl<>
+                        (followsOfOneUser.stream().toList(), pageable, followsOfOneUser.getTotalPages()).map(UserFollow::of);
+        return new PageResponse<>(userFollowPage);
+    }
+
+
+    public PageResponse<UserFollow> getFollows(UUID id, Pageable pageable) {
+        userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("The user not exists"));
+        PageResponse<UserFollow> res = pageableUserFollow(id, pageable);
+        if (res.getContent().isEmpty()) {
+            throw new GlobalEntityNotFounException("The list of follows is empty");
+        }
+        return res;
+    }
+
+    public UserFollow updateFollowers(User user, UUID id) {
+        return userRepository.findById(id)
+                .map(userDestination -> {
+                    boolean exists = userRepository.existsUserByFollow(user.getId(), id);
+                    /**
+                     * Siempre se va a encontrar el usuario ya que se requiere de Login y en el otro caso antes de entrar
+                     * aqui se lanzará la excepción, por ello orElseThrow esta vacío.
+                     */
+                    User act = userRepository.findByPhone(user.getPhone()).orElseThrow();
+                    User des = userRepository.findByEmail(userDestination.getEmail()).orElseThrow();
+
+                    if (!exists) {
+                        act.getFollows().add(des);
+                        des.getFollowers().add(act);
+                    } else {
+                        act.getFollows().remove(des);
+                        des.getFollowers().remove(act);
+                    }
+                    userRepository.save(des);
+                    userRepository.save(act);
+
+                    return UserFollow.of(userDestination);
+                })
+                .orElseThrow(() -> new GlobalEntityNotFounException("The user not found"));
+    }
 
 }

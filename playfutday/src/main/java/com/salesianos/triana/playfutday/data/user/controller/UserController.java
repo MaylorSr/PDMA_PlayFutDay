@@ -12,6 +12,7 @@ import com.salesianos.triana.playfutday.exception.NotPermission;
 import com.salesianos.triana.playfutday.search.page.PageResponse;
 import com.salesianos.triana.playfutday.security.jwt.access.JwtProvider;
 
+import io.swagger.v3.core.util.Json;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -27,7 +28,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -162,6 +162,7 @@ public class UserController {
                                                    @PageableDefault(size = 10, page = 0) Pageable pageable) {
         return userService.findAll(s, pageable);
     }
+
 
     @Operation(summary = "Este método obtiene los posts favoritos del usuario logeado")
     @ApiResponses(value = {
@@ -860,6 +861,123 @@ public class UserController {
                                     @PathVariable UUID id,
                                     @AuthenticationPrincipal User user) {
         return userService.findByIdInfoUser(id);
+    }
+
+
+    @Operation(summary = "Este método implementa seguir a un usuario o dejar de seguirlo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Se ha dado/quitado el follow al usuario destinatario",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PostResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        {
+                                            "id": "51057cde-9852-4cd5-be5e-091979495656",
+                                            "username": "wbeetham0",
+                                            "avatar": "avatar.png"
+                                        }
+                                    }
+                                    """))}),
+            @ApiResponse(responseCode = "401",
+                    description = "No estas logeado",
+                    content = @Content),
+            @ApiResponse(responseCode = "405",
+                    description = "Estas intentado hacer la petición de POST a otra distinta, ejemplo GET",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "El id del usuario destinatario a darle follow / unfollow no existe",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No puedes seguirte a ti mismo",
+                    content = @Content)
+    })
+    @PostMapping("/user/follow/{id}")
+    @PreAuthorize("authentication.principal.id != #id")
+    public UserFollow updateFollowers(@PathVariable UUID id, @AuthenticationPrincipal User user) {
+        return userService.updateFollowers(user, id);
+    }
+
+
+    @Operation(summary = "Este método obtiene una lista paginada de los followers de un determinado usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha obtenido la lista paginada correctamente",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PostResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        {
+                                            "content": [
+                                                {
+                                                    "id": "d8825758-d02a-4bcc-8146-95fb6fa3ded7",
+                                                    "username": "bmacalester1",
+                                                    "avatar": "avatar.png"
+                                                }
+                                            ],
+                                            "totalPages": 1
+                                        }
+                                    }
+                                    """))}),
+            @ApiResponse(responseCode = "401",
+                    description = "No estas logeado",
+                    content = @Content),
+            @ApiResponse(responseCode = "405",
+                    description = "Estas intentado hacer la petición de POST a otra distinta, ejemplo GET",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "El id del usuario al que quieres ver los followers no existe",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "No tienes ningún seguidor en esta página o el usuario no existe ",
+                    content = @Content)
+    })
+    @GetMapping("/user/followers/{id}")
+    @JsonView(viewUser.UserFollow.class)
+    public PageResponse<UserFollow> getFollowers(@PathVariable UUID id,
+                                                 @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        return userService.getFollowers(id, pageable);
+    }
+
+
+    @Operation(summary = "Este método obtiene una lista paginada de los follows de un determinado usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha obtenido la lista paginada correctamente",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PostResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        {
+                                            "content": [
+                                                {
+                                                    "id": "d8825758-d02a-4bcc-8146-95fb6fa3ded7",
+                                                    "username": "bmacalester1",
+                                                    "avatar": "avatar.png"
+                                                }
+                                            ],
+                                            "totalPages": 1
+                                        }
+                                    }
+                                    """))}),
+            @ApiResponse(responseCode = "401",
+                    description = "No estas logeado",
+                    content = @Content),
+            @ApiResponse(responseCode = "405",
+                    description = "Estas intentado hacer la petición de POST a otra distinta, ejemplo GET",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "El id del usuario al que quieres ver los follows no existe",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "No sigues a nadie en esta página o el usuario no existe ",
+                    content = @Content)
+    })
+    @GetMapping("/user/follows/{id}")
+    @JsonView(viewUser.UserFollow.class)
+    public PageResponse<UserFollow> getFollows(@PathVariable UUID id,
+                                               @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        return userService.getFollows(id, pageable);
     }
 
 
