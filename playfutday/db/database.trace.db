@@ -4163,3 +4163,21 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: C:/Users/User/On
 	at org.h2.mvstore.FileStore.open(FileStore.java:128)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:452)
 	... 136 more
+2023-04-05 13:24:12 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * \000d\000aFROM USER_FOLLOWS\000d\000aWHERE FOLLOWER_USER_ID = d8825758-d02a-4[*]bcc-8146-95fb6fa3ded7"
+Syntax error in SQL statement "SELECT * \000d\000aFROM USER_FOLLOWS\000d\000aWHERE FOLLOWER_USER_ID = d8825758-d02a-4[*]bcc-8146-95fb6fa3ded7"; SQL statement:
+SELECT * 
+FROM USER_FOLLOWS
+WHERE FOLLOWER_USER_ID = d8825758-d02a-4bcc-8146-95fb6fa3ded7 [42000-214]
+2023-04-05 13:24:17 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * \000d\000aFROM USER_FOLLOWS\000d\000aWHERE FOLLOWER_USER_ID = d8825758-d02a-4[*]bcc-8146-95fb6fa3ded7"
+Syntax error in SQL statement "SELECT * \000d\000aFROM USER_FOLLOWS\000d\000aWHERE FOLLOWER_USER_ID = d8825758-d02a-4[*]bcc-8146-95fb6fa3ded7"; SQL statement:
+SELECT * 
+FROM USER_FOLLOWS
+WHERE FOLLOWER_USER_ID = d8825758-d02a-4bcc-8146-95fb6fa3ded7 [42000-214]
+2023-04-05 13:24:25 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * \000d\000aFROM USER_FOLLOWS u\000d\000aWHERE u.FOLLOWER_USER_ID = d8825758-d02a-4[*]bcc-8146-95fb6fa3ded7"
+Syntax error in SQL statement "SELECT * \000d\000aFROM USER_FOLLOWS u\000d\000aWHERE u.FOLLOWER_USER_ID = d8825758-d02a-4[*]bcc-8146-95fb6fa3ded7"; SQL statement:
+SELECT * 
+FROM USER_FOLLOWS u
+WHERE u.FOLLOWER_USER_ID = d8825758-d02a-4bcc-8146-95fb6fa3ded7 [42000-214]

@@ -101,9 +101,14 @@ public class UserService {
                 .map(
                         oldUser -> {
                             List<Post> myLikes = postRepository.findOnIlikePost(oldUser.getId());
+                            List<User> myFollows = oldUser.getFollows();
+//                            List<User> userWhoFollowMe = userRepository.findWhoFollowsMe(idU);
                             for (Post p : myLikes) {
                                 postService.giveLikeByUser(p.getId(), oldUser);
                             }
+//                            for (User u : myFollows) {
+//                                updateFollowers(oldUser, u.getId());
+//                            }
                             userRepository.delete(oldUser);
                             return null;
                         }
