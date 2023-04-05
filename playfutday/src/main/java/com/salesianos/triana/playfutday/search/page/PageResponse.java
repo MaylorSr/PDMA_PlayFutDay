@@ -27,6 +27,7 @@ public class PageResponse<T> {
 
     private int totalPages;
 
+    @JsonView({viewUser.UserFollow.class})
     private Long totalElements;
 
 

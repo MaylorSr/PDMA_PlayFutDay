@@ -78,7 +78,7 @@ public class User implements UserDetails {
     /**
      * Con esto evitamos que se cree una tabla adicional en H2, ya que followers usará la de follows
      */
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_follows",
             joinColumns = @JoinColumn(name = "user_id_followed"),
@@ -148,4 +148,18 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
+
+    /**
+     * QUITAMOS AL USUARIO DE TODAS LAS LISTAS RELACIONADAS CON ESTE
+     */
+    @PreRemove
+    public void deleteUser() {
+        this.follows.forEach(f -> {
+            f.followers.remove(this);
+        });
+        this.followers.forEach(f -> {
+            f.follows.remove(this);
+        });
+    }
+
 }

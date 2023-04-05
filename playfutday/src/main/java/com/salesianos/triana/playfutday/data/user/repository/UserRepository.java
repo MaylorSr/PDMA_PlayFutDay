@@ -66,5 +66,10 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
     Page<User> findAllFollows(@Param("id") UUID id, Pageable pageable);
 
 
+    @Query("""
+            SELECT u FROM User u JOIN u.follows f WHERE f.id = :id 
+            """)
+    List<User> findWhoFollowsMe(@Param("id") UUID id);
+
 }
 
