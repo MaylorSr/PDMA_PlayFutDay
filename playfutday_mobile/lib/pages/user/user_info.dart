@@ -4,6 +4,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:playfutday_flutter/blocs/follows/follow.dart';
 import 'package:playfutday_flutter/blocs/userProfile/user_profile.dart';
 import 'package:playfutday_flutter/models/infoUser.dart';
 import 'package:playfutday_flutter/models/models.dart';
@@ -14,10 +15,12 @@ import 'package:playfutday_flutter/services/post_service/post_service.dart';
 import 'package:playfutday_flutter/services/user_service/user_service.dart';
 
 import '../../blocs/blocs.dart';
+import '../../blocs/followers/followers.dart';
 import '../../blocs/myFavPost/my_fav_Post_bloc.dart';
 import '../../blocs/postUser/post_user_bloc.dart';
 import '../../theme/app_theme.dart';
 import '../post/myFavPost/post_pageFav.dart';
+import 'option_follow.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({Key? key, this.user, required this.userLoger})
@@ -88,6 +91,19 @@ class _UserScreenState extends State<UserScreen> {
         child: MyFavPostList(
           user: widget.userLoger,
         ));
+  }
+
+  Future<int> _getTotalElements() async {
+    final followerBloc =
+        FollowerBloc(UserService(), widget.user!.id.toString());
+    final totalElements = await followerBloc.getTotalElements();
+    return totalElements;
+  }
+
+  Future<int> _getTotalElementsFollows() async {
+    final followBloc = FollowBloc(UserService(), widget.user!.id.toString());
+    final totalElements = await followBloc.getTotalElements();
+    return totalElements;
   }
 
   @override
@@ -228,38 +244,88 @@ class _UserScreenState extends State<UserScreen> {
                           ],
                         ),
                         const SizedBox(width: 20),
-                        Column(
-                          children: const [
-                            Text(
-                              '0',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colors.white),
-                            ),
-                            SizedBox(height: 5),
-                            Icon(
-                              Icons.people_alt_rounded,
-                              size: 25,
-                            )
-                          ],
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OptionFollowScreen(
+                                          id: widget.user!.id.toString(),
+                                          username:
+                                              widget.user!.username.toString(),
+                                          followersView: true,
+                                          user: widget.userLoger,
+                                        )));
+                          },
+                          child: Column(
+                            children: [
+                              FutureBuilder(
+                                future: _getTotalElements(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
+                                    return Text(
+                                      snapshot.data.toString(),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  } else {
+                                    return const CircularProgressIndicator();
+                                  }
+                                },
+                              ),
+                              const SizedBox(height: 5),
+                              const Icon(
+                                Icons.people_alt_rounded,
+                                size: 25,
+                              )
+                            ],
+                          ),
                         ),
                         const SizedBox(width: 20),
-                        Column(
-                          children: const [
-                            Text(
-                              '0',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colors.white),
-                            ),
-                            SizedBox(height: 5),
-                            Icon(
-                              Icons.people_outline_outlined,
-                              size: 25,
-                            )
-                          ],
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OptionFollowScreen(
+                                          id: widget.user!.id.toString(),
+                                          username:
+                                              widget.user!.username.toString(),
+                                          followersView: false,
+                                          user: widget.userLoger,
+                                        )));
+                          },
+                          child: Column(
+                            children: [
+                              FutureBuilder(
+                                future: _getTotalElementsFollows(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
+                                    return Text(
+                                      snapshot.data.toString(),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  } else {
+                                    return const CircularProgressIndicator();
+                                  }
+                                },
+                              ),
+                              const SizedBox(height: 5),
+                              const Icon(
+                                Icons.people_outline_outlined,
+                                size: 25,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -350,17 +416,16 @@ class _UserScreenState extends State<UserScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // botones para cambiar la vista entre grid y lista
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.grid_on),
+                    icon: const Icon(Icons.grid_on),
                     color: _view == 1 ? Colors.white : Colors.grey,
                     onPressed: () => setState(() => _view = 1),
                   ),
                   IconButton(
-                    icon: Icon(Icons.list),
+                    icon: const Icon(Icons.list),
                     color: _view == 2 ? Colors.white : Colors.grey,
                     onPressed: () => setState(() => _view = 2),
                   ),

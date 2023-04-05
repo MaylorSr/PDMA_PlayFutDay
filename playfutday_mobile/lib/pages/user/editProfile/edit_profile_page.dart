@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:playfutday_flutter/blocs/userProfile/user_profile.dart';
 import 'package:playfutday_flutter/models/editProfile.dart';
 import 'package:playfutday_flutter/models/infoUser.dart';
+import 'package:playfutday_flutter/pages/user/change_password/change_password_screen.dart';
 import 'package:playfutday_flutter/rest/rest.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import '../../../theme/app_theme.dart';
@@ -201,11 +202,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             backgroundColor: Colors.black,
                             maxRadius: 50,
                             child: Padding(
-                              padding: const EdgeInsets.all(4.0),
+                              padding: const EdgeInsets.all(0.0),
                               child: ClipOval(
                                 child: Container(
                                   child: _image == null
                                       ? CachedNetworkImage(
+                                          fit: BoxFit.cover,
+                                          width: double.infinity,
                                           placeholderFadeInDuration:
                                               const Duration(seconds: 12),
                                           placeholder: (context, url) =>
@@ -215,7 +218,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               Image.asset(
                                                   'assets/images/image_notfound.png'),
                                           imageUrl:
-                                              '$urlBase/download/${widget.user!.avatar}',
+                                              '$urlBase/download/${widget.user.avatar}',
                                         ) // set a placeholder image when no photo is set
                                       : Image.file(
                                           _image!,
@@ -400,6 +403,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                         ],
                       ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      Center(
+                        child: ElevatedButton(
+                            onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                       ChangePasswordScreen(user: widget.user),
+                                )),
+                            child: const Text(
+                              'Change Password',
+                              style: TextStyle(fontSize: 18),
+                            )),
+                      )
                     ],
                   )
                 ]))));

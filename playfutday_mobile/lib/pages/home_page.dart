@@ -111,7 +111,6 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               );
-
             case 3:
               return BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (context, state) {

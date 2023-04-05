@@ -1,11 +1,12 @@
 // ignore_for_file: unused_local_variable, avoid_print
 
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:playfutday_flutter/blocs/allPost/allPost_state.dart';
+import 'package:playfutday_flutter/models/models.dart';
+import 'package:playfutday_flutter/services/user_service/user_service.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 import '../../services/services.dart';
@@ -126,5 +127,14 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
         status: AllPostStatus.success,
         allPost: commentInProgress,
         hasReachedMax: false));
+  }
+
+  Future<UserFollowResponse?> getFollowers(int page, String uuid) async {
+    try {
+      final content = await UserService().getFollows(page, uuid);
+      return content;
+    } catch (e) {
+      return null;
+    }
   }
 }

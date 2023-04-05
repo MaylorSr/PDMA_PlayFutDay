@@ -22,5 +22,6 @@ class UpdateUser extends UserProfileEvent {
 
   final EditDataUser updateUser;
   final UserInfo userNow;
-  
 }
+
+

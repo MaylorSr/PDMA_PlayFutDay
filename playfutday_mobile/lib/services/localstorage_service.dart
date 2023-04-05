@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LocalStorageService {
   const LocalStorageService();
 
-  static late LocalStorageService _instance;
+  static LocalStorageService _instance = const LocalStorageService();
   static late SharedPreferences _preferences;
 
   static Future<LocalStorageService> getInstance() async {
