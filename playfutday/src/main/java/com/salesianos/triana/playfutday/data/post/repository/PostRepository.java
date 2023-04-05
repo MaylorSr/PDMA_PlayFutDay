@@ -38,6 +38,8 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
     List<Post> findOnIlikePost(@Param("id") UUID id);
 
 
+
+
 }
 
 

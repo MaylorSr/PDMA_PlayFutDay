@@ -20,6 +20,8 @@ class UserInfo {
       this.myPost,
       this.roles});
 
+      
+
   UserInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     username = json['username'];

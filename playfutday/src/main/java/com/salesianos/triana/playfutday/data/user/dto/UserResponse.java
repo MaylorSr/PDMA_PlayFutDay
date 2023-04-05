@@ -54,6 +54,7 @@ public class UserResponse {
     @JsonView({viewUser.UserInfo.class})
     protected String token;
 
+
     public static UserResponse fromUser(User user) {
         return UserResponse
                 .builder()

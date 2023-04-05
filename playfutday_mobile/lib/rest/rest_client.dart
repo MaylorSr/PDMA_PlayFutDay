@@ -108,6 +108,35 @@ class RestClient {
     }
   }
 
+  Future<dynamic> editAvatar(File file, String accessToken, String url) async{
+    var bytes = await file.readAsBytes();
+
+    try {
+      Uri uri = Uri.parse(ApiConstants.baseUrl + url);
+
+      Map<String, String> headers = Map();
+      headers.addAll({
+        'Content-Type': 'multipart/form-data',
+        'Authorization': 'Bearer ${accessToken}',
+      });
+      var request = new http.MultipartRequest('POST', uri);
+      final httpImage = http.MultipartFile.fromBytes('image', bytes,
+          contentType: MediaType('image', file.path.split('.').last),
+          filename: file.path.split('/').last);
+      request.files.add(httpImage);
+      request.headers.addAll(headers);
+
+      final response = await _httpClient!.send(request);
+      print(response);
+      var responseJson = response.stream.bytesToString();
+      print(responseJson);
+      return responseJson;
+    } on SocketException catch (ex) {
+      throw Exception('No internet connection: ${ex.message}');
+    }
+  }
+
+
   Future<dynamic> newPost(
       String url, dynamic body, File file, String accessToken) async {
     var bytes = await file.readAsBytes();
