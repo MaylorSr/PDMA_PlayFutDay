@@ -2,9 +2,13 @@
 
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:playfutday_flutter/blocs/allPost/allPost.dart';
+import 'package:playfutday_flutter/blocs/follows/follow.dart';
+import 'package:playfutday_flutter/blocs/follows/follow_event.dart';
 import 'package:playfutday_flutter/blocs/userProfile/user_profile_event.dart';
 import 'package:playfutday_flutter/models/allPost.dart';
 import 'package:playfutday_flutter/pages/post/commentaries/commentary_post.dart';
@@ -41,12 +45,35 @@ class _CardScreenPostState extends State<CardScreenPost> {
 
   late int _likesCount;
 
+  late bool _isFollow = true;
+
   @override
   void initState() {
     super.initState();
     _isLiked =
         widget.post.likesByAuthor?.contains(widget.user.username) ?? false;
     _likesCount = widget.post.countLikes!;
+    isFollow();
+  }
+
+  void isFollow() async {
+    bool found = false;
+    int currentPage = 0;
+    final content = await BlocProvider.of<AllPostBloc>(context)
+        .getFollowers(currentPage, widget.post.idAuthor);
+
+    while (!found && currentPage < content!.totalPages) {
+      currentPage++;
+
+      found = content.userFollow
+          .any((follow) => follow.username == widget.user.username);
+    }
+    setState(() {
+      if (found) {
+        _isFollow = false;
+      }
+      _isFollow = true;
+    });
   }
 
   @override
@@ -144,9 +171,15 @@ class _CardScreenPostState extends State<CardScreenPost> {
                   child: CircleAvatar(
                     maxRadius: 25,
                     child: ClipOval(
-                      child: Image.network(
-                        '$urlBase/download/${widget.post.authorFile}',
-                        errorBuilder: (context, error, stackTrace) =>
+                      child: CachedNetworkImage(
+                        useOldImageOnUrlChange: true,
+                        placeholderFadeInDuration: const Duration(seconds: 15),
+                        placeholder: (context, url) =>
+                            Image.asset('assets/images/reload.gif'),
+                        imageUrl: '$urlBase/download/${widget.post.authorFile}',
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorWidget: (context, url, error) =>
                             Image.asset('assets/images/image_notfound.png'),
                       ),
                     ),
@@ -176,21 +209,51 @@ class _CardScreenPostState extends State<CardScreenPost> {
                 ),
               ),
               Visibility(
-                visible: widget.post.author == widget.user.username,
-                child: ElevatedButton(
-                  onPressed: () => Platform.isAndroid
-                      ? displayDialogAndroid(context)
-                      : displayDialogIos(context),
-                  style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(Colors.white),
-                      elevation: MaterialStatePropertyAll(0)),
-                  child: Icon(
-                    Platform.isAndroid
-                        ? Icons.cancel_outlined
-                        : Icons.close_rounded,
-                    color: const Color.fromARGB(255, 131, 10, 2),
-                    size: 30,
-                  ),
+                visible: widget.user.id != widget.post.idAuthor,
+                child: TextButton.icon(
+                    onPressed: () => setState(() {
+                          _isFollow = !_isFollow;
+                          FollowBloc(UserService(), widget.post.idAuthor)
+                              .add(AddFollowFetched(widget.post.idAuthor));
+                        }),
+                    icon: Icon(
+                      _isFollow
+                          ? Icons.group_remove_outlined
+                          : Icons.group_add_outlined,
+                      color: Colors.black,
+                      size: 30,
+                    ),
+                    label: Text(_isFollow ? 'unfollow' : 'follow')),
+              ),
+              Visibility(
+                visible: widget.user.id == widget.post.idAuthor,
+                child: PopupMenuButton(
+                  icon: const Icon(Icons.more_horiz_sharp, color: Colors.black),
+                  itemBuilder: (BuildContext bc) {
+                    List<PopupMenuItem> items = [];
+                    items.add(
+                      PopupMenuItem(
+                        child: ElevatedButton(
+                          onPressed: () => Platform.isAndroid
+                              ? displayDialogAndroid(context)
+                              : displayDialogIos(context),
+                          style: const ButtonStyle(
+                              backgroundColor:
+                                  MaterialStatePropertyAll(Colors.transparent),
+                              elevation: MaterialStatePropertyAll(0)),
+                          child: Icon(
+                            Platform.isAndroid
+                                ? Icons.cancel_outlined
+                                : Icons.close_rounded,
+                            color: const Color.fromARGB(255, 131, 10, 2),
+                            size: 30,
+                          ),
+                        ),
+                      ),
+                    );
+
+                    return items;
+                  },
                 ),
               )
             ],
@@ -203,11 +266,14 @@ class _CardScreenPostState extends State<CardScreenPost> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
               ),
-              child: Image.network(
-                '$urlBase/download/${widget.post.image}',
-                errorBuilder: (context, error, stackTrace) =>
-                    Image.asset('assets/images/image_notfound.png'),
-              ),
+              child: CachedNetworkImage(
+                  useOldImageOnUrlChange: true,
+                  placeholderFadeInDuration: const Duration(seconds: 10),
+                  placeholder: (context, url) =>
+                      Image.asset('assets/images/reload.gif'),
+                  errorWidget: (context, url, error) =>
+                      Image.asset('assets/images/image_notfound.png'),
+                  imageUrl: '$urlBase/download/${widget.post.image}'),
             ),
           ),
           Padding(

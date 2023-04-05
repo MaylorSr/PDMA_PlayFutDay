@@ -77,7 +77,8 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/fav", "/user/{idU}", "/user/changePassword", "/me",
                         "/edit/birthday", "/edit/phone", "/edit/bio", "/edit/avatar",
-                        "/user/changePassword", "/post/**", "/info/user/").hasAnyRole("USER", "ADMIN")
+                        "/user/changePassword", "/post/**", "/info/user/", "/user/follow/{id}",
+                        "/user/followers/{id}", "/user/follows/{id}").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/user", "/banUserByAdmin/{id}", "/changeRole/{id}", "/post/delete/commentary/{id}").hasRole("ADMIN")
                 .anyRequest().authenticated();
 
@@ -92,7 +93,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web -> web.ignoring().antMatchers("/h2-console/**", "/auth/register", "/auth/login", "/swagger-ui/**", "/v3/api-docs/**", "/download/{filename:.+}"));
+        return (web -> web.ignoring().antMatchers("/h2-console/**", "/auth/register", "/auth/login", "/auth/login/admin", "/swagger-ui/**", "/v3/api-docs/**", "/download/{filename:.+}"));
     }
 
 }

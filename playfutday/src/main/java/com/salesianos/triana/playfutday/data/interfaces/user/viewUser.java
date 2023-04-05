@@ -6,6 +6,10 @@ public interface viewUser {
 
     }
 
+    static class UserFollow{
+
+    }
+
     static class UserInfo extends UserResponse {
 
     }

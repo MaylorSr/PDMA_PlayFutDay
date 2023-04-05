@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:playfutday_flutter/theme/app_theme.dart';
 
@@ -103,6 +104,8 @@ class FormFieldCommentary extends StatelessWidget {
               radius: 20,
               child: ClipOval(
                 child: Image.network(
+                  width: double.infinity,
+                  fit: BoxFit.cover,
                   '$urlBase/download/${user.avatar}',
                   errorBuilder: (context, error, stackTrace) =>
                       Image.asset('assets/images/reload.gif'),
@@ -157,10 +160,15 @@ Widget buildCommentary(
           child: CircleAvatar(
             maxRadius: 20,
             child: ClipOval(
-              child: Image.network(
-                '$urlBase/download/${commentaries.authorFile}',
-                errorBuilder: (context, error, stackTrace) =>
+              child: CachedNetworkImage(
+                placeholderFadeInDuration: const Duration(seconds: 10),
+                placeholder: (context, url) =>
+                    Image.asset('assets/images/reload.gif'),
+                imageUrl: '$urlBase/download/${commentaries.authorFile}',
+                errorWidget: (context, url, error) =>
                     Image.asset('assets/images/image_notfound.png'),
+                width: double.infinity,
+                fit: BoxFit.cover,
               ),
             ),
           ),

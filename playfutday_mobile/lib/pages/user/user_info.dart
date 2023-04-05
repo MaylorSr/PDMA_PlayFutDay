@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:playfutday_flutter/blocs/follows/follow.dart';
+import 'package:playfutday_flutter/blocs/userProfile/user_profile.dart';
 import 'package:playfutday_flutter/models/infoUser.dart';
 import 'package:playfutday_flutter/models/models.dart';
 import 'package:playfutday_flutter/pages/pages.dart';
@@ -12,11 +15,12 @@ import 'package:playfutday_flutter/services/post_service/post_service.dart';
 import 'package:playfutday_flutter/services/user_service/user_service.dart';
 
 import '../../blocs/blocs.dart';
-import '../../blocs/editProfile/edit_profile.dart';
+import '../../blocs/followers/followers.dart';
 import '../../blocs/myFavPost/my_fav_Post_bloc.dart';
 import '../../blocs/postUser/post_user_bloc.dart';
 import '../../theme/app_theme.dart';
 import '../post/myFavPost/post_pageFav.dart';
+import 'option_follow.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({Key? key, this.user, required this.userLoger})
@@ -35,10 +39,7 @@ class _UserScreenState extends State<UserScreen> {
   int _view = 1; // variable para cambiar la vista entre grid y lista
 
   List<Widget> _buildGridMyPost() {
-    // lista de widgets para la vista de grid
     if (widget.user!.myPost != null) {
-      // '${urlBase}/download/${widget.user!.myPost![index].image}'
-      // agregando una validación aquí
       return List.generate(
           widget.user!.myPost!.length,
           (index) => FadeInLeft(
@@ -53,11 +54,14 @@ class _UserScreenState extends State<UserScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: Image.network(
-                      '$urlBase/download/${widget.user!.myPost![index].image}',
-                      errorBuilder: (context, error, stackTrace) =>
-                          Image.asset('assets/images/image_notfound.png'),
-                    ),
+                    child: CachedNetworkImage(
+                        placeholderFadeInDuration: const Duration(seconds: 10),
+                        placeholder: (context, url) =>
+                            Image.asset('assets/images/reload.gif'),
+                        errorWidget: (context, url, error) =>
+                            Image.asset('assets/images/image_notfound.png'),
+                        imageUrl:
+                            '$urlBase/download/${widget.user!.myPost![index].image}'),
                   ),
                 ),
               ));
@@ -66,7 +70,6 @@ class _UserScreenState extends State<UserScreen> {
     }
   }
 
-  // // ignore: unused_element
   BlocProvider _buildListMyPost() {
     // lista de widgets para la vista de lista
 
@@ -90,9 +93,23 @@ class _UserScreenState extends State<UserScreen> {
         ));
   }
 
+  Future<int> _getTotalElements() async {
+    final followerBloc =
+        FollowerBloc(UserService(), widget.user!.id.toString());
+    final totalElements = await followerBloc.getTotalElements();
+    return totalElements;
+  }
+
+  Future<int> _getTotalElementsFollows() async {
+    final followBloc = FollowBloc(UserService(), widget.user!.id.toString());
+    final totalElements = await followBloc.getTotalElements();
+    return totalElements;
+  }
+
   @override
   Widget build(BuildContext context) {
     final authBloc = BlocProvider.of<AuthenticationBloc>(context);
+    final contextProfile = context;
 
     return Scaffold(
       appBar: AppBar(
@@ -113,8 +130,8 @@ class _UserScreenState extends State<UserScreen> {
                 IconButton(
                     onPressed: () {
                       showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
+                          context: contextProfile,
+                          builder: (contextProfile) {
                             return FadeInLeft(
                               animate: true,
                               delay: const Duration(seconds: 1),
@@ -122,31 +139,15 @@ class _UserScreenState extends State<UserScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   ListTile(
-                                    leading:
-                                        const Icon(Icons.mode_edit_outlined),
-                                    title: const Text('Edit Profile'),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              MultiBlocProvider(
-                                            providers: [
-                                              BlocProvider<EditProfileBloc>(
-                                                create: (_) => EditProfileBloc(
-                                                    UserService())
-                                                  ..add(EditProfileFetched(
-                                                      widget.userLoger)),
-                                              ),
-                                            ],
-                                            child: EditProfilePageState(
-                                              user: widget.userLoger,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
+                                      leading:
+                                          const Icon(Icons.mode_edit_outlined),
+                                      title: const Text('Edit Profile'),
+                                      onTap: () {
+                                        BlocProvider.of<UserProfileBloc>(
+                                                context)
+                                            .add(EditProfileState());
+                                        Navigator.pop(context);
+                                      }),
                                   ListTile(
                                     leading: Icon(Platform.isAndroid
                                         ? Icons.close
@@ -155,7 +156,12 @@ class _UserScreenState extends State<UserScreen> {
                                     onTap: () {
                                       userService.deleteUserOrMe(
                                           widget.userLoger.id.toString());
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const LoginPage()));
+                                      Navigator.pop(context);
                                     },
                                   ),
                                   ListTile(
@@ -165,8 +171,7 @@ class _UserScreenState extends State<UserScreen> {
                                     title: const Text('Logout'),
                                     onTap: () {
                                       authBloc.add(UserLoggedOut());
-                                      Navigator.pop(
-                                          context); // Cerrar la hoja de opciones
+                                      Navigator.pop(context);
                                     },
                                   ),
                                 ],
@@ -179,12 +184,21 @@ class _UserScreenState extends State<UserScreen> {
             ),
           ),
         CircleAvatar(
+          backgroundColor: Colors.black,
           maxRadius: 50,
-          child: ClipOval(
-            child: Image.network(
-              '$urlBase/download/${widget.user!.avatar}',
-              errorBuilder: (context, error, stackTrace) =>
-                  Image.asset('assets/images/image_notfound.png'),
+          child: Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: ClipOval(
+              child: CachedNetworkImage(
+                placeholderFadeInDuration: const Duration(seconds: 15),
+                placeholder: (context, url) =>
+                    Image.asset('assets/images/reload.gif'),
+                imageUrl: '$urlBase/download/${widget.user!.avatar}',
+                errorWidget: (context, url, error) =>
+                    Image.asset('assets/images/image_notfound.png'),
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
@@ -230,38 +244,88 @@ class _UserScreenState extends State<UserScreen> {
                           ],
                         ),
                         const SizedBox(width: 20),
-                        Column(
-                          children: const [
-                            Text(
-                              '0',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colors.white),
-                            ),
-                            SizedBox(height: 5),
-                            Icon(
-                              Icons.people_alt_rounded,
-                              size: 25,
-                            )
-                          ],
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OptionFollowScreen(
+                                          id: widget.user!.id.toString(),
+                                          username:
+                                              widget.user!.username.toString(),
+                                          followersView: true,
+                                          user: widget.userLoger,
+                                        )));
+                          },
+                          child: Column(
+                            children: [
+                              FutureBuilder(
+                                future: _getTotalElements(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
+                                    return Text(
+                                      snapshot.data.toString(),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  } else {
+                                    return const CircularProgressIndicator();
+                                  }
+                                },
+                              ),
+                              const SizedBox(height: 5),
+                              const Icon(
+                                Icons.people_alt_rounded,
+                                size: 25,
+                              )
+                            ],
+                          ),
                         ),
                         const SizedBox(width: 20),
-                        Column(
-                          children: const [
-                            Text(
-                              '0',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colors.white),
-                            ),
-                            SizedBox(height: 5),
-                            Icon(
-                              Icons.people_outline_outlined,
-                              size: 25,
-                            )
-                          ],
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OptionFollowScreen(
+                                          id: widget.user!.id.toString(),
+                                          username:
+                                              widget.user!.username.toString(),
+                                          followersView: false,
+                                          user: widget.userLoger,
+                                        )));
+                          },
+                          child: Column(
+                            children: [
+                              FutureBuilder(
+                                future: _getTotalElementsFollows(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.done) {
+                                    return Text(
+                                      snapshot.data.toString(),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  } else {
+                                    return const CircularProgressIndicator();
+                                  }
+                                },
+                              ),
+                              const SizedBox(height: 5),
+                              const Icon(
+                                Icons.people_outline_outlined,
+                                size: 25,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -277,7 +341,8 @@ class _UserScreenState extends State<UserScreen> {
         ),
         Container(
           margin: const EdgeInsetsDirectional.only(start: 22),
-          child: Column(children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(
               children: [
                 const Icon(Icons.person, color: Colors.white),
@@ -336,9 +401,11 @@ class _UserScreenState extends State<UserScreen> {
                       ),
                 const SizedBox(width: 10),
                 // ignore: unnecessary_string_interpolations
-                Text(
-                  widget.user!.biography ?? '',
-                  style: const TextStyle(color: Colors.white),
+                Expanded(
+                  child: Text(
+                    widget.user!.biography ?? '',
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),
@@ -349,17 +416,16 @@ class _UserScreenState extends State<UserScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // botones para cambiar la vista entre grid y lista
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.grid_on),
+                    icon: const Icon(Icons.grid_on),
                     color: _view == 1 ? Colors.white : Colors.grey,
                     onPressed: () => setState(() => _view = 1),
                   ),
                   IconButton(
-                    icon: Icon(Icons.list),
+                    icon: const Icon(Icons.list),
                     color: _view == 2 ? Colors.white : Colors.grey,
                     onPressed: () => setState(() => _view = 2),
                   ),

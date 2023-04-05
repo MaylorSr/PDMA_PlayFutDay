@@ -5,6 +5,7 @@ import 'package:playfutday_flutter/pages/pages.dart';
 import '../../blocs/userProfile/user_profile.dart';
 import '../../models/user.dart';
 
+
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key, required this.user});
 
@@ -32,7 +33,9 @@ class _ProfileState extends State<UserProfilePage> {
               appBar: AppBar(title: const Text('Not found the user')),
             ));
           case UserProfileStatus.success:
-            return UserScreen(user: state.user, userLoger : widget.user);
+            return UserScreen(user: state.user, userLoger: widget.user);
+          case UserProfileStatus.editProfile:
+            return EditProfileScreen(user: state.user!);
           case UserProfileStatus.initial:
             return const Center(child: CircularProgressIndicator());
         }

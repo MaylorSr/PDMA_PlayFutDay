@@ -37,7 +37,7 @@ class _AllPostListState extends State<AllPostListBySearch> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 // ignore: prefer_const_literals_to_create_immutables
-                children: [
+                children: const [
                   Icon(Icons.sports_soccer, size: 50),
                   SizedBox(height: 20),
                   Text(

@@ -12,6 +12,7 @@ import com.salesianos.triana.playfutday.exception.NotPermission;
 import com.salesianos.triana.playfutday.search.page.PageResponse;
 import com.salesianos.triana.playfutday.security.jwt.access.JwtProvider;
 
+import io.swagger.v3.core.util.Json;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -27,7 +28,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -162,6 +163,7 @@ public class UserController {
                                                    @PageableDefault(size = 10, page = 0) Pageable pageable) {
         return userService.findAll(s, pageable);
     }
+
 
     @Operation(summary = "Este método obtiene los posts favoritos del usuario logeado")
     @ApiResponses(value = {
@@ -390,42 +392,80 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userP);
     }
 
-
-    @Operation(summary = "Este método lo que hace es cambiar tu contraseña")
+    @Operation(summary = "Este sirve para logear a un usuario administrador ya creado")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",
-                    description = "{Se ha cambiado la contraseña con éxito}",
+                    description = "El usuario se ha logeado correctamente y devuelto sus datos",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ChangePasswordRequest.class),
+                            schema = @Schema(implementation = LoginRequest.class),
                             examples = {@ExampleObject(
                                     value = """
                                             [
-                                                {
-                                                  "username": "wbeetham0",
-                                                  "avatar": "avatar.png",
-                                                  "enabled": true,
-                                                  "roles": [
-                                                      "ADMIN",
-                                                      "USER"
-                                                  ]
-                                                }
+                                            {
+                                                 "id": "d8825758-d02a-4bcc-8146-95fb6fa3ded7",
+                                                 "username": "bmacalester1",
+                                                 "email": "bmacalester1@hotmail.com",
+                                                 "avatar": "avatar.png",
+                                                 "phone": "3011096944",
+                                                 "birthday": "02/04/2002",
+                                                 "myPost": [
+                                                     {
+                                                         "id": 3,
+                                                         "tag": "#CR7",
+                                                         "image": "cr7.jpg",
+                                                         "uploadDate": "22/02/2023",
+                                                         "author": "bmacalester1",
+                                                         "idAuthor": "d8825758-d02a-4bcc-8146-95fb6fa3ded7",
+                                                         "authorFile": "avatar.png",
+                                                         "countLikes": 0,
+                                                         "commentaries": [
+                                                             {
+                                                                 "message": "engineer rich schemas",
+                                                                 "authorName": "cc1692e1-f031-4675-a0b1-96aeeada21aa",
+                                                                 "uploadCommentary": "22/02/2023"
+                                                             },
+                                                             {
+                                                                 "message": "monetize best-of-breed eyeballs",
+                                                                 "authorName": "abb9feac-f0ec-45cf-91a9-5d21c789da2d",
+                                                                 "uploadCommentary": "22/02/2023"
+                                                             },
+                                                             {
+                                                                 "message": "strategize cross-media deliverables",
+                                                                 "authorName": "abb9feac-f0ec-45cf-91a9-5d21c789da2d",
+                                                                 "uploadCommentary": "22/02/2023"
+                                                             }
+                                                         ]
+                                                     }
+                                                 ],
+                                                 "roles": [
+                                                     "ADMIN",
+                                                     "USER"
+                                                 ],
+                                                 "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkODgyNTc1OC1kMDJhLTRiY2MtODE0Ni05NWZiNmZhM2RlZDciLCJpYXQiOjE2NzcxMDQ2MDYsImV4cCI6MTY3NzcwOTQwNn0.rp4d6AUuMwAZC8gomYwxrEufKr_-_liNuciUo1foFlqcPwBwlHRTp3CNO7ilZtXAEpgK8UuXuqHvFpRCN7Y8_A"
+                                             }
                                             ]
                                              """
                             )}
                     )}),
             @ApiResponse(responseCode = "401",
-                    description = "No estas logeado",
-                    content = @Content),
-            @ApiResponse(responseCode = "400",
-                    description = "Estas otorgando datos erróneos",
+                    description = "No estas logeado u autenticado",
                     content = @Content)
     })
-    @PutMapping("/user/changePassword")
-    @JsonView(viewUser.UserChangeDate.class)
-    public UserResponse changePassword(@Parameter(name = "ChangePasswordRequest",
-            description = "Se debe proporcionar la contraseña antigua y las dos nuevas respectivamente", content = @Content, allowEmptyValue = true)
-                                       @Valid @RequestBody ChangePasswordRequest changePasswordRequest, @AuthenticationPrincipal User user) {
-        return userService.editPassword(user, changePasswordRequest);
+    @PostMapping("/auth/login/admin")
+    @JsonView(viewUser.UserInfo.class)
+    public ResponseEntity<UserResponse> loginAdmin(@Parameter(name = "Usuario",
+            description = "Se debe proporcionar el usuario y contraseña respectivamente para poder logearse como administrador",
+            allowEmptyValue = true, content = @Content)
+                                                   @RequestBody LoginRequest loginRequest) {
+        Authentication authentication =
+                authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String token = jwtProvider.generateToken(authentication);
+        User user = (User) authentication.getPrincipal();
+        UserResponse userP = UserResponse.fromUser(user);
+        userP.setToken(token);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userP);
     }
 
     @Operation(summary = "Este método lo que hace es cambiar tu avatar")
@@ -860,6 +900,123 @@ public class UserController {
                                     @PathVariable UUID id,
                                     @AuthenticationPrincipal User user) {
         return userService.findByIdInfoUser(id);
+    }
+
+
+    @Operation(summary = "Este método implementa seguir a un usuario o dejar de seguirlo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Se ha dado/quitado el follow al usuario destinatario",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PostResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        {
+                                            "id": "51057cde-9852-4cd5-be5e-091979495656",
+                                            "username": "wbeetham0",
+                                            "avatar": "avatar.png"
+                                        }
+                                    }
+                                    """))}),
+            @ApiResponse(responseCode = "401",
+                    description = "No estas logeado",
+                    content = @Content),
+            @ApiResponse(responseCode = "405",
+                    description = "Estas intentado hacer la petición de POST a otra distinta, ejemplo GET",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "El id del usuario destinatario a darle follow / unfollow no existe",
+                    content = @Content),
+            @ApiResponse(responseCode = "403",
+                    description = "No puedes seguirte a ti mismo",
+                    content = @Content)
+    })
+    @PostMapping("/user/follow/{id}")
+    @PreAuthorize("authentication.principal.id != #id")
+    public UserFollow updateFollowers(@PathVariable UUID id, @AuthenticationPrincipal User user) {
+        return userService.updateFollowers(user, id);
+    }
+
+
+    @Operation(summary = "Este método obtiene una lista paginada de los followers de un determinado usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha obtenido la lista paginada correctamente",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PostResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        {
+                                            "content": [
+                                                {
+                                                    "id": "d8825758-d02a-4bcc-8146-95fb6fa3ded7",
+                                                    "username": "bmacalester1",
+                                                    "avatar": "avatar.png"
+                                                }
+                                            ],
+                                            "totalPages": 1
+                                        }
+                                    }
+                                    """))}),
+            @ApiResponse(responseCode = "401",
+                    description = "No estas logeado",
+                    content = @Content),
+            @ApiResponse(responseCode = "405",
+                    description = "Estas intentado hacer la petición de POST a otra distinta, ejemplo GET",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "El id del usuario al que quieres ver los followers no existe",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "No tienes ningún seguidor en esta página o el usuario no existe ",
+                    content = @Content)
+    })
+    @GetMapping("/user/followers/{id}")
+    @JsonView(viewUser.UserFollow.class)
+    public PageResponse<UserFollow> getFollowers(@PathVariable UUID id,
+                                                 @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        return userService.getFollowers(id, pageable);
+    }
+
+
+    @Operation(summary = "Este método obtiene una lista paginada de los follows de un determinado usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha obtenido la lista paginada correctamente",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PostResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        {
+                                            "content": [
+                                                {
+                                                    "id": "d8825758-d02a-4bcc-8146-95fb6fa3ded7",
+                                                    "username": "bmacalester1",
+                                                    "avatar": "avatar.png"
+                                                }
+                                            ],
+                                            "totalPages": 1
+                                        }
+                                    }
+                                    """))}),
+            @ApiResponse(responseCode = "401",
+                    description = "No estas logeado",
+                    content = @Content),
+            @ApiResponse(responseCode = "405",
+                    description = "Estas intentado hacer la petición de POST a otra distinta, ejemplo GET",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "El id del usuario al que quieres ver los follows no existe",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "No sigues a nadie en esta página o el usuario no existe ",
+                    content = @Content)
+    })
+    @GetMapping("/user/follows/{id}")
+    @JsonView(viewUser.UserFollow.class)
+    public PageResponse<UserFollow> getFollows(@PathVariable UUID id,
+                                               @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        return userService.getFollows(id, pageable);
     }
 
 

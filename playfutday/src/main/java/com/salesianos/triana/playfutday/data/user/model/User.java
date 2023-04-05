@@ -1,7 +1,6 @@
 package com.salesianos.triana.playfutday.data.user.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.user.database.EnumSetUserRoleConverter;
 import lombok.AllArgsConstructor;
@@ -33,6 +32,14 @@ import java.util.stream.Collectors;
 @NamedEntityGraph(
         name = "user_with_posts",
         attributeNodes = @NamedAttributeNode(value = "myPost"))
+@NamedEntityGraph(
+        name = "user_with_follows",
+        attributeNodes = @NamedAttributeNode(value = "follows"))
+
+@NamedEntityGraph(
+        name = "user_with_followers",
+        attributeNodes = @NamedAttributeNode(value = "followers"))
+
 public class User implements UserDetails {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -67,6 +74,22 @@ public class User implements UserDetails {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthday;
+
+    /**
+     * Con esto evitamos que se cree una tabla adicional en H2, ya que followers usará la de follows
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_follows",
+            joinColumns = @JoinColumn(name = "user_id_followed"),
+            inverseJoinColumns = @JoinColumn(name = "follower_user_id"))
+    @Builder.Default
+    private List<User> follows = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "follows")
+    @Builder.Default
+    private List<User> followers = new ArrayList<>();
+
 
     @Builder.Default
     private boolean accountNonExpired = true;
@@ -125,4 +148,18 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
+
+    /**
+     * QUITAMOS AL USUARIO DE TODAS LAS LISTAS RELACIONADAS CON ESTE
+     */
+    @PreRemove
+    public void deleteUser() {
+        this.follows.forEach(f -> {
+            f.followers.remove(this);
+        });
+        this.followers.forEach(f -> {
+            f.follows.remove(this);
+        });
+    }
+
 }

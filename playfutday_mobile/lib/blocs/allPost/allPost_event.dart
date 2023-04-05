@@ -30,3 +30,4 @@ class SendComment extends AllPostEvent {
 }
 
 class OnRefresh extends AllPostEvent {}
+

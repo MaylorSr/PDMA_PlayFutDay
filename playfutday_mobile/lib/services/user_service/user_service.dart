@@ -1,4 +1,4 @@
-// ignore_for_file: override_on_non_overriding_member, avoid_print
+import 'dart:io';
 
 import 'package:playfutday_flutter/models/infoUser.dart';
 import 'package:playfutday_flutter/models/models.dart';
@@ -13,7 +13,7 @@ import 'package:injectable/injectable.dart';
 @singleton
 class UserService {
   // ignore: unused_field
-  late LocalStorageService _localStorageService;
+  late LocalStorageService _localStorageService = const LocalStorageService();
   late UserRepository _userRepository;
   // ignore: unused_field
 
@@ -55,6 +55,23 @@ class UserService {
     }
   }
 
+  Future<dynamic> editAvatar(File file) async {
+    String? token = _localStorageService.getFromDisk("user_token");
+    if (token != null) {
+      await _userRepository.editAvatar(token, file);
+      // ignore: avoid_print
+    }
+  }
+
+  Future<dynamic> changePassword(
+      String oldPassword, String newPassword, String confirmPassword) async {
+    String? token = _localStorageService.getFromDisk("user_token");
+    if (token != null) {
+      await _userRepository.changePassword(
+          oldPassword, newPassword, confirmPassword);
+    }
+  }
+
   Future<dynamic> editBio(String biography) async {
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
@@ -68,5 +85,32 @@ class UserService {
     if (token != null) {
       await _userRepository.editPhoneByMe(phone);
     }
+  }
+
+  Future<dynamic> addFollow(String uuid) async {
+    String? token = _localStorageService.getFromDisk("user_token");
+    if (token != null) {
+      await _userRepository.addFollow(uuid);
+    }
+  }
+
+  Future<UserFollowResponse?> getFollowers([int index = 0, uuid]) async {
+    String? token = _localStorageService.getFromDisk("user_token");
+    if (token != null) {
+      UserFollowResponse response =
+          await _userRepository.getFollowers(index, uuid);
+      return response;
+    }
+    return null;
+  }
+
+  Future<UserFollowResponse?> getFollows([int index = 0, uuid]) async {
+    String? token = _localStorageService.getFromDisk("user_token");
+    if (token != null) {
+      UserFollowResponse response =
+          await _userRepository.getFollows(index, uuid);
+      return response;
+    }
+    return null;
   }
 }

@@ -1,14 +1,17 @@
+import 'dart:io';
+
 class EditDataUser {
   String? phone;
   String? biography;
   String? birthday;
-
-  EditDataUser({this.phone, this.biography, this.birthday});
+  File? avatar;
+  EditDataUser({this.phone, this.biography, this.birthday, this.avatar});
 
   EditDataUser.fromJson(Map<String, dynamic> json) {
     phone = json['phone'];
     biography = json['biography'];
     birthday = json['birthday'];
+    avatar = json['avatar'];
   }
 
   Map<String, dynamic> toJson() {
@@ -16,6 +19,7 @@ class EditDataUser {
     data['phone'] = phone;
     data['biography'] = biography;
     data['birthday'] = birthday;
+    data['avatar'] = avatar;
     return data;
   }
 }
