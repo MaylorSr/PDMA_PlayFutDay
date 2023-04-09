@@ -159,7 +159,7 @@ public class UserController {
     @GetMapping("/user")
     @JsonView(viewUser.UserDetailsByAdmin.class)
     public PageResponse<UserResponse> findAllUsers(@RequestParam(value = "s", defaultValue = "") String s,
-                                                   @PageableDefault(size = 10, page = 0) Pageable pageable) {
+                                                   @PageableDefault(size = 5, page = 0) Pageable pageable) {
         return userService.findAll(s, pageable);
     }
 
