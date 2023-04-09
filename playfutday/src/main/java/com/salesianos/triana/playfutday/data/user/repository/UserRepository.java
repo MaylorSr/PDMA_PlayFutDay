@@ -41,6 +41,7 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
     boolean existsUserByFollow(@Param("user_log_id") UUID user_log_id, @Param("userId") UUID userId);
 
     boolean existsByEmailIgnoreCase(String s);
+    boolean existsByUsernameIgnoreCase(String s);
 
     boolean existsByPhoneIgnoreCase(String s);
 

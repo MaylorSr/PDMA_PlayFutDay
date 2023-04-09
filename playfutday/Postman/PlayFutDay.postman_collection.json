@@ -26,7 +26,7 @@
 							"query": [
 								{
 									"key": "s",
-									"value": "tag:MESSI",
+									"value": "tag:MESS",
 									"disabled": true
 								},
 								{
@@ -78,14 +78,14 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/post/like/13",
+							"raw": "{{baseUrl}}/post/like/1",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"post",
 								"like",
-								"13"
+								"1"
 							]
 						}
 					},
@@ -106,14 +106,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/post/commentary/20",
+							"raw": "{{baseUrl}}/post/commentary/1",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"post",
 								"commentary",
-								"20"
+								"1"
 							]
 						}
 					},
@@ -165,7 +165,7 @@
 								{
 									"key": "image",
 									"type": "file",
-									"src": "/C:/Users/User/Downloads/5842fe0ea6515b1e0ad75b3c.png"
+									"src": "/C:/Users/User/OneDrive/Imágenes/Capturas de pantalla/Captura de pantalla (679).png"
 								},
 								{
 									"key": "post",
@@ -257,7 +257,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"maylor\",\n    \"email\": \"maylor@gmail.com\",\n    \"phone\": \"609835692\",\n    \"password\":\"Maylor15\",\n    \"verifyPassword\":\"Maylor15\"\n}",
+							"raw": "{\n    \"username\": \"maylor\",\n    \"email\": \"maylorbustamante2001@gmail.com\", \n    \"phone\": \"609835692\",\n    \"password\":\"Maylor15\",\n    \"verifyPassword\":\"Maylor15\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -494,7 +494,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"phone\":\"608991658\"\r\n}",
+							"raw": "{\r\n    \"phone\":\"608991657\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -531,7 +531,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"birthday\": \"10/12/2009\"\r\n}",
+							"raw": "{\r\n    \"birthday\": \"10/12/2023\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -606,6 +606,105 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "UPDATE FOLLOW",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/follow/{{id_user}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"follow",
+								"{{id_user}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET ALL FOLLOWERS",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/followers/{{id_user}}?page=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"followers",
+								"{{id_user}}"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET FOLLOWS",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/follows/d8825758-d02a-4bcc-8146-95fb6fa3ded7?page=0",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"follows",
+								"d8825758-d02a-4bcc-8146-95fb6fa3ded7"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -628,14 +727,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/post/user/3/user/d8825758-d02a-4bcc-8146-95fb6fa3ded7",
+							"raw": "{{baseUrl}}/post/user/4/user/d8825758-d02a-4bcc-8146-95fb6fa3ded7",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"post",
 								"user",
-								"3",
+								"4",
 								"user",
 								"d8825758-d02a-4bcc-8146-95fb6fa3ded7"
 							]
@@ -921,6 +1020,25 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "VERIFY CODE TO REGISTER",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/auth/verifyCode/271059",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"verifyCode",
+						"271059"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -968,6 +1086,10 @@
 			"key": "username",
 			"value": "hpitt2",
 			"type": "string"
+		},
+		{
+			"key": "id_user",
+			"value": "51057cde-9852-4cd5-be5e-091979495656"
 		}
 	]
 }

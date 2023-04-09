@@ -14,6 +14,7 @@ import com.salesianos.triana.playfutday.data.user.repository.UserRepository;
 import com.salesianos.triana.playfutday.exception.GlobalEntityListNotFounException;
 import com.salesianos.triana.playfutday.exception.GlobalEntityNotFounException;
 import com.salesianos.triana.playfutday.exception.NotPermission;
+import com.salesianos.triana.playfutday.exception.UserExistsException;
 import com.salesianos.triana.playfutday.search.page.PageResponse;
 import com.salesianos.triana.playfutday.search.spec.GenericSpecificationBuilder;
 import com.salesianos.triana.playfutday.search.util.SearchCriteria;
@@ -54,7 +55,7 @@ public class UserService {
                 .username(createUserRequest.getUsername())
                 .avatar("avatar.png")
                 .email(createUserRequest.getEmail())
-                .password(passwordEncoder.encode(createUserRequest.getPassword()))
+                .password(createUserRequest.getPassword())
                 .phone(createUserRequest.getPhone())
                 .roles(roles)
                 .build();
@@ -116,7 +117,12 @@ public class UserService {
     }
 
     public User createUserWithUserRole(UserRequest createUserRequest) {
-        return createUser(createUserRequest, EnumSet.of(UserRole.USER));
+        if (!userRepository.existsByUsernameIgnoreCase(createUserRequest.getUsername())) {
+            return createUser(createUserRequest, EnumSet.of(UserRole.USER));
+        } else {
+            throw new UserExistsException("The user already exists!");
+        }
+
     }
 
 
@@ -200,6 +206,10 @@ public class UserService {
 
     public boolean userExistsEmail(String s) {
         return userRepository.existsByEmailIgnoreCase(s);
+    }
+
+    public boolean userExistsUserName(String s) {
+        return userRepository.existsByUsernameIgnoreCase(s);
     }
 
     public boolean userPhoneUnique(String s) {

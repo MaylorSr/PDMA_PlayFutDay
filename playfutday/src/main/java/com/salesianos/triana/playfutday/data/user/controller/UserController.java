@@ -5,6 +5,8 @@ import com.salesianos.triana.playfutday.data.files.exception.StorageException;
 import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
 import com.salesianos.triana.playfutday.data.interfaces.user.viewUser;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
+import com.salesianos.triana.playfutday.data.termporalUser.model.TemporalUser;
+import com.salesianos.triana.playfutday.data.termporalUser.services.TemporalUserService;
 import com.salesianos.triana.playfutday.data.user.dto.*;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.service.UserService;
@@ -53,8 +55,39 @@ public class UserController {
     private final AuthenticationManager authManager;
     private final JwtProvider jwtProvider;
 
+    private final TemporalUserService temporalUserService;
 
-    @Operation(summary = "Este método crea un nuevo usuario")
+
+    @Operation(summary = "Este método crea envia un código de verificación al email del usuario para poder crear su cuenta")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha enviado correctamente el código de verifiación",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = UserRequest.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "The code was send to email: maylorbustamante2001@gmail.com, please review your email or spam email."
+                                    }
+                                    """))}),
+            @ApiResponse(responseCode = "400",
+                    description = "No se han introducidos los datos correctamente o el email no existe. Observa la lista de errores",
+                    content = @Content),
+            @ApiResponse(responseCode = "401",
+                    description = "Haz intentado realizar la petición borrando un atributo del post",
+                    content = @Content),
+            @ApiResponse(responseCode = "405",
+                    description = "Estas intentado hacer la petición de POST a otra distinta, ejemplo GET",
+                    content = @Content),
+    })
+    @PostMapping("/auth/register")
+    public ResponseEntity<String> createUserWithCode(@Valid @RequestBody @Parameter(name = "UserRequest",
+            description = "La información del usuario que se va a crear")
+                                                     UserRequest createUserRequest) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(temporalUserService.SendCodeToEmail(createUserRequest));
+    }
+
+    @Operation(summary = "Este método crea la cuenta de un usuario")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",
                     description = "Se ha creado un nuevo usuario",
@@ -70,7 +103,7 @@ public class UserController {
                                     }
                                     """))}),
             @ApiResponse(responseCode = "400",
-                    description = "No se han introducidos los datos correctamente. Observa la lista de errores",
+                    description = "El código introducido no pertenece a ningún usuario o es incorrecto",
                     content = @Content),
             @ApiResponse(responseCode = "401",
                     description = "Haz intentado realizar la petición borrando un atributo del post",
@@ -79,10 +112,15 @@ public class UserController {
                     description = "Estas intentado hacer la petición de POST a otra distinta, ejemplo GET",
                     content = @Content),
     })
-    @PostMapping("/auth/register")
+
+    @PostMapping("/auth/verifyCode/{code}")
     @JsonView(viewUser.UserResponse.class)
-    public ResponseEntity<UserResponse> createUserWithUserRole(@Valid @RequestBody @Parameter(name = "UserRequest", description = "La información del usuario que se va a crear") UserRequest createUserRequest) {
-        User user = userService.createUserWithUserRole(createUserRequest);
+    public ResponseEntity<UserResponse> createUserWithUserRole(
+            @Parameter(name = "CODE", description = "Se debe proporcionar el código que se le ha enviado a la email del usuario para crear la cuenta",
+                    allowEmptyValue = true
+            ) @PathVariable String code) {
+
+        User user = userService.createUserWithUserRole(temporalUserService.verifyCode(code));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
     }

@@ -6,6 +6,7 @@ import com.salesianos.triana.playfutday.error.model.impl.ApiValidationSubError;
 import com.salesianos.triana.playfutday.exception.GlobalEntityListNotFounException;
 import com.salesianos.triana.playfutday.exception.GlobalEntityNotFounException;
 import com.salesianos.triana.playfutday.exception.NotPermission;
+import com.salesianos.triana.playfutday.exception.UserExistsException;
 import com.salesianos.triana.playfutday.security.errorhandling.JwtTokenException;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpHeaders;
@@ -106,6 +107,13 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
         return (buildApiError("The user is not authenticated", request, HttpStatus.UNAUTHORIZED));
     }
+
+    @ExceptionHandler({UserExistsException.class})
+    public ResponseEntity<?> userExistsException(UserExistsException ex, WebRequest request) {
+        return (buildApiError(ex.getMessage(), request, HttpStatus.BAD_REQUEST));
+
+    }
+
 
     @ExceptionHandler({StorageException.class})
     public ResponseEntity<?> storageFileEmpty(WebRequest request) {
