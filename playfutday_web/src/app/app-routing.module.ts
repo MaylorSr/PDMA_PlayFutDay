@@ -6,6 +6,7 @@ import { AccessGuard } from './access.guard';
 import { NoRoleComponent } from './views/no-role/no-role.component';
 import { AccessLoginGuard } from './access-login.guard';
 import { AccessDeniedGuard } from './access-denied.guard';
+import { ListUserComponent } from './views/list-user/list-user.component';
 const routes: Routes = [
   {
     path: '',
@@ -25,6 +26,7 @@ const routes: Routes = [
     canActivate: [AccessGuard],
     children: [
       { path: 'dashboard', component: DashboardComponent },
+      { path: 'list-user', component: ListUserComponent },
       { path: '', redirectTo: '/playfutday/dashboard', pathMatch: 'full' },
       { path: '**', redirectTo: 'dashboard', pathMatch: 'full' },
     ],

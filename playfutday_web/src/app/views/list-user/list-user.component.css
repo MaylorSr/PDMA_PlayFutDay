@@ -1,0 +1,25 @@
+#container-dash {
+  background-color: rgb(92, 89, 89);
+}
+
+table {
+  width: 100%;
+}
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+td,
+th {
+  width: 25%;
+  text-align: justify;
+}
+
+.avatar-img {
+  width: 50px; /* ajusta el tamaño de la imagen según lo que necesites */
+  height: 50px;
+  border-radius: 50%; /* hace que la imagen sea circular */
+  object-fit: cover; /* hace que la imagen se ajuste al tamaño del contenedor */
+}

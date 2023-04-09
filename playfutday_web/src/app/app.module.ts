@@ -17,6 +17,7 @@ import { UserDropdownComponent } from './components/dropdwons/user-dropdown/user
 import { TopBarComponent } from './components/top-bar/top-bar.component';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { NoRoleComponent } from './views/no-role/no-role.component';
+import { ListUserComponent } from './views/list-user/list-user.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { NoRoleComponent } from './views/no-role/no-role.component';
     UserDropdownComponent,
     TopBarComponent,
     DashboardComponent,
-    NoRoleComponent
+    NoRoleComponent,
+    ListUserComponent
   ],
   imports: [
     BrowserModule,

@@ -13,7 +13,18 @@
   />
 
   <mat-nav-list fxFlex="50">
-    <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
+    <a
+      mat-list-item
+      [routerLink]="['/playfutday/dashboard']"
+      class="text-xs uppercase py-3 font-bold block"
+      routerLinkActive
+      #playfutdayDashboard="routerLinkActive"
+      [ngStyle]="{
+        'background-color': playfutdayDashboard.isActive
+          ? 'black'
+          : 'transparent'
+      }"
+    >
       <mat-icon>dashboard</mat-icon>
       <span>Dashboard</span>
     </a>
@@ -21,7 +32,18 @@
       <mat-icon>flag</mat-icon>
       <span>Post</span>
     </a>
-    <a mat-list-item routerLink="/users" routerLinkActive="active">
+    <a
+      mat-list-item
+      [routerLink]="['/playfutday/list-user']"
+      class="text-xs uppercase py-3 font-bold block"
+      routerLinkActive
+      #playfutdayListUser="routerLinkActive"
+      [ngStyle]="{
+        'background-color': playfutdayListUser.isActive
+          ? 'black'
+          : 'transparent'
+      }"
+    >
       <mat-icon>people</mat-icon>
       <span>Users</span>
     </a>
