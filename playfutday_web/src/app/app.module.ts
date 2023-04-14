@@ -18,6 +18,11 @@ import { TopBarComponent } from './components/top-bar/top-bar.component';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { NoRoleComponent } from './views/no-role/no-role.component';
 import { ListUserComponent } from './views/list-user/list-user.component';
+import { NgxSpinner, NgxSpinnerModule } from 'ngx-spinner';
+import { SureDeleteComponent } from './views/sure-delete/sure-delete.component';
+import { ListPostComponent } from './views/list-post/list-post.component';
+import { UserInfoComponent } from './views/info/user-info/user-info.component';
+import { PostInfoComponent } from './views/info/post-info/post-info.component';
 
 @NgModule({
   declarations: [
@@ -28,9 +33,14 @@ import { ListUserComponent } from './views/list-user/list-user.component';
     TopBarComponent,
     DashboardComponent,
     NoRoleComponent,
-    ListUserComponent
+    ListUserComponent,
+    SureDeleteComponent,
+    ListPostComponent,
+    UserInfoComponent,
+    PostInfoComponent
   ],
   imports: [
+    NgxSpinnerModule,
     BrowserModule,
     AppRoutingModule,
     FlexLayoutModule,

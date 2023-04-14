@@ -7,6 +7,9 @@ import { NoRoleComponent } from './views/no-role/no-role.component';
 import { AccessLoginGuard } from './access-login.guard';
 import { AccessDeniedGuard } from './access-denied.guard';
 import { ListUserComponent } from './views/list-user/list-user.component';
+import { ListPostComponent } from './views/list-post/list-post.component';
+import { UserInfoComponent } from './views/info/user-info/user-info.component';
+import { PostInfoComponent } from './views/info/post-info/post-info.component';
 const routes: Routes = [
   {
     path: '',
@@ -27,6 +30,10 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'list-user', component: ListUserComponent },
+      { path: 'list-post', component: ListPostComponent },
+      { path: 'user-info/:id', component: UserInfoComponent },
+      { path: 'post-info/:id', component: PostInfoComponent },
+
       { path: '', redirectTo: '/playfutday/dashboard', pathMatch: 'full' },
       { path: '**', redirectTo: 'dashboard', pathMatch: 'full' },
     ],

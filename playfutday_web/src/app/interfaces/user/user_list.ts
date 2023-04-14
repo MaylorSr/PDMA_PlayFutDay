@@ -1,6 +1,7 @@
 export interface UserListResponse {
   content: UserResponse[];
   totalPages: number;
+  totalElements: number;
 }
 
 export interface UserResponse {

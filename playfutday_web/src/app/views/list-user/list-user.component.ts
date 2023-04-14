@@ -1,10 +1,20 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { delay, switchMap } from 'rxjs';
 import { UserService } from 'src/app/_services/user.service';
 import { environment } from 'src/app/environments/environment.prod';
 import { UserResponse } from 'src/app/interfaces/user/user_list';
+import { SureDeleteComponent } from '../sure-delete/sure-delete.component';
 
 @Component({
   selector: 'app-list-user',
@@ -19,24 +29,48 @@ export class ListUserComponent implements OnInit, AfterViewInit {
     'create_account',
     'state',
     'roles',
+    'actions',
   ];
   dataSource!: MatTableDataSource<UserResponse>;
-  pageActual = 1;
-
+  message: string = '';
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   @ViewChild(MatSort)
   sort!: MatSort;
+  error: boolean = false;
 
   users: UserResponse[] = [];
+  pageIndex = 0;
 
   totalPages: number = 0;
-
+  totalElements: number = 0;
   ngOnInit(): void {
-    this.showListUser(0);
+    this.showListUser(this.pageIndex);
   }
 
-  constructor(private userService: UserService) {
+  nextPageUsers() {
+    if (this.pageIndex < this.totalPages - 1) {
+      this.pageIndex++;
+      this.showListUser(this.pageIndex);
+    }
+  }
+
+  backPageUsers() {
+    if (this.pageIndex > 0) {
+      this.pageIndex--;
+      this.showListUser(this.pageIndex);
+    }
+  }
+
+  constructor(
+    public dialog: MatDialog,
+    private userService: UserService,
+    private spinner: NgxSpinnerService
+  ) {
+    this.spinner.show();
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 600);
     this.dataSource = new MatTableDataSource<UserResponse>();
   }
 
@@ -46,13 +80,23 @@ export class ListUserComponent implements OnInit, AfterViewInit {
   }
 
   showListUser(page: number) {
-    this.userService.getListPeople(this.pageActual).subscribe((u) => {
-      this.users = u.content;
-      this.dataSource.data = this.users;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.totalPages = u.totalPages;
-    });
+    this.userService
+      .getListPeople(page)
+      .pipe(delay(600))
+      .subscribe({
+        next: (u) => {
+          this.users = u.content;
+          this.dataSource.data = this.users;
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.totalElements = u.totalElements;
+          this.totalPages = u.totalPages;
+        },
+        error: (err) => {
+          this.message = err.error.message;
+          this.error = true;
+        },
+      });
   }
 
   applyFilter(event: Event) {
@@ -68,31 +112,42 @@ export class ListUserComponent implements OnInit, AfterViewInit {
     return `${environment.api_image}${user.avatar}`;
   }
 
-  nextPage() {
-    if (this.pageActual < this.totalPages) {
-      this.pageActual++;
-      this.showListUser(this.pageActual);
-    }
+  /**
+   *
+   * @param id_user id del usuario a banear
+   */
+  banUser(id_user: any) {
+    this.userService
+      .banUser(id_user)
+      .pipe(switchMap(() => this.userService.getListPeople(this.pageIndex)))
+      .subscribe(() => {
+        this.showListUser(this.pageIndex);
+      });
   }
 
-  backPage() {
-    if (this.pageActual > 1) {
-      this.pageActual--;
-      this.showListUser(this.pageActual);
-    }
+  changeRoles(id_user: any) {
+    this.userService
+      .changeRoles(id_user)
+      .pipe(switchMap(() => this.userService.getListPeople(this.pageIndex)))
+      .subscribe(() => {
+        this.showListUser(this.pageIndex);
+      });
   }
 
-  // goToNextPage() {
-  //   if (this.paginator.pageIndex <= this.totalPages) {
-  //     this.paginator.nextPage();
-  //     this.showListUser(this.paginator.pageIndex);
-  //   }
-  // }
+  
 
-  // goToPreviousPage() {
-  //   if (this.paginator.hasPreviousPage()) {
-  //     this.paginator.previousPage();
-  //     this.showListUser(this.paginator.pageIndex);
-  //   }
-  // }
+  openDialogDelete(
+    enterAnimationDuration: string,
+    exitAnimationDuration: string,
+    user: UserResponse
+  ) {
+    this.dialog.open(SureDeleteComponent, {
+      width: '250px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+      data: {
+        dataInfo: user,
+      },
+    });
+  }
 }
