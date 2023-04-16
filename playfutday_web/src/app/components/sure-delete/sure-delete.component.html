@@ -1,0 +1,14 @@
+<mat-dialog-content style="text-align: center">
+  <p>Are you sure to delete this {{ typeData }} {{ dataName }}?</p>
+</mat-dialog-content>
+<mat-dialog-actions style="justify-content: space-between">
+  <button mat-raised-button tabindex="1" (click)="closeDialog()">Cancel</button>
+  <button
+    mat-raised-button
+    mat-dialog-close
+    tabindex="-1"
+    (click)="deleteType()"
+  >
+    <mat-icon style="color: brown">delete</mat-icon>Delete
+  </button>
+</mat-dialog-actions>

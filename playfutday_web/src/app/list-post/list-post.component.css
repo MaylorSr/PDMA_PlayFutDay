@@ -1,0 +1,31 @@
+.parent-container {
+  height: 600px;
+  display: flex;
+  margin-top: 2em;
+  padding: 1em;
+  flex-direction: column;
+  background-color: white;
+}
+.first-container {
+  height: 670px;
+  background-color: rgba(162, 214, 238, 0.699);
+  padding: 1em;
+}
+.filter-container {
+  text-align: end;
+  flex: 1;
+}
+.actions {
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: space-between;
+}
+.new-post-container {
+  margin-bottom: 1em;
+  flex: 1;
+}
+
+.table-container {
+  flex-grow: 1;
+  overflow-y: auto;
+}

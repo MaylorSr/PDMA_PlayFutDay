@@ -133,7 +133,7 @@ public class PostController {
     @JsonView({viewPost.PostResponse.class})
     public PageResponse<PostResponse> findAllPost(
             @RequestParam(value = "s", defaultValue = "") String s,
-            @PageableDefault(size = 10, page = 0) Pageable pageable) {
+            @PageableDefault(size = 20, page = 0) Pageable pageable) {
         return postService.findAllPost(s, pageable);
     }
 

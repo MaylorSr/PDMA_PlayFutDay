@@ -1,0 +1,37 @@
+<nav
+  class="navbar navbar-expand-lg navbar-transparent navbar-absolute bg-primary fixed-top"
+>
+  <div class="container-fluid">
+    <div class="navbar-wrapper" style="width: 100%">
+      <div class="navbar-toggle">
+        <button type="button" class="navbar-toggler" (click)="sidebarToggle()">
+          <span class="navbar-toggler-bar bar1"></span>
+          <span class="navbar-toggler-bar bar2"></span>
+          <span class="navbar-toggler-bar bar3"></span>
+        </button>
+      </div>
+
+      <div
+        style="
+          width: 100%;
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+        "
+      >
+        <span class="navbar-brand">PlayFutDay</span>
+        <div>
+          <img
+            mat-card-image
+            [src]="showImgUser(user)"
+            onerror="this.onerror = null; 
+            this.src='https://programacion.net/files/article/20161110041116_image-not-found.png'"
+            alt="Photo of a user"
+            class="user-logo"
+          />
+          <span>{{ user.username }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
