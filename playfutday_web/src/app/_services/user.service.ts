@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../environments/environment.prod';
 import { UserLog } from '../interfaces/user/user_log';
 import { UserListResponse, UserResponse } from '../interfaces/user/user_list';
+import { environment } from '../../environments/environment.prod';
+// import { environment } from '../../environments/environment';
 
 const API_URL = environment.api_hosting + '/';
 

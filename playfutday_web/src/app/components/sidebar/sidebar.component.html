@@ -1,0 +1,28 @@
+<div class="logo">
+  <div class="logo-img">
+    <img src="./assets/img/balon_futbol.jpg" />
+  </div>
+</div>
+<div class="sidebar-wrapper">
+  <ul class="nav">
+    <li
+      routerLinkActive="active"
+      *ngFor="let menuItem of menuItems"
+      class="{{ menuItem.class }} nav-item"
+    >
+      <a [routerLink]="[menuItem.path]">
+        <i class="now-ui-icons {{ menuItem.icon }}"></i>
+        <p>{{ menuItem.title }}</p>
+      </a>
+    </li>
+    <button
+      mat-icon-button
+      color="primary"
+      style="width: 100%; text-align: center"
+      (click)="logout()"
+      >
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  </ul>
+</div>
