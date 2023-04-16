@@ -1,0 +1,67 @@
+<div class="panel-header panel-header-sm"></div>
+<div class="main-content" style="background-color: gray">
+  <div class="first-container">
+    <div class="parent-container">
+      <div class="alert success" *ngIf="hide">
+        
+        <strong>Error: </strong> {{ errorMessage }}
+      </div>
+      <h3
+        style="
+          text-align: center;
+          font-size: 25px;
+          color: brown;
+          margin-top: 1em;
+        "
+      >
+        NEW POST
+      </h3>
+
+      <div class="example-container">
+        <div>
+          <mat-label>Tag</mat-label>
+          <mat-form-field hintLabel="Max 50 characters" appearance="fill">
+            <mat-label>Enter a tag for your post</mat-label>
+            <input matInput maxlength="50" #tag placeholder="Ex. Cr7" />
+            <mat-hint align="end">{{ tag.value.length }}/50</mat-hint>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-label>Description</mat-label>
+          <mat-form-field hintLabel="Max 200 characters" appearance="fill">
+            <mat-label>Enter a short description for your post</mat-label>
+            <input
+              matInput
+              #description
+              maxlength="200"
+              placeholder="Ex. This is my first post!"
+            />
+            <mat-hint align="end">{{ description.value.length }}/200</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="file-container">
+        <input
+          type="file"
+          class="file-input"
+          (change)="getFile($event)"
+          #fileInput
+        />
+        <img
+          #fileImage
+          class="file-image"
+          [src]="imageUrl || '/assets/img/upload.jpg'"
+          alt="File of a post that selected"
+        />
+      </div>
+      <button
+        mat-raised-button
+        color="danger"
+        class="update_post"
+        (click)="updatePost()"
+      >
+        Publish
+      </button>
+    </div>
+  </div>
+</div>

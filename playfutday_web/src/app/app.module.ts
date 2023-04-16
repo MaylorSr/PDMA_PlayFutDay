@@ -1,42 +1,39 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { HttpClientModule } from "@angular/common/http";
+import { RouterModule } from "@angular/router";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { ToastrModule } from "ngx-toastr";
 
-import { AppRoutingModule } from './app-routing.module';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
-import { MaterialsImportModule } from './materials-import/materials-import.module';
+import { AppRoutingModule } from "./app.routing";
+import { ComponentsModule } from "./components/components.module";
 
-import { authInterceptorProviders } from './_helpers/auth.interceptor';
-import { LoginComponent } from './views/auth/login/login.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { NavBarComponent } from './components/nav-bar/nav-bar.component';
-import { UserDropdownComponent } from './components/dropdwons/user-dropdown/user-dropdown.component';
-import { TopBarComponent } from './components/top-bar/top-bar.component';
-import { DashboardComponent } from './views/dashboard/dashboard.component';
-import { NoRoleComponent } from './views/no-role/no-role.component';
+import { AppComponent } from "./app.component";
+
+import { AdminLayoutComponent } from "./layouts/admin-layout/admin-layout.component";
+import { MaterialsImportModule } from "./materials-import/materials-import.module";
+import { authInterceptorProviders } from "./_helpers/auth.interceptor";
+import { LoginComponent } from "./login/login.component";
+import { NoRoleComponent } from "./no-role/no-role.component";
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    NavBarComponent,
-    UserDropdownComponent,
-    TopBarComponent,
-    DashboardComponent,
-    NoRoleComponent
-  ],
   imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FlexLayoutModule,
+    BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
+    ComponentsModule,
+    RouterModule,
     MaterialsImportModule,
-    BrowserAnimationsModule,
-    Ng2SearchPipeModule,
+    AppRoutingModule,
+    NgbModule,
+    ToastrModule.forRoot(),
+  ],
+  declarations: [
+    AppComponent,
+    AdminLayoutComponent,
+    LoginComponent,
+    NoRoleComponent,
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent],
