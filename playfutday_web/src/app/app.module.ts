@@ -16,12 +16,15 @@ import { MaterialsImportModule } from "./materials-import/materials-import.modul
 import { authInterceptorProviders } from "./_helpers/auth.interceptor";
 import { LoginComponent } from "./login/login.component";
 import { NoRoleComponent } from "./no-role/no-role.component";
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+
 
 @NgModule({
   imports: [
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
+    NgxChartsModule,
     ComponentsModule,
     RouterModule,
     MaterialsImportModule,
