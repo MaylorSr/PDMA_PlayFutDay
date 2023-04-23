@@ -1,6 +1,8 @@
 package com.salesianos.triana.playfutday.data.user.service;
 
 
+import com.salesianos.triana.playfutday.data.commentary.dto.CommentaryResponse;
+import com.salesianos.triana.playfutday.data.commentary.model.Commentary;
 import com.salesianos.triana.playfutday.data.files.exception.StorageException;
 import com.salesianos.triana.playfutday.data.files.service.FileSystemStorageService;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
@@ -8,6 +10,8 @@ import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
 import com.salesianos.triana.playfutday.data.post.service.PostService;
 import com.salesianos.triana.playfutday.data.user.dto.*;
+import com.salesianos.triana.playfutday.data.user.interfaces.IUserResponseCreated;
+import com.salesianos.triana.playfutday.data.user.interfaces.IUserResponseEnabled;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.model.UserRole;
 import com.salesianos.triana.playfutday.data.user.repository.UserRepository;
@@ -19,7 +23,6 @@ import com.salesianos.triana.playfutday.search.page.PageResponse;
 import com.salesianos.triana.playfutday.search.spec.GenericSpecificationBuilder;
 import com.salesianos.triana.playfutday.search.util.SearchCriteria;
 import com.salesianos.triana.playfutday.search.util.SearchCriteriaExtractor;
-import com.sun.tools.jconsole.JConsolePlugin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,7 +32,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.naming.AuthenticationException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.EnumSet;
@@ -249,6 +251,41 @@ public class UserService {
         return res;
     }
 
+    public List<CommentaryResponse> getLast3CommentariesOfUser(String id) {
+        /**CASTEAMOS DE STRING A UUID PARA BUSCAR AL USUARIO**/
+        userRepository.findById(UUID.fromString(id)).orElseThrow(() -> new GlobalEntityNotFounException("The user with that id not exits"));
+        List<Commentary> commentaryList = userRepository.geLastsComments(id);
+
+        if (commentaryList.isEmpty()) {
+            throw new GlobalEntityListNotFounException("This user not have any comments");
+        }
+        return commentaryList.stream().map(CommentaryResponse::of).toList();
+    }
+
+    public List<IUserResponseEnabled> getAllUserState() {
+
+        /**
+         * EN TEORÍA SIEMPRE EXISTIRÁ UN USUARIO QUE SERÁ EL ADMIN, AUNQUE SEA 1 EN LA BD, EN CASO DE QUE NO, AÑADIMOS EXCEPCIÓN.
+         */
+        List<IUserResponseEnabled> enabledList = userRepository.getUsersState();
+
+        if (enabledList.isEmpty()) {
+            throw new GlobalEntityListNotFounException("Not found any users in data base");
+        }
+        return enabledList;
+    }
+
+    public List<IUserResponseCreated> getListUsersByYear(int year) {
+
+        List<IUserResponseCreated> createdList = userRepository.getUsersByMonthAndYear(year);
+
+        if (createdList.isEmpty() || LocalDateTime.now().getYear() < year) {
+            throw new GlobalEntityListNotFounException("Any user was created in this year, select a correct year");
+        }
+
+        return createdList;
+    }
+
     /**
      * PAGINACION AHORA DE LOS FOLLOWS
      *
@@ -275,9 +312,10 @@ public class UserService {
         return res;
     }
 
-    public UserFollow updateFollowers(User user, UUID id) {
+    public String updateFollowers(User user, UUID id) {
         return userRepository.findById(id)
                 .map(userDestination -> {
+                    String message = "";
                     boolean exists = userRepository.existsUserByFollow(user.getId(), id);
                     /**
                      * Siempre se va a encontrar el usuario ya que se requiere de Login y en el otro caso antes de entrar
@@ -289,14 +327,17 @@ public class UserService {
                     if (!exists) {
                         act.getFollows().add(des);
                         des.getFollowers().add(act);
+                        message = String.format("Now, you follow at @%s", userDestination.getUsername());
                     } else {
                         act.getFollows().remove(des);
                         des.getFollowers().remove(act);
+                        message = String.format("Now, you unfollow at @%s", userDestination.getUsername());
                     }
                     userRepository.save(des);
                     userRepository.save(act);
-
-                    return UserFollow.of(userDestination);
+                    //SE ENVÍA UN MENSAJE BÁSICAMENTE PORQUE LA RESPUESTA NO ES NECESARIA EN EL MOBILE, ADEMÁS PARA QUE SÓLO SEA INFORMATIVO EN
+                    //EN EL POSTMAN.
+                    return message;
                 })
                 .orElseThrow(() -> new GlobalEntityNotFounException("The user not found"));
     }

@@ -1,16 +1,28 @@
 package com.salesianos.triana.playfutday.data.interfaces.user;
 
+import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
+import com.salesianos.triana.playfutday.data.user.model.User;
+
 public interface viewUser {
 
     static class UserResponse {
 
     }
 
-    static class UserFollow{
+    static class UserDetailsViewWeb extends UserResponse {
 
     }
 
+    static class BanUserViewWeb extends UserResponse {
+    }
+
+
     static class UserInfo extends UserResponse {
+
+    }
+
+    static class UserFollow {
+
 
     }
 
@@ -18,11 +30,8 @@ public interface viewUser {
 
     }
 
-    static class UserChangeDate {
 
-    }
-
-    static class editProfile{
+    static class editProfile {
 
     }
 

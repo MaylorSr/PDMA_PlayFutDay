@@ -4,11 +4,24 @@ public interface viewPost {
     static class PostResponse {
     }
 
-    static class PostAdmin extends PostResponse {
+    /**
+     * VISTA MÓVIL
+     **/
+    static class PostViewMobile extends PostResponse {
 
     }
 
-    static class PostLikeMe {
+    static class PostViewMobileLike extends PostResponse {
+
     }
+
+
+    /**
+     * VISTA WEB
+     */
+    static class PostDetailsAngular extends PostResponse {
+
+    }
+
 
 }

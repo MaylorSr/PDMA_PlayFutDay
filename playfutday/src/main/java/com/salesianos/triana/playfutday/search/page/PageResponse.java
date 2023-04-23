@@ -17,17 +17,17 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 
 public class PageResponse<T> {
-    @JsonView({viewUser.UserDetailsByAdmin.class, viewPost.PostResponse.class, viewPost.PostLikeMe.class, viewUser.UserFollow.class})
+    @JsonView({viewUser.UserDetailsViewWeb.class, viewPost.PostDetailsAngular.class, viewUser.UserDetailsByAdmin.class, viewPost.PostResponse.class, viewUser.UserFollow.class})
     private List<T> content;
 
     private boolean last;
 
     private boolean first;
-    @JsonView({viewUser.UserDetailsByAdmin.class, viewPost.PostResponse.class, viewPost.PostLikeMe.class, viewUser.UserFollow.class})
+    @JsonView({viewUser.UserDetailsViewWeb.class, viewPost.PostDetailsAngular.class, viewUser.UserDetailsByAdmin.class, viewPost.PostResponse.class, viewUser.UserFollow.class})
 
     private int totalPages;
 
-    @JsonView({viewUser.UserFollow.class})
+    @JsonView({viewUser.UserDetailsViewWeb.class, viewPost.PostDetailsAngular.class, viewUser.UserFollow.class})
     private Long totalElements;
 
 

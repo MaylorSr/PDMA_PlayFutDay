@@ -1,5 +1,6 @@
 package com.salesianos.triana.playfutday.data.post.repository;
 
+import com.salesianos.triana.playfutday.data.commentary.model.Commentary;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import org.springframework.data.domain.Page;
@@ -37,8 +38,27 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
             """)
     List<Post> findOnIlikePost(@Param("id") UUID id);
 
+    @Query("""
+            SELECT c FROM Post p JOIN p.commentaries c WHERE p.id =:id
+            """)
+    Page<Commentary> findAllCommentariesByPostId(@Param("id") Long id, Pageable pageable);
+
+//    @Query("""
+//            SELECT c FROM Commentary c order by c.updateCommentary asc
+//            """)
+//    Page<Commentary> findAllCommentaries(Pageable pageable);
 
 
+    @Query("""
+            SELECT COUNT(p) FROM Post p  WHERE EXTRACT(MONTH FROM p.uploadDate) = :month        
+            """)
+    int getTotalPostByMonth(@Param("month") int month);
+
+
+    @Query("""
+            SELECT COUNT(p) FROM Post p
+            """)
+    int getTotalPost();
 
 }
 

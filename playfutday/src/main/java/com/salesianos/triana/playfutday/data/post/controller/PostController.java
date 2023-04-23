@@ -2,11 +2,11 @@ package com.salesianos.triana.playfutday.data.post.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.salesianos.triana.playfutday.data.commentary.dto.CommentaryRequest;
+import com.salesianos.triana.playfutday.data.commentary.dto.CommentaryResponse;
 import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
 import com.salesianos.triana.playfutday.data.post.dto.PostRequest;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.post.service.PostService;
-import com.salesianos.triana.playfutday.data.user.dto.UserResponse;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.search.page.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +30,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -37,6 +38,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+
+    /**
+     * REQUESTS VIEW MOBILE
+     **/
+
 
     @Operation(summary = "Este método obtiene todos los posts de los usuarios")
     @ApiResponses(value = {
@@ -62,6 +68,7 @@ public class PostController {
                                                              {
                                                                  "message": "innovate intuitive models",
                                                                  "authorName": "abb9feac-f0ec-45cf-91a9-5d21c789da2d",
+                                                                 "authorFile" : "mario.jpg"
                                                                  "uploadCommentary": "23/02/2023"
                                                              }
                                                          ]
@@ -130,7 +137,7 @@ public class PostController {
             @ApiResponse(responseCode = "401", description = "No estas logeado", content = @Content)
     })
     @GetMapping("/")
-    @JsonView({viewPost.PostResponse.class})
+    @JsonView({viewPost.PostViewMobile.class})
     public PageResponse<PostResponse> findAllPost(
             @RequestParam(value = "s", defaultValue = "") String s,
             @PageableDefault(size = 10, page = 0) Pageable pageable) {
@@ -202,12 +209,16 @@ public class PostController {
             @ApiResponse(responseCode = "404", description = "La lista está vacía", content = @Content),
             @ApiResponse(responseCode = "401", description = "No estas logeado", content = @Content),
     })
+    /**
+     * ESTA PETICIÓN EN REALIDAD NO SE ESTÁ UTILIZANDO SE DEBE ELIMINAR
+     */
     @GetMapping("/user")
     @JsonView(viewPost.PostResponse.class)
-    public PageResponse<PostResponse> getAll(@PageableDefault(size = 10, page = 0) Pageable pageable,
-                                             @Parameter(name = "Usuario", description = "Se debe proporcionar " +
-                                                     "el token del usuario logeado para ver sus posts")
-                                             @AuthenticationPrincipal User user) {
+    public PageResponse<PostResponse> getAll(
+            @PageableDefault(size = 20, page = 0) Pageable pageable,
+            @Parameter(name = "Usuario", description = "Se debe proporcionar " +
+                    "el token del usuario logeado para ver sus posts")
+            @AuthenticationPrincipal User user) {
         return postService.findAllPostByUserName(user.getUsername(), pageable);
     }
 
@@ -277,7 +288,7 @@ public class PostController {
             @ApiResponse(responseCode = "401", description = "No estas logeado", content = @Content),
     })
     @GetMapping("/user/{username}")
-    @JsonView({viewPost.PostResponse.class})
+    @JsonView({viewPost.PostViewMobile.class})
     public PageResponse<PostResponse> findPostOfUser(@PageableDefault(size = 10, page = 0) Pageable pageable, @Parameter(name = "username",
             description = "Se debe proporcionar el username del usuario a buscar los posts") @PathVariable String username) {
         return postService.findAllPostByUserName(username, pageable);
@@ -368,7 +379,7 @@ public class PostController {
     })
 
     @PostMapping("/like/{id}")
-    @JsonView(viewPost.PostResponse.class)
+    @JsonView(viewPost.PostViewMobileLike.class)
     public ResponseEntity<PostResponse> saveLikeByUser(@Parameter(name = "Usuario",
             description = "Se debe proporcionar el token del usuario logeado")
                                                        @AuthenticationPrincipal User user,
@@ -382,6 +393,7 @@ public class PostController {
                 .created(createdURI)
                 .body(postWithLike);
     }
+
 
     @Operation(summary = "Este método agreaga un comentario a un post")
     @ApiResponses(value = {
@@ -404,6 +416,7 @@ public class PostController {
                                                 {
                                                     "message": "This is my first commentary here aaa!",
                                                     "authorName": "wbeetham0",
+                                                    "authorFile": "javier.jpg",
                                                     "uploadCommentary": "23/02/2023"
                                                 }
                                             ]
@@ -421,7 +434,7 @@ public class PostController {
                     content = @Content)
     })
     @PostMapping("/commentary/{id}")
-    @JsonView(viewPost.PostResponse.class)
+    @JsonView(viewPost.PostViewMobile.class)
     public ResponseEntity<PostResponse> saveCommentaryByUser(
             @Parameter(name = "CommentaryRequest", description = "Se debe de proporcionar el mensaje")
             @Valid @RequestBody CommentaryRequest request,
@@ -435,6 +448,184 @@ public class PostController {
         return ResponseEntity
                 .created(createdURI)
                 .body(newCommentaryInPost);
+    }
+
+
+    /**
+     * REQUESTS VIEW WEB
+     */
+
+
+    @Operation(summary = "Este método obtiene los detalles de un post")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Sa han devuelto los datos correctamente",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PostResponse.class),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            {
+                                                "id": 1,
+                                                "tag": "#pacheco",
+                                                "description": "RCD ESPANYOL",
+                                                "image": "PACHECO.jpg",
+                                                "uploadDate": "15/07/1998",
+                                                "author": "alejandro",
+                                                "idAuthor": "7495ac21-9cef-4655-a816-29a1eee80841",
+                                                "authorFile": "alejandro.jpg"
+                                            }                                            
+                                             """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "405",
+                    description = "Estas intentado hacer la petición de GET a otra distinta, ejemplo POST",
+                    content = @Content),
+            @ApiResponse(responseCode = "400", description = "Estas intentando pasar cuerpo a la petición que no lo requiere", content = @Content),
+            @ApiResponse(responseCode = "404", description = "El id del post no es correcto", content = @Content),
+            @ApiResponse(responseCode = "401", description = "No estas logeado", content = @Content),
+    })
+    @GetMapping("/details/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @JsonView({viewPost.PostDetailsAngular.class})
+    public PostResponse getDetailsPost(@PathVariable Long id) {
+        return postService.findDetailsPostById(id);
+    }
+
+
+    @Operation(summary = "Este método obtiene todos los comentarios de un post")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Sa han devuelto los datos correctamente de todos los comentarios de un post",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = PostResponse.class)),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            {
+                                                "content": [
+                                                    {
+                                                        "id": 45,
+                                                        "message": "Proin eu mi. Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.",
+                                                        "id_author": "7495ac21-9cef-4655-a816-29a1eee80841",
+                                                        "authorName": "alejandro",
+                                                        "post_id": 1,
+                                                        "uploadCommentary": "23/04/2023"
+                                                    },
+                                                    {
+                                                        "id": 46,
+                                                        "message": "Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.",
+                                                        "id_author": "7495ac21-9cef-4655-a816-29a1eee80841",
+                                                        "authorName": "alejandro",
+                                                        "post_id": 1,
+                                                        "uploadCommentary": "23/04/2023"
+                                                    },
+                                                    {
+                                                        "id": 52,
+                                                        "message": "Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.",
+                                                        "id_author": "681903b4-dc43-43c2-942c-86b81b15d1fc",
+                                                        "authorName": "marta",
+                                                        "post_id": 1,
+                                                        "uploadCommentary": "23/04/2023"
+                                                    }
+                                                ],
+                                                "totalPages": 1,
+                                                "totalElements": 3
+                                            }
+                                             """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "405",
+                    description = "Estas intentado hacer la petición de GET a otra distinta, ejemplo POST",
+                    content = @Content),
+            @ApiResponse(responseCode = "400", description = "Estas intentando pasar cuerpo a la petición que no lo requiere", content = @Content),
+            @ApiResponse(responseCode = "404", description = "La lista está vacía", content = @Content),
+            @ApiResponse(responseCode = "401", description = "No estas logeado", content = @Content),
+    })
+    @GetMapping("/details/{id}/commentaries")
+    @JsonView(viewPost.PostDetailsAngular.class)
+    @PreAuthorize("hasRole('ADMIN')")
+    public PageResponse<CommentaryResponse> getDetailsPostCommentaries(
+            @PageableDefault(size = 20, page = 0) Pageable pageable,
+            @PathVariable Long id) {
+        return postService.findCommentariesByPostId(pageable, id);
+    }
+
+    @Operation(summary = "Este método obtiene todos los comentarios")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Sa han devuelto los datos correctamente de todos mis posts",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = PostResponse.class)),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            [
+                                             {
+                                                "content": [
+                                                             {
+                                                                  "id": 41,
+                                                                  "message": "Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat.",
+                                                                  "id_author": "7495ac21-9cef-4655-a816-29a1eee80841",
+                                                                  "authorName": "alejandro",
+                                                                  "post_id": 17,
+                                                                  "uploadCommentary": "23/04/2023"
+                                                             },
+                                                             {
+                                                                  "id": 42,
+                                                                  "message": "Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.",
+                                                                  "id_author": "7495ac21-9cef-4655-a816-29a1eee80841",
+                                                                  "authorName": "alejandro",
+                                                                  "post_id": 9,
+                                                                  "uploadCommentary": "23/04/2023"
+                                                             },
+                                                 ],
+                                            "totalPages": 2,
+                                            "totalElements": 30                                             }
+                                            ]
+                                             """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "405",
+                    description = "Estas intentado hacer la petición de GET a otra distinta, ejemplo POST",
+                    content = @Content),
+            @ApiResponse(responseCode = "400", description = "Estas intentando pasar cuerpo a la petición que no lo requiere", content = @Content),
+            @ApiResponse(responseCode = "404", description = "La lista está vacía", content = @Content),
+            @ApiResponse(responseCode = "401", description = "No estas logeado", content = @Content),
+    })
+    @GetMapping("/all/commentaries")
+    @JsonView(viewPost.PostDetailsAngular.class)
+    @PreAuthorize("hasRole('ADMIN')")
+    public PageResponse<CommentaryResponse> getAllCommentaries(
+            @PageableDefault(size = 20, page = 0) Pageable pageable) {
+        return postService.findAllCommentaries(pageable);
+    }
+
+
+    @Operation(summary = "Este método obtiene el total de post en un mes concreto")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Se ha obtenido el total de post",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PostResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                        {
+                                            10
+                                        }
+                                    }
+                                    """))}),
+            @ApiResponse(responseCode = "401",
+                    description = "No estas logeado",
+                    content = @Content),
+            @ApiResponse(responseCode = "405",
+                    description = "Estas intentado hacer la petición de POST a otra distinta, ejemplo GET",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "El mes no existe",
+                    content = @Content)
+    })
+    @GetMapping("/total/post/{month}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public int getTotalPostByMonth(@PathVariable("month") int month) {
+        return postService.getTotalPostOfMonth(month);
     }
 
     @Operation(summary = "Este método elmina un post de un usuario")

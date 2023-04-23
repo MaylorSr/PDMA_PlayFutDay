@@ -38,12 +38,11 @@ public class Commentary {
     private LocalDate updateCommentary;
 
     @ManyToOne()
-
     @JoinColumn(name = "post_id")
     private Post post;
 
+    private String id_author;
     private String author;
-
     private String authorFile;
 
 }

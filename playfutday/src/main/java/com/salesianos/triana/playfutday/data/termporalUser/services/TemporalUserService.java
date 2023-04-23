@@ -49,18 +49,12 @@ public class TemporalUserService {
 
     public String SendCodeToEmail(UserRequest userRequest) {
         MimeMessage message = javaMailSender.createMimeMessage();
-        /**
-         * NO LANZAMOS EXCEPCIÓN POR LA LÓGICA, EN CASO DE ENCONTRARSE, SETEA EL CODIGO PARA ASÍ NO ALMACENAR UNO NUEVO
-         * YA QUE NUNCA DEBE DE HABER DOS USUARIOS CON TODO IGUAL AL NO TENER VALIDACIÓN, SOLO SIRVE PARA PODER REENVIAR EL
-         * CODIGO DE VERIFICACIÓN, EN CASO DE NO EXISTIR LO GUARDA EN LA BD.
-         */
         TemporalUser userTemporal = temporalUserRepository.findByUsername(userRequest.getUsername());
         String code = generateCode();
         if (userTemporal != null) {
             userTemporal.setCode(code);
             temporalUserRepository.save(userTemporal);
         } else {
-
             temporalUserRepository.save(
                     TemporalUser.builder()
                             .username(userRequest.getUsername())
@@ -73,25 +67,32 @@ public class TemporalUserService {
             );
         }
 
-
-        /**
-         * PARA ENVIAR EL CORREO JUNTO CON EL CODIGO
-         */
-
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             File file = storageService.loadAsResource("logo_app.png").getFile();
             helper.setFrom(email);
             helper.setTo(userRequest.getEmail());
             helper.setSubject("-- VERIFY CODE --");
-            helper.setText(String.format("Hi! %s, your code for creating your account in PlayFutDay is: %s", userRequest.getUsername(), code));
-            helper.addAttachment("PlayFutDay", file);
+            // Cuerpo del mensaje para que no sea tan soso//
+            String htmlMessage = String.format("<div style='background-color:#f5f5f5;padding:20px;font-family:Arial, sans-serif;'>" +
+                    "<h2 style='color:#2d2d2d;text-align:center;margin-top:0;'>PlayFutDay Account Verification</h2>" +
+                    "<p style='color:#2d2d2d;text-align:center;margin-bottom:40px;'>Hi, %s!</p>" +
+                    "<p style='color:#2d2d2d;'>Thank you for signing up for PlayFutDay. Your verification code is:</p>" +
+                    "<h1 style='color:#2d2d2d;text-align:center;margin-top:0;'>%s</h1>" +
+                    "<p style='color:#2d2d2d;'>Please enter this code in the app to complete your account registration.</p>" +
+                    "<p style='color:#2d2d2d;'>Thank you!</p>" +
+                    "<div style='text-align:center;'>" +
+                    "<img src='cid:logo' style='max-width:200px;margin-top:40px;'>" +
+                    "</div>" +
+                    "</div>", userRequest.getUsername(), code);
+            helper.setText(htmlMessage, true);
+            helper.addInline("logo", file);
             javaMailSender.send(message);
 
         } catch (Exception ex) {
             throw new GlobalEntityNotFounException("Please enter a correct email!");
         }
-        return String.format("The code was send to email: %s, please review your email or spam email.", userRequest.getEmail());
+        return String.format("The code was send to email: %s. Please check your message email or spam folder.", userRequest.getEmail());
     }
 
 

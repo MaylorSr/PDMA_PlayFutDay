@@ -75,11 +75,17 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                /**ROUTES FOR USER AND ADMIN**/
+
                 .antMatchers("/fav", "/user/{idU}", "/user/changePassword", "/me",
                         "/edit/birthday", "/edit/phone", "/edit/bio", "/edit/avatar",
                         "/user/changePassword", "/post/**", "/info/user/", "/user/follow/{id}",
                         "/user/followers/{id}", "/user/follows/{id}").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/user", "/banUserByAdmin/{id}", "/changeRole/{id}", "/post/delete/commentary/{id}").hasRole("ADMIN")
+                /**ROUTES FOR ADMIN**/
+
+                .antMatchers("/user", "/banUserByAdmin/{id}", "/post/details/{id}",
+                        "/post/details/{id}/commentaries", "/post/all/commentaries", "/user/list/comments/{id}", "/post/total/post/{month}",
+                        "/user/list/state/now", "/user/create/year/{year}", "/changeRole/{id}", "/post/delete/commentary/{id}").hasRole("ADMIN")
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -93,7 +99,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web -> web.ignoring().antMatchers("/h2-console/**", "/auth/register", "/auth/login", "/auth/login/admin","/auth/verifyCode/{code}", "/swagger-ui/**", "/v3/api-docs/**", "/download/{filename:.+}"));
+        return (web -> web.ignoring().antMatchers("/h2-console/**", "/auth/register", "/auth/login", "/auth/verifyCode/{code}", "/swagger-ui/**", "/v3/api-docs/**", "/download/{filename:.+}"));
     }
 
 }

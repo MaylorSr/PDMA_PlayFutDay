@@ -1,6 +1,7 @@
 package com.salesianos.triana.playfutday.data.post.service;
 
 import com.salesianos.triana.playfutday.data.commentary.dto.CommentaryRequest;
+import com.salesianos.triana.playfutday.data.commentary.dto.CommentaryResponse;
 import com.salesianos.triana.playfutday.data.commentary.model.Commentary;
 import com.salesianos.triana.playfutday.data.commentary.repository.CommentaryRepository;
 import com.salesianos.triana.playfutday.data.files.service.FileSystemStorageService;
@@ -46,6 +47,52 @@ public class PostService {
 
     public String postExists = "The list of post is empty";
 
+
+    public PostResponse findDetailsPostById(Long id) {
+        return PostResponse.of(repo.findById(id).orElseThrow(
+                () -> new GlobalEntityNotFounException("The post with that id not exits")
+        ));
+    }
+
+
+    public PageResponse<CommentaryResponse> pageableCommentary(Long id, Pageable pageable) {
+        Page<Commentary> commentariesOfOnePostById = repo.findAllCommentariesByPostId(id, pageable);
+        Page<CommentaryResponse> commentaryResponsePage =
+                new PageImpl<>
+                        (commentariesOfOnePostById.stream().toList(), pageable, commentariesOfOnePostById.getTotalPages()).map(CommentaryResponse::of);
+        return new PageResponse<>(commentaryResponsePage);
+    }
+
+    public PageResponse<CommentaryResponse> findCommentariesByPostId(Pageable pageable, Long id) {
+        Post post = repo.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("The post with that id not exits"));
+
+        PageResponse<CommentaryResponse> res = pageableCommentary(post.getId(), pageable);
+        if (res.getContent().isEmpty()) {
+            throw new GlobalEntityNotFounException("The found any commentaries in this page of the post");
+        } else {
+            return res;
+        }
+    }
+
+    public PageResponse<CommentaryResponse> pageableAllCommentary(Pageable pageable) {
+        Page<Commentary> listCommentaries = repoCommentary.findAll(pageable);
+
+        Page<CommentaryResponse> commentaryResponsePage =
+                new PageImpl<>
+                        (listCommentaries.stream().toList(), pageable, repoCommentary.findAll().size()).map(CommentaryResponse::of);
+        return new PageResponse<>(commentaryResponsePage);
+    }
+
+    public PageResponse<CommentaryResponse> findAllCommentaries(Pageable pageable) {
+        PageResponse<CommentaryResponse> res = pageableAllCommentary(pageable);
+        if (res.getContent().isEmpty()) {
+            throw new GlobalEntityNotFounException("The found any commentaries in this page");
+        } else {
+            return res;
+        }
+    }
+
+
     public PageResponse<PostResponse> findAllPost(String s, Pageable pageable) {
         List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
         PageResponse<PostResponse> res = search(params, pageable);
@@ -66,11 +113,12 @@ public class PostService {
 
     public PageResponse<PostResponse> pageablePost(String username, Pageable pageable) {
         Page<Post> postOfOneUserByUserName = repo.findAllPostOfOneUserByUserName(username, pageable);
-        Page<PostResponse> postResponsePage =
-                new PageImpl<>
-                        (postOfOneUserByUserName.stream().toList(), pageable, postOfOneUserByUserName.getTotalPages()).map(PostResponse::of);
+
+        Page<PostResponse> postResponsePage = new PageImpl<>
+                (postOfOneUserByUserName.stream().toList(), pageable, postOfOneUserByUserName.getTotalPages()).map(PostResponse::of);
         return new PageResponse<>(postResponsePage);
     }
+
 
     public PageResponse<PostResponse> search(List<SearchCriteria> params, Pageable pageable) {
         GenericSpecificationBuilder genericSpecificationBuilder = new GenericSpecificationBuilder(params);
@@ -98,10 +146,11 @@ public class PostService {
                 post -> {
                     post.getCommentaries().add(
                             Commentary.builder()
+                                    .message(request.getMessage())
                                     .post(post)
                                     .author(user.getUsername())
+                                    .id_author(user.getId().toString())
                                     .authorFile(user.getAvatar())
-                                    .message(request.getMessage())
                                     /**
                                      * Se explica en la entidad comentary el porque el LocalDate.now
                                      */
@@ -113,6 +162,17 @@ public class PostService {
         ).orElseThrow(() -> new GlobalEntityNotFounException(postExists));
     }
 
+
+    public int getTotalPostOfMonth(int month) {
+        if (month == 0) {
+            return repo.getTotalPost();
+        } else if (month > 12 || month < 0) {
+            throw new GlobalEntityNotFounException("Select one of the months between 1 and 12. Remember that 0 is for see all post");
+        }
+        return repo.getTotalPostByMonth(month);
+    }
+
+
     public PostResponse giveLikeByUser(Long id, User user) {
         return repo.findById(id).map(
                 post -> {
@@ -121,7 +181,7 @@ public class PostService {
                     if (!exists) {
                         likes.add(user);
                     } else {
-                        likes.remove(likes.indexOf(user) );
+                        likes.remove(likes.indexOf(user) + 1);
                         repo.save(post);
                     }
                     return PostResponse.of(repo.save(post));

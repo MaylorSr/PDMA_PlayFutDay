@@ -1,10 +1,11 @@
 package com.salesianos.triana.playfutday.data.user.repository;
 
-import com.salesianos.triana.playfutday.data.post.model.Post;
+import com.salesianos.triana.playfutday.data.commentary.model.Commentary;
+import com.salesianos.triana.playfutday.data.user.interfaces.IUserResponseCreated;
+import com.salesianos.triana.playfutday.data.user.interfaces.IUserResponseEnabled;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -41,6 +42,7 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
     boolean existsUserByFollow(@Param("user_log_id") UUID user_log_id, @Param("userId") UUID userId);
 
     boolean existsByEmailIgnoreCase(String s);
+
     boolean existsByUsernameIgnoreCase(String s);
 
     boolean existsByPhoneIgnoreCase(String s);
@@ -67,10 +69,34 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
     Page<User> findAllFollows(@Param("id") UUID id, Pageable pageable);
 
 
-    @Query("""
-            SELECT u FROM User u JOIN u.follows f WHERE f.id = :id 
+//    @Query("""
+//            SELECT u FROM User u JOIN u.follows f WHERE f.id = :id
+//            """)
+//    List<User> findWhoFollowsMe(@Param("id") UUID id);
+
+
+    @Query("""          
+            SELECT c FROM Commentary c WHERE c.id_author = :id AND ROWNUM <= 3 ORDER BY c.updateCommentary DESC
             """)
-    List<User> findWhoFollowsMe(@Param("id") UUID id);
+    List<Commentary> geLastsComments(@Param("id") String id);
+
+
+    ///https://www.baeldung.com/jpa-queries-custom-result-with-aggregation-functions ¡¡HELP!!
+    @Query("SELECT CASE WHEN u.enabled = true THEN 'active' ELSE 'inactive' END AS state, COUNT(u) AS value FROM User u GROUP BY u.enabled")
+    List<IUserResponseEnabled> getUsersState();
+
+
+    /**
+     * get all users created at year SUPPORT! https://www.objectdb.com/java/jpa/query/jpql/date
+     */
+
+    @Query("""
+                SELECT FUNCTION('MONTH', u.createdAt) AS month, COUNT(u) AS totalUsersCreated
+                FROM User u
+                WHERE FUNCTION('YEAR', u.createdAt) = :year GROUP BY FUNCTION('MONTH', u.createdAt)
+                ORDER BY FUNCTION('MONTH', u.createdAt) ASC
+            """)
+    List<IUserResponseCreated> getUsersByMonthAndYear(int year);
 
 }
 
