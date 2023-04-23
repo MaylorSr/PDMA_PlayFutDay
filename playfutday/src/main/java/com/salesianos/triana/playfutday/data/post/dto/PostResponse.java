@@ -36,7 +36,7 @@ public class PostResponse {
     @JsonView({viewPost.PostResponse.class})
 
     protected String description;
-    @JsonView({viewPost.PostResponse.class})
+    @JsonView({viewPost.PostResponse.class, viewUser.UserInfo.class})
 
     protected String image;
     @JsonView({viewPost.PostResponse.class})

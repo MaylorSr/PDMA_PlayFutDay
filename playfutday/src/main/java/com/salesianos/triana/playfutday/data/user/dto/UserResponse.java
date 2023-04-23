@@ -54,6 +54,7 @@ public class UserResponse {
     @JsonView({viewUser.UserDetailsViewWeb.class, viewUser.BanUserViewWeb.class})
 
     protected boolean enabled;
+    @JsonView({viewUser.UserInfo.class})
     protected List<PostResponse> myPost;
     @JsonView({viewUser.UserResponse.class, viewUser.BanUserViewWeb.class})
 
