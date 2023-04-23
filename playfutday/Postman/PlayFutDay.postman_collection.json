@@ -2,217 +2,693 @@
 	"info": {
 		"_postman_id": "f32f77ef-d8db-40e3-9877-e567f64c18a6",
 		"name": "PlayFutDay",
+		"description": "_**En esta carpeta se encuentran todas las carpetas y subcarpetas con las peticiones que se harán tanto para la página web diseñada en Angular como para la aplicación móvil diseñada en Flutter.**_",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "23783409"
+		"_exporter_id": "23783409",
+		"_collection_link": "https://solar-moon-618513.postman.co/workspace/My-Workspace~20b5227c-21c3-4bfd-81d6-a2bcf7efd1fb/collection/23783409-f32f77ef-d8db-40e3-9877-e567f64c18a6?action=share&creator=23783409&source=collection_link"
 	},
 	"item": [
 		{
-			"name": "Post",
+			"name": "CREATE/LOGIN_ACCOUNT",
 			"item": [
 				{
-					"name": "GET Posts",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/post/?page=0",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"post",
-								""
-							],
-							"query": [
+					"name": "LOGIN",
+					"item": [
+						{
+							"name": "POST Login",
+							"event": [
 								{
-									"key": "s",
-									"value": "tag:MESSI",
-									"disabled": true
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var json = pm.response.json();",
+											"pm.collectionVariables.set(\"token\", json.token);",
+											"pm.collectionVariables.set(\"refresh_token\", json.refreshToken);",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"maylor\",\n    \"password\": \"Maylor15\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
 								},
-								{
-									"key": "page",
-									"value": "0"
+								"url": {
+									"raw": "{{baseUrl}}/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
 								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET MyPosts",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
+							},
+							"response": []
 						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/post/user?page=0",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"post",
-								"user"
-							],
-							"query": [
+						{
+							"name": "POST Login 2",
+							"event": [
 								{
-									"key": "page",
-									"value": "0"
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var json = pm.response.json();",
+											"pm.collectionVariables.set(\"token\", json.token);",
+											"",
+											""
+										],
+										"type": "text/javascript"
+									}
 								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "POST Like PostbyMe",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/post/like/13",
-							"host": [
-								"{{baseUrl}}"
 							],
-							"path": [
-								"post",
-								"like",
-								"13"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "POST CommentaryByMe",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"message\":\"This is my first commentary here aaa!\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/post/commentary/20",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"post",
-								"commentary",
-								"20"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Post of User",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/post/user/{{username}}?page=2",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"post",
-								"user",
-								"{{username}}"
-							],
-							"query": [
-								{
-									"key": "page",
-									"value": "2"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "POST NuevoP",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "image",
-									"type": "file",
-									"src": "/C:/Users/User/Downloads/5842fe0ea6515b1e0ad75b3c.png"
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"miguel\",\n    \"password\": \"Aa12345678\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
 								},
-								{
-									"key": "post",
-									"value": "{\n    \"tag\": \"MESSI\",\n    \"description\": \"Lorem Ipsum Dolor Sit Amet....\"\n}",
-									"contentType": "application/vnd.api+json",
-									"type": "text"
+								"url": {
+									"raw": "{{baseUrl}}/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
 								}
-							]
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "{{url_base}}post/",
-							"host": [
-								"{{url_base}}post"
+						{
+							"name": "LOGIN_IMPORTSQL",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var json = pm.response.json();\r",
+											"pm.collectionVariables.set(\"token\", json.token);"
+										],
+										"type": "text/javascript"
+									}
+								}
 							],
-							"path": [
-								""
-							]
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"content-type": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"alejandro\",\r\n    \"password\": \"A1b2345\"\r\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "LOGIN_ADMIN_IMPORTSQL",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var json = pm.response.json();\r",
+											"pm.collectionVariables.set(\"token\", json.token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"marta\",\r\n    \"password\": \"M1n2345\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				},
 				{
-					"name": "GET FILE",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
+					"name": "SING UP",
+					"item": [
+						{
+							"name": "VERIFY CODE TO REGISTER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/auth/verifyCode/421881",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"verifyCode",
+										"421881"
+									],
+									"query": [
+										{
+											"key": "",
+											"value": null,
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "{{baseUrl}}/download/messi.jpg",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"download",
-								"messi.jpg"
-							]
+						{
+							"name": "POST NEW USER - 1",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"maylor\",\n    \"email\": \"maylorbustamante2001@gmail.com\", \n    \"phone\": \"609835692\",\n    \"password\":\"Maylor15\",\n    \"verifyPassword\":\"Maylor15\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST NEW USER - 2",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\": \"miguel\",\n    \"email\": \"miguelcampos@gmail.com\",\n    \"phone\": \"608994580\",\n    \"password\":\"Aa12345678\",\n    \"verifyPassword\":\"Aa12345678\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				}
 			],
+			"description": "StartFragment\n\nEste es la carpeta dónde se encuentran todas las peticiones que no requiren de token, es decir, necesarias para realizar las demás peticiones."
+		},
+		{
+			"name": "ANGULAR_REQUESTS",
+			"item": [
+				{
+					"name": "USER_MODEL",
+					"item": [
+						{
+							"name": "BAN/NO_BAN/_USER",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/banUserByAdmin/7495ac21-9cef-4655-a816-29a1eee80841",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"banUserByAdmin",
+										"7495ac21-9cef-4655-a816-29a1eee80841"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "REMOVE/ADD/_ROLE_TO_ADMIN",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/changeRole/7495ac21-9cef-4655-a816-29a1eee80841",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"changeRole",
+										"7495ac21-9cef-4655-a816-29a1eee80841"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ALL_USERS_IN_APP",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user?page=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user"
+									],
+									"query": [
+										{
+											"key": "s",
+											"value": "username:bmacalester1",
+											"description": "Búsca por nombre de usuario",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TOTAL_USERS_ACCOUNT_CREATED_BY_YEAR",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/create/year/2023",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"create",
+										"year",
+										"2023"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ALL_ USER_STATE",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/list/state/now",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"list",
+										"state",
+										"now"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "COMMENTARY_MODEL",
+					"item": [
+						{
+							"name": "DELETE Commentary of User",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/post/delete/commentary/47",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"post",
+										"delete",
+										"commentary",
+										"47"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "LAST_THREE_COMMENTARIES_ BY_USERNAME",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/list/comments/{{id_user}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"list",
+										"comments",
+										"{{id_user}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ALL_COMMENTARIES",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/post/all/commentaries?page=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"post",
+										"all",
+										"commentaries"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "COMMENTARIES_OF_POST_ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/post/details/1/commentaries?page=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"post",
+										"details",
+										"1",
+										"commentaries"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "POST_MODEL",
+					"item": [
+						{
+							"name": "POST_DETAILS",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/post/details/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"post",
+										"details",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TOTAL _POST_BY_MONTH",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/post/total/post/4",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"post",
+										"total",
+										"post",
+										"4"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			],
+			"description": "Este es la carpeta dónde se encuentran todas las peticiones que se realizan en la página web diseñada con Angular. Se hace para mayor comodidad de peticiones.",
 			"auth": {
 				"type": "bearer",
 				"bearer": [
@@ -245,485 +721,581 @@
 			]
 		},
 		{
-			"name": "Users",
+			"name": "GENERAL_REQUESTS",
 			"item": [
 				{
-					"name": "POST Nuevo usuario",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"username\": \"maylor\",\n    \"email\": \"maylor@gmail.com\",\n    \"phone\": \"609835692\",\n    \"password\":\"Maylor15\",\n    \"verifyPassword\":\"Maylor15\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+					"name": "POST_MODEL",
+					"item": [
+						{
+							"name": "DELETE",
+							"item": [
+								{
+									"name": "DELETE_POST",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/post/user/4/user/d8825758-d02a-4bcc-8146-95fb6fa3ded7",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"post",
+												"user",
+												"4",
+												"user",
+												"d8825758-d02a-4bcc-8146-95fb6fa3ded7"
+											]
+										},
+										"description": "El primer número es el **ID** del post a eliminar y el segundo /user/** es el **ID** del usuario que tiene dicho post."
+									},
+									"response": []
 								}
+							]
+						},
+						{
+							"name": "GET",
+							"item": [
+								{
+									"name": "GET_ALL_POSTS",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/post/?page=0",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"post",
+												""
+											],
+											"query": [
+												{
+													"key": "s",
+													"value": "tag:oyarzabal",
+													"disabled": true
+												},
+												{
+													"key": "page",
+													"value": "0"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GET_POSTS_USER_LOGIN",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/post/user?page=0",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"post",
+												"user"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "0"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GET_FILE",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "{{baseUrl}}/download/halland.jpg",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"download",
+												"halland.jpg"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "POST",
+							"item": [
+								{
+									"name": "NEW_POST",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "image",
+													"type": "file",
+													"src": "/C:/Users/User/Downloads/images.png"
+												},
+												{
+													"key": "post",
+													"value": "{\n    \"tag\": \"MESSI\",\n    \"description\": \"Lorem Ipsum Dolor Sit Amet....\"\n}",
+													"contentType": "application/vnd.api+json",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{url_base}}post/",
+											"host": [
+												"{{url_base}}post"
+											],
+											"path": [
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
 							}
 						},
-						"url": {
-							"raw": "{{baseUrl}}/auth/register",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"auth",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "POST Nuevo usuario 2",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"username\": \"miguel\",\n    \"email\": \"miguelcampos@gmail.com\",\n    \"phone\": \"608994580\",\n    \"password\":\"Aa12345678\",\n    \"verifyPassword\":\"Aa12345678\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
 							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/auth/register",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"auth",
-								"register"
-							]
 						}
-					},
-					"response": []
+					]
 				},
 				{
-					"name": "PUT Modificar contraseña",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+					"name": "USER_MODEL",
+					"item": [
+						{
+							"name": "PUT",
+							"item": [
 								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"oldPassword\": \"QUE1chC2Jv\",\n    \"newPassword\": \"MaylorDaa\",\n    \"verifyNewPassword\": \"MaylorDaa\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/user/changePassword",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"user",
-								"changePassword"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET My Fav Post",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+									"name": "CHANGUE_PASSWORD",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"oldPassword\": \"QUE1chC2Jv\",\n    \"newPassword\": \"MaylorDaa\",\n    \"verifyNewPassword\": \"MaylorDaa\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/user/changePassword",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"user",
+												"changePassword"
+											]
+										}
+									},
+									"response": []
+								},
 								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/fav?page=0",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"fav"
-							],
-							"query": [
+									"name": "CHANGE_BIO",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"biography\":\"I am new here guys\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/edit/bio",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"edit",
+												"bio"
+											]
+										}
+									},
+									"response": []
+								},
 								{
-									"key": "page",
-									"value": "0"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DELETE USER BY ME OR ADMIN",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+									"name": "CHANGE_PHONE",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"phone\":\"608991657\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/edit/phone",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"edit",
+												"phone"
+											]
+										}
+									},
+									"response": []
+								},
 								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
+									"name": "CHANGE_BIRHTDAY",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"birthday\": \"10/12/2023\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/edit/birthday",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"edit",
+												"birthday"
+											]
+										}
+									},
+									"response": []
 								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/user/d8825758-d02a-4bcc-8146-95fb6fa3ded7",
-							"host": [
-								"{{baseUrl}}"
 							],
-							"path": [
-								"user",
-								"d8825758-d02a-4bcc-8146-95fb6fa3ded7"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "PUT EDIT AVATAR",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
 								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
 								{
-									"key": "image",
-									"type": "file",
-									"src": "/C:/Users/User/Downloads/Organigrama PlayFutDay.png"
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
 								}
 							]
 						},
-						"url": {
-							"raw": "{{baseUrl}}/edit/avatar",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"edit",
-								"avatar"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "PUT EDIT BIO",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+						{
+							"name": "GET",
+							"item": [
 								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
+									"name": "INFO_USER_ID",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/info/user/7495ac21-9cef-4655-a816-29a1eee80841",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"info",
+												"user",
+												"7495ac21-9cef-4655-a816-29a1eee80841"
+											]
+										}
+									},
+									"response": []
 								}
 							]
 						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"biography\":\"I am new here guys\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/edit/bio",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"edit",
-								"bio"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "PUT EDIT PHONE",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+						{
+							"name": "DELETE",
+							"item": [
 								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
+									"name": "DELETE_USER",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/user/d8825758-d02a-4bcc-8146-95fb6fa3ded7",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"user",
+												"d8825758-d02a-4bcc-8146-95fb6fa3ded7"
+											]
+										}
+									},
+									"response": []
 								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"phone\":\"608991658\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/edit/phone",
-							"host": [
-								"{{baseUrl}}"
 							],
-							"path": [
-								"edit",
-								"phone"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "PUT BIRHTDAY",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
 								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"birthday\": \"10/12/2009\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/edit/birthday",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"edit",
-								"birthday"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "ME INFO",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
 								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
 								}
 							]
 						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/me",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"me"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET INFO OTHER USER",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+						{
+							"name": "POST",
+							"item": [
 								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
+									"name": "CHANGE_AVATAR",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "image",
+													"type": "file",
+													"src": "/C:/Users/User/Downloads/images.png"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrl}}/edit/avatar",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"edit",
+												"avatar"
+											]
+										}
+									},
+									"response": []
 								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/info/user/51057cde-9852-4cd5-be5e-091979495656",
-							"host": [
-								"{{baseUrl}}"
 							],
-							"path": [
-								"info",
-								"user",
-								"51057cde-9852-4cd5-be5e-091979495656"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Admin",
-			"item": [
-				{
-					"name": "DELETE Post of User",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+							"auth": {
+								"type": "bearer",
+								"bearer": [
+									{
+										"key": "token",
+										"value": "{{token}}",
+										"type": "string"
+									}
+								]
+							},
+							"event": [
 								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/post/user/3/user/d8825758-d02a-4bcc-8146-95fb6fa3ded7",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"post",
-								"user",
-								"3",
-								"user",
-								"d8825758-d02a-4bcc-8146-95fb6fa3ded7"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DELETE Commentary of User",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/post/delete/commentary/47",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"post",
-								"delete",
-								"commentary",
-								"47"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "POST Ban User or DesBan",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/banUserByAdmin/abb9feac-f0ec-45cf-91a9-5d21c789da2d",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"banUserByAdmin",
-								"abb9feac-f0ec-45cf-91a9-5d21c789da2d"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET ChangeRole to Admin or Remove then",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/changeRole/d8825758-d02a-4bcc-8146-95fb6fa3ded7",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"changeRole",
-								"d8825758-d02a-4bcc-8146-95fb6fa3ded7"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET ALL USERS",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/user?page=0",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"user"
-							],
-							"query": [
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								},
 								{
-									"key": "page",
-									"value": "0",
-									"description": "The number of page"
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
 								}
 							]
 						}
-					},
-					"response": []
+					]
 				}
 			],
+			"description": "_**En esta carpeta se encuentran las peticiones que se realizan tanto para la vista de Administrador (WEB - ANGULAR) como para la aplicación móvil (MOBILE - Flutter), es decir; peticiones que se comparten para ambas vistas.**_",
 			"auth": {
 				"type": "bearer",
 				"bearer": [
@@ -756,171 +1328,315 @@
 			]
 		},
 		{
-			"name": "POST Login",
-			"event": [
+			"name": "MOBILE_REQUESTS",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var json = pm.response.json();",
-							"pm.collectionVariables.set(\"token\", json.token);",
-							"pm.collectionVariables.set(\"refresh_token\", json.refreshToken);",
-							"",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"username\": \"maylor\",\n    \"password\": \"Maylor15\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "POST",
+					"item": [
+						{
+							"name": "LIKE_POST",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/post/like/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"post",
+										"like",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DO_COMMENTARY",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"message\":\"This is my first commentary here aaa!\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/post/commentary/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"post",
+										"commentary",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UPDATE_FOLLOW",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/follow/{{id_user}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"follow",
+										"{{id_user}}"
+									]
+								}
+							},
+							"response": []
 						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/auth/login",
-					"host": [
-						"{{baseUrl}}"
 					],
-					"path": [
-						"auth",
-						"login"
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "GET",
+					"item": [
+						{
+							"name": "POST_OF_USER_NAME",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/post/user/{{username}}?page=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"post",
+										"user",
+										"{{username}}"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ME_FAV_POST",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/fav?page=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"fav"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ME_INFO",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/me",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ALL_FOLLOWERS",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/followers/{{id_user}}?page=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"followers",
+										"{{id_user}}"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ALL_FOLLOWS",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/user/follows/7495ac21-9cef-4655-a816-29a1eee80841",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"follows",
+										"7495ac21-9cef-4655-a816-29a1eee80841"
+									]
+								}
+							},
+							"response": []
+						}
 					]
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "POST Login 2",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var json = pm.response.json();",
-							"pm.collectionVariables.set(\"token\", json.token);",
-							"",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
 			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"username\": \"miguel\",\n    \"password\": \"Aa12345678\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/auth/login",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"auth",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Post Login ImportSQL",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var json = pm.response.json();\r",
-							"pm.collectionVariables.set(\"token\", json.token);"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"content-type": true
-				}
-			},
-			"request": {
-				"method": "POST",
-				"header": [
+			"description": "StartFragment\n\nEste es la carpeta dónde se encuentran todas las peticiones que se realizan en la aplicación móvil diseñada con Flutter. Se hace para mayor comodidad de peticiones.\n\nEndFragment",
+			"auth": {
+				"type": "bearer",
+				"bearer": [
 					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
 					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"bmacalester1\",\r\n    \"password\": \"8dNbnHaX\"\r\n}"
-				},
-				"url": {
-					"raw": "{{baseUrl}}/auth/login",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"auth",
-						"login"
-					]
-				}
+				]
 			},
-			"response": []
-		},
-		{
-			"name": "POST Login ADMIN",
 			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
 				{
 					"listen": "test",
 					"script": {
+						"type": "text/javascript",
 						"exec": [
-							"var json = pm.response.json();\r",
-							"pm.collectionVariables.set(\"token\", json.token);"
-						],
-						"type": "text/javascript"
+							""
+						]
 					}
 				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"wbeetham0\",\r\n    \"password\": \"QUE1chC2Jv\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/auth/login",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"auth",
-						"login"
-					]
-				}
-			},
-			"response": []
+			]
 		}
 	],
 	"event": [
@@ -966,8 +1682,12 @@
 		},
 		{
 			"key": "username",
-			"value": "hpitt2",
+			"value": "laura",
 			"type": "string"
+		},
+		{
+			"key": "id_user",
+			"value": "681903b4-dc43-43c2-942c-86b81b15d1fc"
 		}
 	]
 }

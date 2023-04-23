@@ -14,6 +14,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -22,19 +23,24 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommentaryResponse {
 
-    @JsonView({viewCommentary.CommentaryResponse.class, viewUser.UserDetailsByAdmin.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostDetailsAngular.class, viewCommentary.CommentaryResponse.class})
     private Long id;
 
-    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostViewMobile.class, viewPost.PostDetailsAngular.class, viewCommentary.CommentaryResponse.class})
     protected String message;
 
-    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
-    protected String authorName;
+    @JsonView({viewPost.PostDetailsAngular.class})
+    protected String id_author;
 
-    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostViewMobile.class, viewPost.PostDetailsAngular.class, viewCommentary.CommentaryResponse.class})
+    protected String authorName;
+    @JsonView({viewPost.PostDetailsAngular.class})
+    protected Long post_id;
+
+    @JsonView({viewPost.PostViewMobile.class, viewCommentary.CommentaryResponse.class})
     protected String authorFile;
 
-    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostViewMobile.class, viewPost.PostDetailsAngular.class, viewCommentary.CommentaryResponse.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     protected LocalDate uploadCommentary;
 
@@ -42,7 +48,9 @@ public class CommentaryResponse {
         return CommentaryResponse.builder()
                 .id(commentary.getId())
                 .message(commentary.getMessage())
+                .id_author(commentary.getId_author())
                 .authorName(commentary.getAuthor())
+                .post_id(commentary.getPost().getId())
                 .authorFile(commentary.getAuthorFile())
                 .uploadCommentary(commentary.getUpdateCommentary())
                 .build();

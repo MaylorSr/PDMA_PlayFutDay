@@ -26,32 +26,40 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class UserResponse {
 
-    @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.UserResponse.class})
     protected UUID id;
-    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewUser.UserChangeDate.class})
+    @JsonView({viewUser.UserResponse.class, viewUser.editProfile.class})
+
     protected String username;
-    @JsonView({viewUser.UserDetailsByAdmin.class})
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+    @JsonView({viewUser.UserDetailsViewWeb.class})
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     protected LocalDateTime createdAt;
-    @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.editProfile.class, viewUser.UserInfo.class})
+
     protected String email;
-    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewUser.UserChangeDate.class})
+    @JsonView({viewUser.UserResponse.class, viewUser.editProfile.class})
+
     protected String avatar;
-    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.editProfile.class, viewUser.UserInfo.class})
+
     protected String biography;
-    @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.editProfile.class, viewUser.UserInfo.class})
+
     protected String phone;
-    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.editProfile.class, viewUser.UserInfo.class})
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     protected LocalDate birthday;
-    @JsonView({viewUser.UserDetailsByAdmin.class, viewUser.UserChangeDate.class})
+    @JsonView({viewUser.UserDetailsViewWeb.class, viewUser.BanUserViewWeb.class})
+
     protected boolean enabled;
-    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected List<PostResponse> myPost;
-    @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewUser.UserChangeDate.class})
+    @JsonView({viewUser.UserResponse.class, viewUser.BanUserViewWeb.class})
+
     protected Set<UserRole> roles;
 
-    @JsonView({viewUser.UserInfo.class})
+    @JsonView({viewUser.UserResponse.class})
     protected String token;
 
 

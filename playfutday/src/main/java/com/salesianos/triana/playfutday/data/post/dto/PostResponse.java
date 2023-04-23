@@ -28,29 +28,33 @@ public class PostResponse {
 
     private static PostRepository postRepository;
 
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostResponse.class})
     protected Long id;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostResponse.class})
+
     protected String tag;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostResponse.class})
+
     protected String description;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostResponse.class})
+
     protected String image;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostResponse.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     protected LocalDateTime uploadDate;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostResponse.class})
     protected String author;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostResponse.class})
+
     protected UUID idAuthor;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostViewMobile.class, viewPost.PostDetailsAngular.class})
     protected String authorFile;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostViewMobile.class, viewPost.PostViewMobileLike.class})
     protected List<String> likesByAuthor;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostViewMobile.class, viewPost.PostViewMobileLike.class})
     protected int countLikes;
 
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostViewMobile.class})
     protected List<CommentaryResponse> commentaries;
 
     public static PostResponse of(Post post) {
@@ -60,8 +64,8 @@ public class PostResponse {
                 .description(post.getDescription())
                 .image(post.getImage())
                 .uploadDate(post.getUploadDate())
-                .author(post.getAuthor().getUsername())
                 .idAuthor(post.getAuthor().getId())
+                .author(post.getAuthor().getUsername())
                 .authorFile(post.getAuthor().getAvatar())
                 .likesByAuthor(post.getLikes() == null ? null : post.getLikes().stream().map(User::getUsername).toList())
                 .countLikes(post.getLikes() == null ? 0 : post.getLikes().size())

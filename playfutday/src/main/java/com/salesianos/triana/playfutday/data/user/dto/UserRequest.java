@@ -18,6 +18,7 @@ import javax.validation.constraints.NotBlank;
 public class UserRequest {
 
     @NotBlank(message = "{createUserRequest.userName.blank}")
+    @UniqueUserName(message = "{createUserRequest.unique.username}")
     private String username;
     @Email(message = "{createUserRequest.email.pattern}")
     @NotBlank(message = "{createUserRequest.email.blank}")
