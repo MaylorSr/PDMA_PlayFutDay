@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   };
   isLoggedIn = false;
   isLoginFailed = false;
-  errorMessage = "The server was failed";
+  errorMessage = "";
 
   constructor(
     private authService: AuthService,

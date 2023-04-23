@@ -6,7 +6,7 @@
       alt="Imagen de un balon de futbol"
     />
   </div>
-  <div style="flex: 1; align-self: center;">
+  <div style="flex: 1; align-self: center">
     <form
       class="contenedor-form"
       *ngIf="!isLoggedIn"
@@ -68,12 +68,8 @@
         <button mat-raised-button class="login-button">Login</button>
       </div>
       <div class="alert success" *ngIf="f.submitted && isLoginFailed">
-        <span
-          class="closebtn"
-          onclick="this.parentElement.style.display='none';"
-          >&times;</span
-        >
-        <strong>Login failed: </strong> {{ errorMessage }}
+        <strong>Login failed: </strong>
+        {{ errorMessage ?? "The server was failed" }}
       </div>
     </form>
   </div>
