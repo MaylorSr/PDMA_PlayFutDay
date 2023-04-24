@@ -1,4 +1,13 @@
 <div class="panel-header panel-header-sm"></div>
 <div class="main-content">
-
+  <h1>{{ userSelected.username }}</h1>
+  <h1>{{ userSelected.myPost.length ?? 0 }}</h1>
+  <img
+    mat-card-image
+    [src]="showImgUser(userSelected)"
+    onerror="this.onerror = null; this.src='https://programacion.net/files/article/20161110041116_image-not-found.png'"
+    alt="Photo of a user"
+    class="avatar-img"
+  />
+  <h1>{{totalFollwers}}</h1>
 </div>

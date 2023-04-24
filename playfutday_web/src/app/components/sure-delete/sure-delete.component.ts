@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { PostService } from "../../_services/post.service";
 import { UserService } from "../../_services/user.service";
 import { UserResponse } from "../../interfaces/user/user_list";
-import { UserLog } from "../../interfaces/user/user_log";
+import { UserResponseInfo } from "../../interfaces/user/user_info_id";
 
 @Component({
   selector: "app-sure-delete",
@@ -20,8 +20,7 @@ export class SureDeleteComponent implements OnInit {
   ) {}
   dataName: string = '';
   typeData: string = '';
-  u: UserResponse = {} as UserResponse;
-  u2: UserLog = {} as UserLog;
+  u: UserResponseInfo = {} as UserResponseInfo;
 
   comprobarEntidad() {
     if (this.data.dataInfo.username) {

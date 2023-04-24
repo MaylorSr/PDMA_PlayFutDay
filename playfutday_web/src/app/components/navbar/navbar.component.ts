@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef } from "@angular/core";
 import { Location } from "@angular/common";
 import { Router } from "@angular/router";
 import { UserService } from "../../_services/user.service";
-import { UserLog } from "../../interfaces/user/user_log";
+import { UserResponseInfo } from "../../interfaces/user/user_info_id";
 import { environment } from "../../../environments/environment.prod";
 
 @Component({
@@ -18,9 +18,9 @@ export class NavbarComponent implements OnInit {
 
   public isCollapsed = true;
 
-  user: UserLog = {} as UserLog;
+  user: UserResponseInfo = {} as UserResponseInfo;
 
-  showImgUser(user: UserLog) {
+  showImgUser(user: UserResponseInfo) {
     return `${environment.api_image}${user.avatar}`;
   }
 
