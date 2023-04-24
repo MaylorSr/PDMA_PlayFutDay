@@ -234,10 +234,11 @@ public class UserService {
 
 
     public PageResponse<UserFollow> pageableUser(UUID id, Pageable pageable) {
+        User user = userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("Not found the user"));
         Page<User> followersOfOneUser = userRepository.findAllFollowers(id, pageable);
         Page<UserFollow> userFollowPage =
                 new PageImpl<>
-                        (followersOfOneUser.stream().toList(), pageable, followersOfOneUser.getTotalPages()).map(UserFollow::of);
+                        (followersOfOneUser.stream().toList(), pageable, user.getFollowers() == null ? 0 : user.getFollowers().size()).map(UserFollow::of);
         return new PageResponse<>(userFollowPage);
     }
 
@@ -295,10 +296,12 @@ public class UserService {
 
 
     public PageResponse<UserFollow> pageableUserFollow(UUID id, Pageable pageable) {
+        User user = userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("Not found the user"));
+
         Page<User> followsOfOneUser = userRepository.findAllFollows(id, pageable);
         Page<UserFollow> userFollowPage =
                 new PageImpl<>
-                        (followsOfOneUser.stream().toList(), pageable, followsOfOneUser.getTotalPages()).map(UserFollow::of);
+                        (followsOfOneUser.stream().toList(), pageable, user.getFollows() == null ? 0 : user.getFollows().size()).map(UserFollow::of);
         return new PageResponse<>(userFollowPage);
     }
 

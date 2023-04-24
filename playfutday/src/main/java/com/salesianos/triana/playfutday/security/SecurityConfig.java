@@ -80,7 +80,7 @@ public class SecurityConfig {
                 .antMatchers("/fav", "/user/{idU}", "/user/changePassword", "/me",
                         "/edit/birthday", "/edit/phone", "/edit/bio", "/edit/avatar",
                         "/user/changePassword", "/post/**", "/info/user/", "/user/follow/{id}",
-                        "/user/followers/{id}", "/user/follows/{id}").hasAnyRole("USER", "ADMIN")
+                        "/user/followers/{id}", "/user/follows/{id}", "/post/user/post/grid/{username}").hasAnyRole("USER", "ADMIN")
                 /**ROUTES FOR ADMIN**/
 
                 .antMatchers("/user", "/banUserByAdmin/{id}", "/post/details/{id}",

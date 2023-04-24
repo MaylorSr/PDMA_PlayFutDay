@@ -55,6 +55,20 @@ public class PostService {
     }
 
 
+    public List<PostResponse> findAllPostGridByUserName(String username) {
+
+        return userRepository.findFirstByUsername(username).map(
+                user -> {
+                    if (user.getMyPost() == null) {
+                        throw new GlobalEntityListNotFounException("The user not have any post");
+                    }
+                    return user.getMyPost().stream().map(PostResponse::of).toList();
+                }
+        ).orElseThrow(() -> new GlobalEntityNotFounException("The user not exits"));
+
+    }
+
+
     public PageResponse<CommentaryResponse> pageableCommentary(Long id, Pageable pageable) {
         Page<Commentary> commentariesOfOnePostById = repo.findAllCommentariesByPostId(id, pageable);
         Page<CommentaryResponse> commentaryResponsePage =

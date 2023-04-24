@@ -27,7 +27,7 @@ public class PageResponse<T> {
 
     private int totalPages;
 
-    @JsonView({viewUser.UserDetailsViewWeb.class, viewPost.PostDetailsAngular.class, viewUser.UserFollow.class})
+    @JsonView({viewUser.UserFollow.class, viewUser.UserDetailsViewWeb.class, viewPost.PostDetailsAngular.class, viewUser.UserFollow.class})
     private Long totalElements;
 
 
