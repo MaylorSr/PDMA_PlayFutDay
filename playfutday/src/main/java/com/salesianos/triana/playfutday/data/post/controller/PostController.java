@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.salesianos.triana.playfutday.data.commentary.dto.CommentaryRequest;
 import com.salesianos.triana.playfutday.data.commentary.dto.CommentaryResponse;
 import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
+import com.salesianos.triana.playfutday.data.interfaces.user.viewUser;
 import com.salesianos.triana.playfutday.data.post.dto.PostRequest;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.post.service.PostService;
@@ -223,7 +224,7 @@ public class PostController {
     }
 
 
-    @Operation(summary = "Este método obtiene todos los posts de un usuario concreto")
+    @Operation(summary = "Este método obtiene todos los posts de un usuario concreto de forma paginada")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Sa han devuelto los datos correctamente de todos los posts del usuario en cuestión",
@@ -292,6 +293,46 @@ public class PostController {
     public PageResponse<PostResponse> findPostOfUser(@PageableDefault(size = 10, page = 0) Pageable pageable, @Parameter(name = "username",
             description = "Se debe proporcionar el username del usuario a buscar los posts") @PathVariable String username) {
         return postService.findAllPostByUserName(username, pageable);
+    }
+
+
+    @Operation(summary = "Este método obtiene todos las imágenes de los posts de un usuario concreto")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Sa han devuelto los datos correctamente de todos los posts del usuario en cuestión",
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = PostResponse.class)),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            [
+                                                {
+                                                    "image": "SPANYOL.jpg"
+                                                },
+                                                {
+                                                    "image": "CAMPANIA.jpg"
+                                                },
+                                                {
+                                                    "image": "de_bruyne.jpg"
+                                                },
+                                                {
+                                                    "image": "toni_kross.jpg"
+                                                }
+                                            ]
+                                             """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "405",
+                    description = "Estas intentado hacer la petición de GET a otra distinta, ejemplo POST",
+                    content = @Content),
+            @ApiResponse(responseCode = "400", description = "Estas intentando pasar cuerpo a la petición que no lo requiere", content = @Content),
+            @ApiResponse(responseCode = "404", description = "La lista está vacía o el usuario no existe", content = @Content),
+            @ApiResponse(responseCode = "401", description = "No estas logeado", content = @Content),
+    })
+
+    @GetMapping("/user/post/grid/{username}")
+    @JsonView({viewUser.UserInfo.class})
+    public List<PostResponse> findAllPostGridOfUserId(@PathVariable String username) {
+        return postService.findAllPostGridByUserName(username);
     }
 
 
