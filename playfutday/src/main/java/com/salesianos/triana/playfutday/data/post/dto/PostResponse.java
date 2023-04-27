@@ -51,8 +51,11 @@ public class PostResponse {
     protected String authorFile;
     @JsonView({viewPost.PostViewMobile.class, viewPost.PostViewMobileLike.class})
     protected List<String> likesByAuthor;
-    @JsonView({viewPost.PostViewMobile.class, viewPost.PostViewMobileLike.class})
+    @JsonView({viewPost.PostViewMobile.class, viewPost.PostViewMobileLike.class, viewPost.PostDetailsAngular.class})
     protected int countLikes;
+    @JsonView({viewPost.PostDetailsAngular.class})
+
+    protected int countCommentaries;
 
     @JsonView({viewPost.PostViewMobile.class})
     protected List<CommentaryResponse> commentaries;
@@ -70,6 +73,7 @@ public class PostResponse {
                 .likesByAuthor(post.getLikes() == null ? null : post.getLikes().stream().map(User::getUsername).toList())
                 .countLikes(post.getLikes() == null ? 0 : post.getLikes().size())
                 .commentaries(post.getCommentaries() == null ? null : post.getCommentaries().stream().map(CommentaryResponse::of).toList())
+                .countCommentaries(post.getCommentaries() == null ? 0 : post.getCommentaries().size())
                 .build();
     }
 

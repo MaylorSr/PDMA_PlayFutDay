@@ -69,7 +69,7 @@ public class TemporalUserService {
 
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            File file = storageService.loadAsResource("logo_app.png").getFile();
+            File file = storageService.loadAsResource("logo_app-removebg.png").getFile();
             helper.setFrom(email);
             helper.setTo(userRequest.getEmail());
             helper.setSubject("-- VERIFY CODE --");
