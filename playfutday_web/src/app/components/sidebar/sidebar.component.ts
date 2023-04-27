@@ -23,9 +23,21 @@ export const ROUTES: RouteInfo[] = [
   },
 
   {
+    path: "/playfutday/commentaries-list",
+    title: "Commentaries",
+    icon: "ui-2_chat-round",
+    class: "",
+  },
+  {
     path: "/playfutday/user-list",
     title: "Users",
     icon: "users_circle-08",
+    class: "",
+  },
+  {
+    path: "/playfutday/settings",
+    title: "Settings",
+    icon: "ui-2_settings-90",
     class: "",
   },
 ];

@@ -18,6 +18,7 @@ export class NavbarComponent implements OnInit {
 
   public isCollapsed = true;
 
+  loadingData: boolean = true;
   user: UserResponseInfo = {} as UserResponseInfo;
 
   showImgUser(user: UserResponseInfo) {
@@ -39,6 +40,7 @@ export class NavbarComponent implements OnInit {
     this.userService.getProfile().subscribe({
       next: (log) => {
         this.user = log;
+        this.loadingData = false;
       },
     });
     /******/

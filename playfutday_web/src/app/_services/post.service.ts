@@ -5,6 +5,9 @@ import { environment } from "../../environments/environment.prod";
 import { PostListResponse } from "../interfaces/post/post_list";
 import { TokenStorageService } from "./token-storage.service";
 import { PostRequestResponse } from "../interfaces/post/post_request";
+import { PostInfoByIdResponse } from "../interfaces/post/post_info_by_id";
+import { ListPostCommentaryRespone } from "../interfaces/commentaries/list_reponse";
+import { AllCommentariesResponse } from "../interfaces/commentaries/list_all_commentaries";
 const API_URL = environment.api_hosting + "/";
 
 @Injectable({
@@ -29,6 +32,10 @@ export class PostService {
     return this.http.get<PostListResponse>(
       `${API_URL}post/user/${username}?page=${page}`
     );
+  }
+
+  getInfoPostById(id: number): Observable<PostInfoByIdResponse> {
+    return this.http.get<PostInfoByIdResponse>(`${API_URL}post/details/${id}`);
   }
 
   deleteCommentarie(id_commentary: string) {
@@ -60,5 +67,20 @@ export class PostService {
     });
 
     return this.http.post(`${API_URL}post/`, formData, { headers });
+  }
+
+  getCommentariesOfPostById(
+    id_post: number,
+    page: number
+  ): Observable<ListPostCommentaryRespone> {
+    return this.http.get<ListPostCommentaryRespone>(
+      `${API_URL}post/details/${id_post}/commentaries?page=${page}`
+    );
+  }
+
+  getAllCommentaries(page: number): Observable<AllCommentariesResponse> {
+    return this.http.get<AllCommentariesResponse>(
+      `${API_URL}post/all/commentaries?page=${page}`
+    );
   }
 }

@@ -1,0 +1,50 @@
+.parent-container {
+  height: 600px;
+  display: flex;
+  margin-top: 2em;
+  padding: 1em;
+  flex-direction: column;
+  background-color: white;
+}
+.first-container {
+  height: 670px;
+  background-color: rgba(162, 214, 238, 0.699);
+  padding: 1em;
+}
+
+.file-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  padding: 16px;
+  border: outset;
+  height: 125px;
+  position: relative;
+}
+
+.file-input {
+  height: 125px;
+  opacity: 0;
+  width: auto;
+  position: absolute;
+  z-index: 1;
+}
+
+.file-image {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+mat-label {
+  color: black;
+  font-size: 14px;
+}
+.mat-form-field {
+  border-style: groove;
+  border-radius: 10%;
+  color: black;
+}
+mat-form-field + mat-form-field {
+  margin-left: 8px;
+}

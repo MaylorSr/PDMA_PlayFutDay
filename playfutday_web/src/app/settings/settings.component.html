@@ -1,0 +1,109 @@
+<div class="panel-header panel-header-sm"></div>
+<div class="main-content" style="background-color: gray">
+  <div class="first-container">
+    <div class="parent-container">
+      <div style="display: grid; padding: 2em; color: brown">
+        <h3>Account Settings</h3>
+        <mat-divider
+          style="width: 100%; background: black; margin: auto"
+        ></mat-divider>
+
+        <form class="example-form">
+          <div
+            class="font-icon-list col-lg-2 col-md-3 col-sm-4 col-xs-6 col-xs-6"
+            style="padding: 1em"
+          >
+            <div class="font-icon-detail">
+              <span style="color: black">Change your avatar</span>
+              <div class="file-container">
+                <input
+                  type="file"
+                  class="file-input"
+                  (change)="getFile($event)"
+                  #fileInput
+                />
+
+                <img
+                  #fileImage
+                  class="file-image"
+                  [src]="imageUrl || '/assets/img/upload.jpg'"
+                  alt="File of a post that selected"
+                />
+              </div>
+            </div>
+          </div>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Old Password</mat-label>
+            <input
+              [(ngModel)]="oldPassword"
+              matInput
+              type="password"
+              placeholder="Enter your old password"
+            />
+            <mat-icon matSuffix>lock</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>New Password</mat-label>
+            <input
+              [(ngModel)]="newPassword"
+              matInput
+              type="password"
+              placeholder="Enter your new password"
+            />
+            <mat-icon matSuffix>lock</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field class="example-full-width">
+            <mat-label>Verify Password</mat-label>
+            <input
+              [(ngModel)]="veryfiPassword"
+              matInput
+              type="password"
+              placeholder="Verify your new password"
+            />
+            <mat-icon matSuffix>lock</mat-icon>
+          </mat-form-field>
+
+          <div style="margin-top: 1em">
+            <mat-form-field class="example-full-width">
+              <mat-label>Phone</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Enter your new phone number"
+                pattern="[0-9]*"
+                minlength="9"
+                maxlength="9"
+                [(ngModel)]="phone"
+              />
+              <mat-icon matSuffix>phone</mat-icon>
+            </mat-form-field>
+          </div>
+          <div style="margin-top: 1em">
+            <mat-form-field class="example-full-width">
+              <mat-label>Bio</mat-label>
+              <input
+                [(ngModel)]="bio"
+                matInput
+                type="text"
+                placeholder="Enter your new bio"
+                maxlength="200"
+              />
+            </mat-form-field>
+          </div>
+          <button
+          style="margin-top: 1em;"
+            mat-raised-button
+            color="primary"
+            type="submit"
+            (click)="sendForm()"
+          >
+            Update Profile
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

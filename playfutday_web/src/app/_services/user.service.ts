@@ -5,6 +5,9 @@ import { UserListResponse, UserResponse } from "../interfaces/user/user_list";
 import { environment } from "../../environments/environment.prod";
 import { UserResponseInfo } from "../interfaces/user/user_info_id";
 import { UserFollowResponse } from "../interfaces/user/user_follow";
+import { LastThreeCommentaries } from "../interfaces/commentaries/last_three_commentaries";
+import { PostListByUserName } from "../interfaces/post/post_user_by_username";
+import { ChangePasswordResponse } from "../interfaces/user/changePassword";
 // import { environment } from '../../environments/environment';
 
 const API_URL = environment.api_hosting + "/";
@@ -17,6 +20,15 @@ export class UserService {
 
   getListPeople(page: number): Observable<UserListResponse> {
     return this.http.get<UserListResponse>(`${API_URL}user?page=${page}`);
+  }
+
+  getListPostByUserName(
+    page: number,
+    username: string
+  ): Observable<PostListByUserName> {
+    return this.http.get<PostListByUserName>(
+      `${API_URL}post/user/${username}?page=${page}`
+    );
   }
 
   getProfile(): Observable<UserResponseInfo> {
@@ -55,6 +67,40 @@ export class UserService {
   ): Observable<UserFollowResponse> {
     return this.http.get<UserFollowResponse>(
       `${API_URL}user/followers/${id_user}?page=${page}`
+    );
+  }
+
+  getFollowsByIdUser(
+    id_user: string,
+    page: number
+  ): Observable<UserFollowResponse> {
+    return this.http.get<UserFollowResponse>(
+      `${API_URL}user/follows/${id_user}?page=${page}`
+    );
+  }
+
+  getLasThreeCommentariesByUserId(
+    id_user: String
+  ): Observable<LastThreeCommentaries[]> {
+    return this.http.get<LastThreeCommentaries[]>(
+      `${API_URL}user/list/comments/${id_user}`
+    );
+  }
+
+  changeBio(bio: string): Observable<String> {
+    return this.http.put<String>(`${API_URL}edit/bio`, bio);
+  }
+
+  changePhone(phone: string): Observable<String> {
+    return this.http.put<String>(`${API_URL}edit/phone`, phone);
+  }
+
+  changePassword(
+    body: ChangePasswordResponse
+  ): Observable<ChangePasswordResponse> {
+    return this.http.put<ChangePasswordResponse>(
+      `${API_URL}user/changePassword`,
+      body
     );
   }
 }

@@ -18,16 +18,18 @@ export class SureDeleteComponent implements OnInit {
     private userService: UserService,
     private postService: PostService
   ) {}
-  dataName: string = '';
-  typeData: string = '';
+  dataName: string = "";
+  typeData: string = "";
   u: UserResponseInfo = {} as UserResponseInfo;
 
   comprobarEntidad() {
     if (this.data.dataInfo.username) {
       this.dataName = this.data.dataInfo.username;
-      this.typeData = 'user';
+      this.typeData = "user";
+    } else if (this.data.dataInfo.tag) {
+      this.typeData = "post";
     } else {
-      this.typeData = 'post';
+      this.typeData = "commentarie";
     }
   }
 
@@ -44,26 +46,28 @@ export class SureDeleteComponent implements OnInit {
       this.userService.deleteUser(this.data.dataInfo.id).subscribe(
         (response) => {
           // Aquí puedes manejar la respuesta exitosa si es necesario
-          console.log('Usuario eliminado:', response);
+          console.log("Usuario eliminado:", response);
         },
         (error) => {
           // Aquí puedes manejar el error si ocurre
           console.log(error);
         }
       );
+    } else if (this.data.dataInfo.tag) {
+      this.postService
+        .deletePost(this.data.dataInfo.id, this.data.dataInfo.idAuthor)
+        .subscribe(
+          (response) => {
+            // Aquí puedes manejar la respuesta exitosa si es necesario
+            console.log("Post eliminado:", response);
+          },
+          (error) => {
+            // Aquí puedes manejar el error si ocurre
+            console.log(error);
+          }
+        );
     } else {
-      this.postService.deletePost(this.data.dataInfo.id, this.data.dataInfo.idAuthor).subscribe(
-        (response) => {
-          // Aquí puedes manejar la respuesta exitosa si es necesario
-          console.log('Post eliminado:', response);
-        },
-        (error) => {
-          // Aquí puedes manejar el error si ocurre
-          console.log(error);
-        }
-      );
-      
-
+      console.log("es un comentario");
     }
   }
 }

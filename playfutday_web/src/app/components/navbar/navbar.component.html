@@ -20,7 +20,10 @@
         "
       >
         <span class="navbar-brand">PlayFutDay</span>
-        <div>
+        <div *ngIf="loadingData" style="text-align: -webkit-center">
+          <mat-spinner></mat-spinner>
+        </div>
+        <div *ngIf="!loadingData" (load)="loadingData = false">
           <img
             mat-card-image
             [src]="showImgUser(user)"
