@@ -192,14 +192,14 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/auth/verifyCode/421881",
+									"raw": "{{baseUrl}}/auth/verifyCode/738632",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"auth",
 										"verifyCode",
-										"421881"
+										"738632"
 									],
 									"query": [
 										{
@@ -541,14 +541,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/post/details/1/commentaries?page=0",
+									"raw": "{{baseUrl}}/post/details/5/commentaries?page=0",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"post",
 										"details",
-										"1",
+										"5",
 										"commentaries"
 									],
 									"query": [
@@ -1598,6 +1598,27 @@
 										"user",
 										"follows",
 										"7495ac21-9cef-4655-a816-29a1eee80841"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST_GRID_PROFILE_USER",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/post/user/post/grid/{{username}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"post",
+										"user",
+										"post",
+										"grid",
+										"{{username}}"
 									]
 								}
 							},
