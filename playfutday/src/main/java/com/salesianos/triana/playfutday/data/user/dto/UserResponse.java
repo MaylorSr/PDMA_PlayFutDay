@@ -63,6 +63,10 @@ public class UserResponse {
     @JsonView({viewUser.UserResponse.class})
     protected String token;
 
+    @JsonView({viewUser.UserResponse.class})
+
+    protected String refreshToken;
+
 
     public static UserResponse fromUser(User user) {
         return UserResponse
@@ -79,6 +83,7 @@ public class UserResponse {
                 .myPost(user.getMyPost().isEmpty() ? null : user.getMyPost().stream().map(PostResponse::of).toList())
                 .roles(user.getRoles())
                 .token("")
+                .refreshToken("")
                 .build();
     }
 

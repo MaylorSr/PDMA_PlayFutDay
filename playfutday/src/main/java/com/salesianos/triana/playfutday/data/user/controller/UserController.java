@@ -16,6 +16,10 @@ import com.salesianos.triana.playfutday.data.user.service.UserService;
 import com.salesianos.triana.playfutday.search.page.PageResponse;
 import com.salesianos.triana.playfutday.security.jwt.access.JwtProvider;
 
+import com.salesianos.triana.playfutday.security.refresh.RefreshToken;
+import com.salesianos.triana.playfutday.security.refresh.RefreshTokenException;
+import com.salesianos.triana.playfutday.security.refresh.RefreshTokenRequest;
+import com.salesianos.triana.playfutday.security.refresh.RefreshTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -53,6 +57,8 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationManager authManager;
     private final JwtProvider jwtProvider;
+
+    private final RefreshTokenService refreshTokenService;
 
     private final TemporalUserService temporalUserService;
 
@@ -200,6 +206,71 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @Operation(summary = "Este método sirve para realizar el token de refresco al usuario logeado")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "El token se ha refrescadi correctamente",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = LoginRequest.class),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            {
+                                                 "id": "7495ac21-9cef-4655-a816-29a1eee80841",
+                                                 "username": "alejandro",
+                                                 "email": "alejandro@gmail.com",
+                                                 "avatar": "alejandro.jpg",
+                                                 "biography": "I am Alejandro, a software engineer passionate about coding and hiking in my free time.",
+                                                 "phone": "170304671",
+                                                 "birthday": "17/12/2002",
+                                                 "myPost": [
+                                                     {
+                                                         "image": "PACHECO.jpg"
+                                                     },
+                                                     {
+                                                         "image": "POZO.jpg"
+                                                     },
+                                                     {
+                                                         "image": "tec_lampard.png"
+                                                     },
+                                                     {
+                                                         "image": "insigne.jpg"
+                                                     }
+                                                 ],
+                                                 "roles": [
+                                                     "USER"
+                                                 ],
+                                                 "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NDk1YWMyMS05Y2VmLTQ2NTUtYTgxNi0yOWExZWVlODA4NDEiLCJpYXQiOjE2ODI3MDQ1ODYsImV4cCI6MTY4MjcwNDg4Nn0.7BSW-Zavbwre62s8e4nkM51BZLo69j0tLmKsateJiIDESDf_HTUFM8zXg9Yfz-L1OZw0ZDvksldlDYFS-MYnTA",
+                                                 "refreshToken": "894f0d98-773c-4843-9ac2-03b40dab8dbb"
+                                             }
+                                             """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "401",
+                    description = "No estas logeado u autenticado o el token de refresco ha expirado",
+                    content = @Content),
+    })
+    @PostMapping("/refresh/token")
+    @JsonView(viewUser.UserInfo.class)
+    public ResponseEntity<UserResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+        String refreshToken = request.getRefreshToken();
+
+        return refreshTokenService.findByToken(refreshToken)
+                .map(refreshTokenService::verifyRefreshToken)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    String token = jwtProvider.generateToken(user);
+                    refreshTokenService.deleteByUser(user);
+                    RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(user);
+                    UserResponse userP = UserResponse.fromUser((user));
+                    userP.setToken(token);
+                    userP.setRefreshToken(newRefreshToken.getToken());
+                    return ResponseEntity.status(HttpStatus.CREATED).body(userP);
+                }).
+                orElseThrow(
+                        () -> new RefreshTokenException("Not found the refresh token")
+                );
+    }
+
     @Operation(summary = "Este método sirve para logear a un usuario ya creado")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",
@@ -208,50 +279,34 @@ public class UserController {
                             schema = @Schema(implementation = LoginRequest.class),
                             examples = {@ExampleObject(
                                     value = """
-                                            [
                                             {
-                                                 "id": "d8825758-d02a-4bcc-8146-95fb6fa3ded7",
-                                                 "username": "bmacalester1",
-                                                 "email": "bmacalester1@hotmail.com",
-                                                 "avatar": "avatar.png",
-                                                 "phone": "3011096944",
-                                                 "birthday": "02/04/2002",
+                                                 "id": "7495ac21-9cef-4655-a816-29a1eee80841",
+                                                 "username": "alejandro",
+                                                 "email": "alejandro@gmail.com",
+                                                 "avatar": "alejandro.jpg",
+                                                 "biography": "I am Alejandro, a software engineer passionate about coding and hiking in my free time.",
+                                                 "phone": "170304671",
+                                                 "birthday": "17/12/2002",
                                                  "myPost": [
                                                      {
-                                                         "id": 3,
-                                                         "tag": "#CR7",
-                                                         "image": "cr7.jpg",
-                                                         "uploadDate": "22/02/2023",
-                                                         "author": "bmacalester1",
-                                                         "idAuthor": "d8825758-d02a-4bcc-8146-95fb6fa3ded7",
-                                                         "authorFile": "avatar.png",
-                                                         "countLikes": 0,
-                                                         "commentaries": [
-                                                             {
-                                                                 "message": "engineer rich schemas",
-                                                                 "authorName": "cc1692e1-f031-4675-a0b1-96aeeada21aa",
-                                                                 "uploadCommentary": "22/02/2023"
-                                                             },
-                                                             {
-                                                                 "message": "monetize best-of-breed eyeballs",
-                                                                 "authorName": "abb9feac-f0ec-45cf-91a9-5d21c789da2d",
-                                                                 "uploadCommentary": "22/02/2023"
-                                                             },
-                                                             {
-                                                                 "message": "strategize cross-media deliverables",
-                                                                 "authorName": "abb9feac-f0ec-45cf-91a9-5d21c789da2d",
-                                                                 "uploadCommentary": "22/02/2023"
-                                                             }
-                                                         ]
+                                                         "image": "PACHECO.jpg"
+                                                     },
+                                                     {
+                                                         "image": "POZO.jpg"
+                                                     },
+                                                     {
+                                                         "image": "tec_lampard.png"
+                                                     },
+                                                     {
+                                                         "image": "insigne.jpg"
                                                      }
                                                  ],
                                                  "roles": [
-                                                     "ADMIN",
                                                      "USER"
                                                  ],
-                                                 "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkODgyNTc1OC1kMDJhLTRiY2MtODE0Ni05NWZiNmZhM2RlZDciLCJpYXQiOjE2NzcxMDQ2MDYsImV4cCI6MTY3NzcwOTQwNn0.rp4d6AUuMwAZC8gomYwxrEufKr_-_liNuciUo1foFlqcPwBwlHRTp3CNO7ilZtXAEpgK8UuXuqHvFpRCN7Y8_A"
+                                                 "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3NDk1YWMyMS05Y2VmLTQ2NTUtYTgxNi0yOWExZWVlODA4NDEiLCJpYXQiOjE2ODI3MDQ1ODYsImV4cCI6MTY4MjcwNDg4Nn0.7BSW-Zavbwre62s8e4nkM51BZLo69j0tLmKsateJiIDESDf_HTUFM8zXg9Yfz-L1OZw0ZDvksldlDYFS-MYnTA",
+                                                 "refreshToken": "894f0d98-773c-4843-9ac2-03b40dab8dbb"
                                              }
-                                            ]
                                              """
                             )}
                     )}),
@@ -270,12 +325,13 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtProvider.generateToken(authentication);
-        User user = (User) authentication.getPrincipal();
-        UserResponse userP = UserResponse.fromUser(user);
+        refreshTokenService.deleteByUser((User) authentication.getPrincipal());
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken((User) authentication.getPrincipal());
+        UserResponse userP = UserResponse.fromUser((User) authentication.getPrincipal());
         userP.setToken(token);
+        userP.setRefreshToken(refreshToken.getToken());
         return ResponseEntity.status(HttpStatus.CREATED).body(userP);
     }
-
 
     @Operation(summary = "Este método implementa seguir a un usuario o dejar de seguirlo")
     @ApiResponses(value = {
