@@ -9,15 +9,15 @@ class PostFavResponse {
     if (json['content'] != null) {
       content = <MyFavPost>[];
       json['content'].forEach((v) {
-        content!.add(new MyFavPost.fromJson(v));
+        content!.add(MyFavPost.fromJson(v));
       });
       totalPages = json['totalPages'];
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.content != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (content != null) {
       data['content'] = content!.map((v) => v.toJson()).toList();
     }
     data['totalPages'] = totalPages;
@@ -51,13 +51,13 @@ class MyFavPost {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['tag'] = this.tag;
-    data['image'] = this.image;
-    data['author'] = this.author;
-    data['authorFile'] = this.authorFile;
-    data['countLikes'] = this.countLikes;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['tag'] = tag;
+    data['image'] = image;
+    data['author'] = author;
+    data['authorFile'] = authorFile;
+    data['countLikes'] = countLikes;
     return data;
   }
 

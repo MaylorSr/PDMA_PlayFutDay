@@ -4,6 +4,7 @@ import 'package:playfutday_flutter/models/infoUser.dart';
 import 'package:playfutday_flutter/models/models.dart';
 
 import 'package:playfutday_flutter/repositories/repositories.dart';
+import '../../models/sing_up.dart';
 import '../localstorage_service.dart';
 
 import 'package:get_it/get_it.dart';
@@ -25,14 +26,10 @@ class UserService {
         .then((value) => _localStorageService = value);
   }
 
-  @override
   Future<UserInfo?> getCurrentUserInfo(String id) async {
-    //String? loggedUser = _localStorageService.getFromDisk("user");
-    print("get current user");
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
       UserInfo response = await _userRepository.getProfile(id);
-      print(response);
       return response;
     }
     return null;
@@ -51,7 +48,6 @@ class UserService {
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
       await _userRepository.editBirthdayByMe(birthday);
-      // ignore: avoid_print
     }
   }
 
@@ -59,7 +55,6 @@ class UserService {
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
       await _userRepository.editAvatar(token, file);
-      // ignore: avoid_print
     }
   }
 
@@ -76,7 +71,6 @@ class UserService {
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
       await _userRepository.editBioByMe(biography);
-      // ignore: avoid_print
     }
   }
 
@@ -112,5 +106,13 @@ class UserService {
       return response;
     }
     return null;
+  }
+
+  Future<dynamic> singUp(RegisterRequest body) async {
+    return await _userRepository.singUp(body);
+  }
+
+  Future<dynamic> verifyCode(String code) async {
+    return await _userRepository.verifyCode(code);
   }
 }

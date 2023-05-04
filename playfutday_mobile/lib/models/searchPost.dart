@@ -14,7 +14,7 @@ class SearchPost extends SearchDelegate {
   String? get searchFieldLabel => "Search post by tag";
   @override
   List<Widget>? buildActions(BuildContext context) {
-    return [IconButton(onPressed: () => query = '', icon: Icon(Icons.clear))];
+    return [IconButton(onPressed: () => query = '', icon: const Icon(Icons.clear))];
   }
 
   @override

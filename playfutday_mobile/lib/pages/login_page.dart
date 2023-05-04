@@ -2,6 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:playfutday_flutter/pages/sing_up/sing_up.dart';
 import '../blocs/authentication/authentication.dart';
 import '../blocs/login/login.dart';
 import '../config/locator.dart';
@@ -40,7 +43,6 @@ class LoginPage extends StatelessWidget {
                   ],
                 ));
               }
-              // return splash screen
               return Center(
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
@@ -107,7 +109,8 @@ class __SignInFormState extends State<_SignInForm> {
         builder: (context, state) {
           if (state is LoginLoading) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: LoadingAnimationWidget.prograssiveDots(
+                  color: Color.fromARGB(255, 6, 49, 122), size: 45),
             );
           }
           return Form(
@@ -119,12 +122,8 @@ class __SignInFormState extends State<_SignInForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  // ignore: avoid_unnecessary_containers
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 20.0),
-                    child: Image.network(
-                        height: 230,
-                        'https://img.freepik.com/vector-gratis/pelota-futbol-dibujado-mano_1034-741.jpg?size=626&ext=jpg&ga=GA1.1.1911364125.1676903140&semt=ais'),
+                  SizedBox(
+                    child: Image.asset('assets/images/logo.png', height: 230),
                   ),
                   Text('PLAYFUTDAY',
                       textAlign: TextAlign.center,
@@ -158,8 +157,6 @@ class __SignInFormState extends State<_SignInForm> {
                         ),
                         TextFormField(
                           style: TextStyle(color: Colors.black),
-
-                          // ignore: prefer_const_constructors
                           decoration: InputDecoration(
                             labelText: 'Password',
                             filled: true,
@@ -177,35 +174,32 @@ class __SignInFormState extends State<_SignInForm> {
                         const SizedBox(
                           height: 15,
                         ),
-                        const ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll<Color>(
-                                Colors.transparent),
-                          ),
-                          onPressed:
-                              null /*() {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                transitionDuration: Duration(milliseconds: 500),
-                                transitionsBuilder: (context, animation,
-                                    secondaryAnimation, child) {
-                                  return FadeTransition(
-                                    opacity: animation,
-                                    child: child,
-                                  );
-                                },
-                                pageBuilder:
-                                    (context, animation, secondaryAnimation) {
-                                  return SingUpForm();
-                                },
-                              ),
-                            );
-                          }*/
-                          ,
-                          child: Text('You do not have count? register now',
-                              style: TextStyle(color: Color.fromARGB(255, 139, 13, 3))),
-                        ),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  transitionDuration:
+                                      const Duration(milliseconds: 300),
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      SingUpPage(),
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    return SlideTransition(
+                                      position: Tween<Offset>(
+                                              begin: const Offset(1, 0),
+                                              end: Offset.zero)
+                                          .animate(animation),
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                            child: Text('You do not have count? register now',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 139, 13, 3)))),
                         const SizedBox(
                           height: 15,
                         ),
@@ -235,6 +229,10 @@ class __SignInFormState extends State<_SignInForm> {
   }
 
   void _showError(String error) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+    EasyLoading.showError(
+        duration: const Duration(seconds: 3),
+        dismissOnTap: true,
+        error,
+        maskType: EasyLoadingMaskType.black);
   }
 }

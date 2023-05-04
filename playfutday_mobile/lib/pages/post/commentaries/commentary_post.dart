@@ -103,12 +103,16 @@ class FormFieldCommentary extends StatelessWidget {
           child: CircleAvatar(
               radius: 20,
               child: ClipOval(
-                child: Image.network(
+                child: CachedNetworkImage(
+                  useOldImageOnUrlChange: true,
+                  placeholderFadeInDuration: const Duration(seconds: 15),
+                  placeholder: (context, url) =>
+                      Image.asset('assets/images/reload.gif'),
+                  imageUrl: '$urlBase/download/${user.avatar}',
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  '$urlBase/download/${user.avatar}',
-                  errorBuilder: (context, error, stackTrace) =>
-                      Image.asset('assets/images/reload.gif'),
+                  errorWidget: (context, url, error) =>
+                      Image.asset('assets/images/avatar.png'),
                 ),
               )),
         ),
@@ -166,7 +170,7 @@ Widget buildCommentary(
                     Image.asset('assets/images/reload.gif'),
                 imageUrl: '$urlBase/download/${commentaries.authorFile}',
                 errorWidget: (context, url, error) =>
-                    Image.asset('assets/images/image_notfound.png'),
+                      Image.asset('assets/images/avatar.png'),
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),

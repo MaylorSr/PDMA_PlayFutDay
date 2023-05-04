@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:playfutday_flutter/services/services.dart';
 import 'package:playfutday_flutter/theme/app_theme.dart';
 
@@ -9,7 +10,7 @@ import 'blocs/authentication/authentication.dart';
 import 'config/locator.dart';
 import 'pages/pages.dart';
 
-void main() {
+void main() async {
   setupAsyncDependencies();
   configureDependencies();
 
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Authentication Demo',
         theme: AppTheme.darkTheme,
+        builder: EasyLoading.init(),
         home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (context, state) {
             GlobalContext.ctx = context;

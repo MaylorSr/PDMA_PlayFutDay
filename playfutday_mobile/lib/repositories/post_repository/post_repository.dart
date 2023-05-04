@@ -7,7 +7,8 @@ import 'package:playfutday_flutter/models/commentary_request.dart';
 import 'package:playfutday_flutter/models/models.dart';
 
 import '../../config/locator.dart';
-import '../../models/my_fav_post.dart';
+// import '../../models/my_fav_post.dart';
+import '../../models/image_post_grid.dart';
 import '../../rest/rest_client.dart';
 
 @Order(-1)
@@ -25,6 +26,18 @@ class PostRepository {
     var jsonResponse = await _client.get(url);
 
     return PostResponse.fromJson(jsonDecode(jsonResponse));
+  }
+
+  Future<List<ImagesPostGrid>> getAllImagesPostGridOfUser(
+      String username) async {
+    String url = "/post/user/post/grid/$username";
+    var jsonResponse = await _client.get(url);
+    List<dynamic> responseList = jsonDecode(jsonResponse);
+    List<ImagesPostGrid> imagesPostGridList = responseList
+        .map((response) => ImagesPostGrid.fromJson(response))
+        .toList();
+
+    return imagesPostGridList;
   }
 
   Future<PostResponse> allPostByTag([int index = 0, query]) async {
@@ -61,9 +74,7 @@ class PostRepository {
 
   Future<void> deletePost(int idPost, String userId) async {
     String url = "/post/user/$idPost/user/$userId";
-    // ignore: avoid_print
-    print(idPost);
-    // ignore: unused_local_variable
+    (idPost);
     var jsonResponse = await _client.deleteP(url);
   }
   /*

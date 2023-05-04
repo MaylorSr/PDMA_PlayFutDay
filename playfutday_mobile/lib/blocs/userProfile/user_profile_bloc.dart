@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
@@ -8,7 +7,7 @@ import 'package:stream_transform/stream_transform.dart';
 import 'user_profile_event.dart';
 import 'user_profile_state.dart';
 
-const throttleDuration = Duration(milliseconds: 200);
+const throttleDuration = Duration(milliseconds: 500);
 
 EventTransformer<E> throttleDroppable<E>(Duration duration) {
   return (events, mapper) {

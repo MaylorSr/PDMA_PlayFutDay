@@ -7,7 +7,6 @@ import '../../services/services.dart';
 import 'authentication_event.dart';
 import 'authentication_state.dart';
 
-
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final AuthenticationService _authenticationService;
@@ -29,16 +28,15 @@ class AuthenticationBloc
   ) async {
     emit(AuthenticationLoading());
     try {
-      await Future.delayed(const Duration(milliseconds: 100)); // a simulated delay
+      await Future.delayed(
+          const Duration(milliseconds: 300)); // a simulated delay
       final currentUser = await _authenticationService.getCurrentUser();
-
       if (currentUser != null) {
         emit(AuthenticationAuthenticated(user: currentUser));
       } else {
         emit(AuthenticationNotAuthenticated());
       }
-    } on UnauthorizedException catch (e) {
-      print(e);
+    } on UnauthorizedException {
       emit(AuthenticationNotAuthenticated());
     } on Exception catch (e) {
       emit(AuthenticationFailure(

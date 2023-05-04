@@ -2,14 +2,18 @@ import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:playfutday_flutter/blocs/follows/follow.dart';
+import 'package:playfutday_flutter/blocs/post_grid_user/post_grid_event.dart';
 import 'package:playfutday_flutter/blocs/userProfile/user_profile.dart';
 import 'package:playfutday_flutter/models/infoUser.dart';
 import 'package:playfutday_flutter/models/models.dart';
 import 'package:playfutday_flutter/pages/pages.dart';
 import 'package:playfutday_flutter/pages/user/post_user.dart';
+import 'package:playfutday_flutter/pages/user/post_view_grid_user/post_grid_view.dart';
 import 'package:playfutday_flutter/rest/rest.dart';
 import 'package:playfutday_flutter/services/post_service/post_service.dart';
 import 'package:playfutday_flutter/services/user_service/user_service.dart';
@@ -18,6 +22,7 @@ import '../../blocs/blocs.dart';
 import '../../blocs/followers/followers.dart';
 import '../../blocs/myFavPost/my_fav_Post_bloc.dart';
 import '../../blocs/postUser/post_user_bloc.dart';
+import '../../blocs/post_grid_user/post_grid_bloc.dart';
 import '../../theme/app_theme.dart';
 import '../post/myFavPost/post_pageFav.dart';
 import 'option_follow.dart';
@@ -38,36 +43,13 @@ class _UserScreenState extends State<UserScreen> {
   final UserService userService = UserService();
   int _view = 1; // variable para cambiar la vista entre grid y lista
 
-  List<Widget> _buildGridMyPost() {
-    if (widget.user!.myPost != null) {
-      return List.generate(
-          widget.user!.myPost!.length,
-          (index) => FadeInLeft(
-                animate: true,
-                duration: const Duration(seconds: 2),
-                child: SizedBox(
-                  height: 300,
-                  child: Card(
-                    color: Colors.transparent,
-                    elevation: 0,
-                    clipBehavior: Clip.antiAlias,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: CachedNetworkImage(
-                        placeholderFadeInDuration: const Duration(seconds: 10),
-                        placeholder: (context, url) =>
-                            Image.asset('assets/images/reload.gif'),
-                        errorWidget: (context, url, error) =>
-                            Image.asset('assets/images/image_notfound.png'),
-                        imageUrl:
-                            '$urlBase/download/${widget.user!.myPost![index].image}'),
-                  ),
-                ),
-              ));
-    } else {
-      return []; // devolver una lista vacía si widget.user.myPost es nulo
-    }
+  BlocProvider _buildGridListPostImage() {
+    return BlocProvider(
+      create: (_) =>
+          AllImagePostGridBloc(PostService(), widget.user!.username.toString())
+            ..add(AllImagePostGridFetched()),
+      child: const PostGridImageScreen(),
+    );
   }
 
   BlocProvider _buildListMyPost() {
@@ -149,29 +131,42 @@ class _UserScreenState extends State<UserScreen> {
                                         Navigator.pop(context);
                                       }),
                                   ListTile(
-                                    leading: Icon(Platform.isAndroid
-                                        ? Icons.close
-                                        : Icons.remove_circle_outline_outlined),
-                                    title: const Text('Delete my account'),
-                                    onTap: () {
-                                      userService.deleteUserOrMe(
-                                          widget.userLoger.id.toString());
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const LoginPage()));
-                                      Navigator.pop(context);
-                                    },
-                                  ),
+                                      leading: Icon(Platform.isAndroid
+                                          ? Icons.close
+                                          : Icons
+                                              .remove_circle_outline_outlined),
+                                      title: const Text('Delete my account'),
+                                      onTap: () {
+                                        EasyLoading.showInfo(
+                                            duration: const Duration(
+                                                milliseconds: 500),
+                                            "You account was delete");
+                                        Future.delayed(const Duration(
+                                                milliseconds: 800))
+                                            .then((value) => {
+                                                  userService.deleteUserOrMe(
+                                                      widget.userLoger.id
+                                                          .toString()),
+                                                  authBloc.add(UserLoggedOut()),
+                                                  Navigator.pop(context)
+                                                });
+                                      }),
                                   ListTile(
                                     leading: Icon(Platform.isAndroid
                                         ? Icons.logout
                                         : Icons.logout_outlined),
                                     title: const Text('Logout'),
                                     onTap: () {
-                                      authBloc.add(UserLoggedOut());
-                                      Navigator.pop(context);
+                                      EasyLoading.show(status: 'Logout...');
+                                      Future.delayed(
+                                          const Duration(milliseconds: 650),
+                                          () {
+                                        EasyLoading.dismiss(animation: true)
+                                            .then((value) => {
+                                                  authBloc.add(UserLoggedOut()),
+                                                  Navigator.pop(context)
+                                                });
+                                      });
                                     },
                                   ),
                                 ],
@@ -441,9 +436,11 @@ class _UserScreenState extends State<UserScreen> {
               // vista de grid o lista según la variable _isGridView
               Expanded(
                   child: _view == 1
-                      ? GridView.count(
-                          crossAxisCount: 2,
-                          children: _buildGridMyPost(),
+                      ? BlocProvider(
+                          create: (_) => AllImagePostGridBloc(
+                              PostService(), widget.user!.username.toString())
+                            ..add(AllImagePostGridFetched()),
+                          child: const PostGridImageScreen(),
                         )
                       : _view == 2
                           ? BlocProvider(

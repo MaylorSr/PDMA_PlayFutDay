@@ -59,7 +59,7 @@ class _AllFollowerListVercialState extends State<AllFollowerListVertical> {
               controller: _scrollController,
             );
           case AllFollowerStatus.initial:
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
         }
       },
     );

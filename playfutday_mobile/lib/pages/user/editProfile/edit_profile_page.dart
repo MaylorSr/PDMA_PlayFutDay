@@ -73,8 +73,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     setState(() {
                       if (pickedFile != null) {
                         _image = File(pickedFile.path);
-                      } else {
-                        print('No image selected.');
                       }
                     });
 
@@ -93,8 +91,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     setState(() {
                       if (pickedFile != null) {
                         _image = File(pickedFile.path);
-                      } else {
-                        print('No image selected.');
                       }
                     });
                     // ignore: use_build_context_synchronously
@@ -128,12 +124,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     setState(() {
                       if (pickedFile != null) {
                         _image = File(pickedFile.path);
-                      } else {
-                        print('No image selected.');
                       }
+                      Navigator.pop(context);
                     });
-
-                    Navigator.pop(context);
                   },
                   label: const Text('Camara',
                       style: TextStyle(color: AppTheme.primary)),
@@ -147,15 +140,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     setState(() {
                       if (pickedFile != null) {
                         _image = File(pickedFile.path);
-                      } else {
-                        print('No image selected.');
                       }
+                      Navigator.pop(context);
                     });
-                    Navigator.pop(context);
                   },
                   label: const Text('Gallery',
                       style: TextStyle(color: AppTheme.primary)),
-                  icon: Icon((Icons.photo_camera_back_outlined)),
+                  icon: const Icon((Icons.photo_camera_back_outlined)),
                 )
               ],
             );
@@ -249,7 +240,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '@${widget.user!.username}',
+                        '@${widget.user.username}',
                         style: const TextStyle(
                           fontSize: 25,
                           color: AppTheme.primary,
@@ -388,9 +379,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             color: AppTheme.primary,
                                             fontWeight: FontWeight.bold,
                                             fontStyle: FontStyle.italic)),
-                                    maxTime: DateTime.now(), onChanged: (date) {
-                                  print('change $date');
-                                }, onConfirm: (date) {
+                                    maxTime: DateTime.now(),
+                                    onChanged: (date) {}, onConfirm: (date) {
                                   setState(() {
                                     _birthDateController.text =
                                         DateFormat('dd/MM/yyyy').format(date);
@@ -412,7 +402,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                       ChangePasswordScreen(user: widget.user),
+                                      ChangePasswordScreen(user: widget.user),
                                 )),
                             child: const Text(
                               'Change Password',

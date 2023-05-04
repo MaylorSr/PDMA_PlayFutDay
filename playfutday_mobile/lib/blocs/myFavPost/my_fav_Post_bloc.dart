@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
@@ -7,7 +8,7 @@ import 'package:playfutday_flutter/services/post_service/post_service.dart';
 import 'package:stream_transform/stream_transform.dart';
 import '../allPost/allPost_event.dart';
 
-const throttleDuration = Duration(milliseconds: 100);
+const throttleDuration = Duration(milliseconds: 500);
 int page = -1;
 
 EventTransformer<E> throttleDroppable<E>(Duration duration) {
@@ -17,7 +18,8 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 }
 
 class MyFavPostBloc extends Bloc<AllPostEvent, AllPostState> {
-  MyFavPostBloc(this._postService, this.username) : super(const AllPostState()) {
+  MyFavPostBloc(this._postService, this.username)
+      : super(const AllPostState()) {
     on<AllPostFetched>(
       _onAllPostFetched,
       transformer: throttleDroppable(throttleDuration),
@@ -59,13 +61,12 @@ class MyFavPostBloc extends Bloc<AllPostEvent, AllPostState> {
 
   Future<void> _onDeletePost(
       DeletePost event, Emitter<AllPostState> emitter) async {
-    final deleteInProgress = state.allPost.map((post) {
-      // ignore: unrelated_type_equality_checks
-      return post.id == event.idPost ? state.copyWith() : post;
-    }).toList();
+    // final deleteInProgress = state.allPost.map((post) {
+    //   // ignore: unrelated_type_equality_checks
+    //   return post.id == event.idPost ? state.copyWith() : post;
+    // }).toList();
 
-    print(deleteInProgress);
-    // ignore: invalid_use_of_visible_for_testing_member
+    // print(deleteInProgress);
     emitter(state.copyWith(
         status: AllPostStatus.success,
         allPost: state.allPost,
@@ -74,9 +75,7 @@ class MyFavPostBloc extends Bloc<AllPostEvent, AllPostState> {
     unawaited(
       _postService.deletePost(event.idPost, event.idUser).then((_) {
         final deleteSuccess = List.of(state.allPost)
-          // ignore: unrelated_type_equality_checks
           ..removeWhere((post) => post.id == event.idPost);
-        // ignore: invalid_use_of_visible_for_testing_member
         emitter(state.copyWith(allPost: deleteSuccess));
       }),
     );

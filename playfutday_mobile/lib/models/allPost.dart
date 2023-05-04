@@ -11,19 +11,16 @@ class PostResponse {
     if (json['content'] != null) {
       content = <Post>[];
       json['content'].forEach((v) {
-        // ignore: unnecessary_new
-        content!.add(new Post.fromJson(v));
+        content.add(new Post.fromJson(v));
       });
       totalPages = json['totalPages'];
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (content != null) {
-      data['content'] = this.content!.map((v) => v.toJson()).toList();
-    }
-    data['totalPages'] = this.totalPages;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['content'] = content.map((v) => v.toJson()).toList();
+    data['totalPages'] = totalPages;
 
     return data;
   }
@@ -80,19 +77,19 @@ class Post extends Equatable {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['tag'] = this.tag;
-    data['description'] = this.description;
-    data['image'] = this.image;
-    data['uploadDate'] = this.uploadDate;
-    data['author'] = this.author;
-    data['idAuthor'] = this.idAuthor;
-    data['authorFile'] = this.authorFile;
-    data['likesByAuthor'] = this.likesByAuthor;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['tag'] = tag;
+    data['description'] = description;
+    data['image'] = image;
+    data['uploadDate'] = uploadDate;
+    data['author'] = author;
+    data['idAuthor'] = idAuthor;
+    data['authorFile'] = authorFile;
+    data['likesByAuthor'] = likesByAuthor;
     data['countLikes'] = countLikes;
-    if (this.commentaries != null) {
-      data['commentaries'] = this.commentaries!.map((v) => v.toJson()).toList();
+    if (commentaries != null) {
+      data['commentaries'] = commentaries!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -135,11 +132,11 @@ class Commentaries {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    data['authorName'] = this.authorName;
-    data['authorFile'] = this.authorFile;
-    data['uploadCommentary'] = this.uploadCommentary;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
+    data['authorName'] = authorName;
+    data['authorFile'] = authorFile;
+    data['uploadCommentary'] = uploadCommentary;
     return data;
   }
 }

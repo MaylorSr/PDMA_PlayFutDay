@@ -34,13 +34,19 @@ dependencies:
   animate_do: ^2.0.0
   flutter_datetime_picker: ^1.5.1
   cached_network_image: ^3.2.3
-
-  
+  flutter_easyloading: ^3.0.5
+  flutter_native_splash: ^2.2.19
+  loading_animation_widget: ^1.2.0+4  
+  pin_code_fields: ^7.4.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/logo.png
+
 
 flutter:
   uses-material-design: true

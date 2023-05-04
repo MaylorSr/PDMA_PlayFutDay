@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:playfutday_flutter/models/allPost.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:playfutday_flutter/services/post_service/post_service.dart';
 
 import '../../blocs/blocs.dart';
@@ -77,7 +77,8 @@ class _AllPostListState extends State<AllPostList> {
                         decelerationRate: ScrollDecelerationRate.fast)),
                 itemBuilder: (BuildContext context, int index) {
                   return index >= state.allPost.length
-                      ? const BottomLoader()
+                      ?  LoadingAnimationWidget.twoRotatingArc(
+                        color: const Color.fromARGB(255, 6, 49, 122), size: 45)
                       : CardScreenPost(
                           post: state.allPost[index],
                           user: widget.user,
@@ -103,7 +104,10 @@ class _AllPostListState extends State<AllPostList> {
               ),
             ));
           case AllPostStatus.initial:
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: LoadingAnimationWidget.twoRotatingArc(
+                  color: const Color.fromARGB(255, 6, 49, 122), size: 45),
+            );
         }
       },
     );

@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:playfutday_flutter/services/post_service/post_service.dart';
-import 'package:animate_do/animate_do.dart';
 
 import '../../theme/app_theme.dart';
 
@@ -75,8 +74,6 @@ class _NewPostFormState extends State<NewPostForm> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     void displayDialogAndroid(BuildContext context) {
       showDialog(
           context: context,

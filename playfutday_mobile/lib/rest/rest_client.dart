@@ -1,16 +1,19 @@
-// ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_new, prefer_collection_literals, depend_on_referenced_packages, avoid_print, duplicate_ignore
+// ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_new, prefer_collection_literals, depend_on_referenced_packages, avoid_, duplicate_ignore
 
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
 
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http_interceptor/http_interceptor.dart';
-import 'package:injectable/injectable.dart';
 import 'package:http/http.dart' as http;
-import 'package:playfutday_flutter/main.dart';
+import 'package:injectable/injectable.dart';
+import 'package:playfutday_flutter/models/models.dart';
+import 'package:playfutday_flutter/models/refresh_token_model.dart';
 import 'package:playfutday_flutter/services/localstorage_service.dart';
+import '../main.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiConstants {
@@ -33,6 +36,50 @@ class HeadersApiInterceptor implements InterceptorContract {
   @override
   Future<ResponseData> interceptResponse({required ResponseData data}) async =>
       data;
+}
+
+class ExpiredTokenRetryPolicy extends RetryPolicy {
+  //Number of retry
+  @override
+  // ignore: overridden_fields
+  int maxRetryAttempts = 2;
+  // String token = LocalStorageService().getFromDisk("user_token");
+  String refreshTokenNow =
+      const LocalStorageService().getFromDisk("user_refresh_token");
+  @override
+  Future<bool> shouldAttemptRetryOnResponse(ResponseData response) async {
+    final usuario = await refreshToken(refreshTokenNow);
+    if (usuario != null) {
+      saveStateTokens(
+          usuario.token.toString(), usuario.refreshToken.toString());
+      return false;
+    }
+    return true;
+  }
+
+  Future<User?> refreshToken(String refreshToken) async {
+    const String urlRefresh = "/refresh/token";
+    final body = RefreshTokenModel(refreshToken: refreshToken);
+
+    final response =
+        await http.post((ApiConstants.baseUrl + urlRefresh).toUri(),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode(body));
+
+    if (response.statusCode != 201) {
+      return null;
+    } else {
+      User user = User.fromJson(jsonDecode(response.body));
+      return user;
+    }
+  }
+
+  void saveStateTokens(String token, String refreshToken) {
+    const LocalStorageService().saveToDisk("user_refresh_token", refreshToken);
+    const LocalStorageService().saveToDisk("user_token", token);
+  }
 }
 
 @Order(-10)
@@ -108,7 +155,16 @@ class RestClient {
     }
   }
 
-  Future<dynamic> editAvatar(File file, String accessToken, String url) async{
+  Future<dynamic> verifyCode(String url, String code) async {
+    Uri uri = Uri.parse(ApiConstants.baseUrl + url);
+    final response = await http.post(
+      uri,
+      headers: {'Content-Type': 'application/json', 'Authorization': 'NoAuth'},
+    );
+    return response;
+  }
+
+  Future<dynamic> editAvatar(File file, String accessToken, String url) async {
     var bytes = await file.readAsBytes();
 
     try {
@@ -127,15 +183,12 @@ class RestClient {
       request.headers.addAll(headers);
 
       final response = await _httpClient!.send(request);
-      print(response);
       var responseJson = response.stream.bytesToString();
-      print(responseJson);
       return responseJson;
     } on SocketException catch (ex) {
       throw Exception('No internet connection: ${ex.message}');
     }
   }
-
 
   Future<dynamic> newPost(
       String url, dynamic body, File file, String accessToken) async {
@@ -163,9 +216,7 @@ class RestClient {
       }
 
       final response = await _httpClient!.send(request);
-      print(response);
       var responseJson = response.stream.bytesToString();
-      print(responseJson);
       return responseJson;
     } on SocketException catch (ex) {
       throw Exception('No internet connection: ${ex.message}');
@@ -184,9 +235,6 @@ class RestClient {
   }
 
   dynamic _response(http.Response response) {
-    print(response.body); /*
-    ApiError error = jsonDecode(response.body);*/
-
     switch (response.statusCode) {
       case 200:
       case 201:
@@ -277,12 +325,19 @@ class AuthorizationInterceptor implements InterceptorContract {
   @override
   Future<ResponseData> interceptResponse({required ResponseData data}) async {
     if (data.statusCode == 401 || data.statusCode == 403) {
-      // ignore: prefer_const_constructors
-      Future.delayed(Duration(seconds: 1), () {
-        Navigator.of(GlobalContext.ctx).push<void>(MyApp.route());
-      });
+      bool responseData =
+          await ExpiredTokenRetryPolicy().shouldAttemptRetryOnResponse(data);
+      if (!responseData) {
+        var request = data.request;
+        request!.headers["Authorization"] =
+            // ignore: prefer_interpolation_to_compose_strings
+            "Bearer " + _localStorageService.getFromDisk("user_token");
+        var retryResponseStream = await request.toHttpRequest().send();
+        var retryResponse = await http.Response.fromStream(retryResponseStream);
+        var datos = ResponseData.fromHttpResponse(retryResponse);
+        return Future.value(datos);
+      }
     }
-
     return Future.value(data);
   }
 }
@@ -294,3 +349,39 @@ class RestAuthenticatedClient extends RestClient {
       : super.withInterceptors(
             List.of(<InterceptorContract>[AuthorizationInterceptor()]));
 }
+
+/*
+@override
+  Future<ResponseData> interceptResponse({required ResponseData data}) async {
+    if (data.statusCode == 401 || data.statusCode == 403) {
+      // Future.delayed(Duration(seconds: 1), () {
+      //   Navigator.of(GlobalContext.ctx).push<void>(MyApp.route());
+      // });
+      var refreshToken = _localStorageService.getFromDisk("user_refresh_token");
+      final response = await http.post(
+          Uri.parse(ApiConstants.baseUrl + "/user/refreshtoken"),
+          body: jsonEncode({"refreshToken": refreshToken}),
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          });
+      if (response.statusCode == 201) {
+        LoginResponse loginResponse =
+            LoginResponse.fromJson(jsonDecode(response.body));
+
+        await _localStorageService.saveToDisk(
+            "user_token", loginResponse.token);
+        await _localStorageService.saveToDisk(
+            "user_refresh_token", loginResponse.refreshToken);
+
+        var request = data.request;
+        request!.headers["Authorization"] =
+            "Bearer " + _localStorageService.getFromDisk("user_token");
+        var retryResponseStream = await request.toHttpRequest().send();
+        var retryResponse = await http.Response.fromStream(retryResponseStream);
+        var datos = ResponseData.fromHttpResponse(retryResponse);
+        return Future.value(datos);
+      }
+    }
+    return Future.value(data);
+  }*/

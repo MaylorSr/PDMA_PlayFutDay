@@ -3,13 +3,16 @@ class UserFollowResponse {
   late int totalPages;
   late int totalElements;
 
-  UserFollowResponse({required this.userFollow, required this.totalPages, required this.totalElements});
+  UserFollowResponse(
+      {required this.userFollow,
+      required this.totalPages,
+      required this.totalElements});
 
   UserFollowResponse.fromJson(Map<String, dynamic> json) {
     if (json['content'] != null) {
       userFollow = <UserFollow>[];
       json['content'].forEach((v) {
-        userFollow!.add(new UserFollow.fromJson(v));
+        userFollow.add(UserFollow.fromJson(v));
       });
     }
     totalPages = json['totalPages'];
@@ -17,12 +20,10 @@ class UserFollowResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.userFollow != null) {
-      data['content'] = this.userFollow!.map((v) => v.toJson()).toList();
-    }
-    data['totalPages'] = this.totalPages;
-    data['totalElements'] = this.totalElements;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['content'] = userFollow.map((v) => v.toJson()).toList();
+    data['totalPages'] = totalPages;
+    data['totalElements'] = totalElements;
 
     return data;
   }
@@ -42,10 +43,10 @@ class UserFollow {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['username'] = this.username;
-    data['avatar'] = this.avatar;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['username'] = username;
+    data['avatar'] = avatar;
     return data;
   }
 }

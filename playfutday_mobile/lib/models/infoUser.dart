@@ -1,3 +1,4 @@
+// ignore: file_names
 class UserInfo {
   String? id;
   String? username;
@@ -33,25 +34,25 @@ class UserInfo {
     if (json['myPost'] != null) {
       myPost = <MyPost>[];
       json['myPost'].forEach((v) {
-        myPost!.add(new MyPost.fromJson(v));
+        myPost!.add(MyPost.fromJson(v));
       });
     }
     roles = json['roles'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['username'] = this.username;
-    data['email'] = this.email;
-    data['avatar'] = this.avatar;
-    data['biography'] = this.biography;
-    data['phone'] = this.phone;
-    data['birthday'] = this.birthday;
-    if (this.myPost != null) {
-      data['myPost'] = this.myPost!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['username'] = username;
+    data['email'] = email;
+    data['avatar'] = avatar;
+    data['biography'] = biography;
+    data['phone'] = phone;
+    data['birthday'] = birthday;
+    if (myPost != null) {
+      data['myPost'] = myPost!.map((v) => v.toJson()).toList();
     }
-    data['roles'] = this.roles;
+    data['roles'] = roles;
     return data;
   }
 }
@@ -98,27 +99,27 @@ class MyPost {
     if (json['commentaries'] != null) {
       commentaries = <Commentaries>[];
       json['commentaries'].forEach((v) {
-        commentaries!.add(new Commentaries.fromJson(v));
+        commentaries!.add(Commentaries.fromJson(v));
       });
     }
     description = json['description'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['tag'] = this.tag;
-    data['image'] = this.image;
-    data['uploadDate'] = this.uploadDate;
-    data['author'] = this.author;
-    data['idAuthor'] = this.idAuthor;
-    data['authorFile'] = this.authorFile;
-    data['likesByAuthor'] = this.likesByAuthor;
-    data['countLikes'] = this.countLikes;
-    if (this.commentaries != null) {
-      data['commentaries'] = this.commentaries!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['tag'] = tag;
+    data['image'] = image;
+    data['uploadDate'] = uploadDate;
+    data['author'] = author;
+    data['idAuthor'] = idAuthor;
+    data['authorFile'] = authorFile;
+    data['likesByAuthor'] = likesByAuthor;
+    data['countLikes'] = countLikes;
+    if (commentaries != null) {
+      data['commentaries'] = commentaries!.map((v) => v.toJson()).toList();
     }
-    data['description'] = this.description;
+    data['description'] = description;
     return data;
   }
 }
@@ -140,11 +141,11 @@ class Commentaries {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    data['authorName'] = this.authorName;
-    data['authorFile'] = this.authorFile;
-    data['uploadCommentary'] = this.uploadCommentary;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
+    data['authorName'] = authorName;
+    data['authorFile'] = authorFile;
+    data['uploadCommentary'] = uploadCommentary;
     return data;
   }
 }

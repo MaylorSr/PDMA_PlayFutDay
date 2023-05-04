@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:playfutday_flutter/models/models.dart';
 import 'package:playfutday_flutter/rest/rest.dart';
-import 'package:playfutday_flutter/theme/app_theme.dart';
 
 import '../../../blocs/userProfile/user_profile_bloc.dart';
 import '../../../blocs/userProfile/user_profile_event.dart';

@@ -1,5 +1,6 @@
-// ignore: file_names
-class ApiError {
+// ignore_for_file: file_names
+
+class Error {
   String? status;
   String? message;
   String? path;
@@ -7,7 +8,7 @@ class ApiError {
   String? date;
   List<SubErrors>? subErrors;
 
-  ApiError(
+  Error(
       {this.status,
       this.message,
       this.path,
@@ -15,7 +16,7 @@ class ApiError {
       this.date,
       this.subErrors});
 
-  ApiError.fromJson(Map<String, dynamic> json) {
+  Error.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     path = json['path'];

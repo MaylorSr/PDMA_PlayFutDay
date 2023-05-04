@@ -25,12 +25,19 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
   AllPostBloc(this._postService) : super(const AllPostState()) {
     on<AllPostFetched>(
       _onAllPostFetched,
-      transformer: throttleDroppable(throttleDuration),
     );
-    on<DeletePost>(_onDeletePost);
-    on<GiveLike>(_onLikedPost);
-    on<OnRefresh>(_onRefreshElements);
-    on<SendComment>(_onSendComment);
+    on<DeletePost>(
+      _onDeletePost,
+    );
+    on<GiveLike>(
+      _onLikedPost,
+    );
+    on<OnRefresh>(
+      _onRefreshElements,
+    );
+    on<SendComment>(
+      _onSendComment,
+    );
   }
 
   // ignore: unused_field
@@ -94,7 +101,7 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
           ? post.copyWith(
               post.likesByAuthor = updatedPost?.likesByAuthor,
               post.countLikes = updatedPost?.countLikes,
-              post.commentaries = updatedPost?.commentaries)
+              post.commentaries = post.commentaries)
           : post;
     }).toList();
 

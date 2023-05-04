@@ -8,7 +8,7 @@ import 'package:stream_transform/stream_transform.dart';
 import '../../services/user_service/user_service.dart';
 import 'follow_event.dart';
 
-const throttleDuration = Duration(milliseconds: 100);
+const throttleDuration = Duration(milliseconds: 500);
 int page = -1;
 
 EventTransformer<E> throttleDroppable<E>(Duration duration) {

@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:playfutday_flutter/models/change_password_request.dart';
 import 'package:playfutday_flutter/models/editProfile.dart';
+import 'package:playfutday_flutter/models/sing_up.dart';
 
 import '../config/locator.dart';
 import '../models/infoUser.dart';
 import '../models/models.dart';
-import '../models/user.dart';
 import '../rest/rest_client.dart';
 
 class UserRepository {
@@ -23,6 +22,18 @@ class UserRepository {
 
     var jsonResponse = await _client.get(url);
     return UserResponse.fromJson(jsonDecode(jsonResponse));
+  }
+
+  Future<dynamic> singUp(RegisterRequest body) async {
+    String url = "/auth/register";
+    var jsonResponse = await _client.singUpPost(url, body);
+    return jsonResponse;
+  }
+
+  Future<dynamic> verifyCode(String code) async {
+    String url = "/auth/verifyCode/$code";
+    var jsonResponse = await _client.verifyCode(url, code);
+    return jsonResponse;
   }
 
   Future<dynamic> getProfile(String id) async {

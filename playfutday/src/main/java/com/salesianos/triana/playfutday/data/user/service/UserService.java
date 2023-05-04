@@ -23,6 +23,7 @@ import com.salesianos.triana.playfutday.search.page.PageResponse;
 import com.salesianos.triana.playfutday.search.spec.GenericSpecificationBuilder;
 import com.salesianos.triana.playfutday.search.util.SearchCriteria;
 import com.salesianos.triana.playfutday.search.util.SearchCriteriaExtractor;
+import com.salesianos.triana.playfutday.security.refresh.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -50,6 +51,8 @@ public class UserService {
     private final PostService postService;
 
     private final FileSystemStorageService storageService;
+
+    private final RefreshTokenService refreshTokenService;
 
 
     public User createUser(UserRequest createUserRequest, EnumSet<UserRole> roles) {
@@ -104,14 +107,11 @@ public class UserService {
                 .map(
                         oldUser -> {
                             List<Post> myLikes = postRepository.findOnIlikePost(oldUser.getId());
-                            List<User> myFollows = oldUser.getFollows();
-//                            List<User> userWhoFollowMe = userRepository.findWhoFollowsMe(idU);
                             for (Post p : myLikes) {
                                 postService.giveLikeByUser(p.getId(), oldUser);
                             }
-//                            for (User u : myFollows) {
-//                                updateFollowers(oldUser, u.getId());
-//                            }
+                            refreshTokenService.deleteByUser(oldUser);
+
                             userRepository.delete(oldUser);
                             return null;
                         }

@@ -31,11 +31,11 @@ class JwtAuthenticationService extends AuthenticationService {
   @override
   Future<User?> getCurrentUser() async {
     //String? loggedUser = _localStorageService.getFromDisk("user");
-    print("get current user");
+    ("get current user");
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
       UserResponse response = await _userRepository.me();
-      print(response);
+      (response);
       return response;
     }
     return null;
@@ -46,21 +46,15 @@ class JwtAuthenticationService extends AuthenticationService {
       String username, String password) async {
     User response = await _authenticationRepository.doLogin(username, password);
     await _localStorageService.saveToDisk('user_token', response.token);
-    return User(
-        avatar: response.avatar,
-        username: response.username,
-        email: response.email,
-        biography: response.biography,
-        phone: response.phone,
-        birthday: response.birthday,
-        myPost: response.myPost,
-        roles: response.roles,
-        id: response.id);
+    await _localStorageService.saveToDisk(
+        'user_refresh_token', response.refreshToken);
+    return response;
   }
 
   @override
   Future<void> signOut() async {
-    print("borrando token");
+    ("borrando token y refresh token");
     await _localStorageService.deleteFromDisk("user_token");
+    await _localStorageService.deleteFromDisk("user_refresh_token");
   }
 }

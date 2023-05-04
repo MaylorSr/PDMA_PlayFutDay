@@ -19,7 +19,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         _authenticationBloc = authenticationBloc,
         _authenticationService = authenticationService,
         super(LoginInitial()) {
-    on<LoginInWithUserNameButtonPressed>(__onLoggingInWithUserNameButtonPressed);
+    on<LoginInWithUserNameButtonPressed>(
+        __onLoggingInWithUserNameButtonPressed);
   }
 
   __onLoggingInWithUserNameButtonPressed(

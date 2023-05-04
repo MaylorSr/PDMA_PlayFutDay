@@ -195,7 +195,7 @@ public class PostService {
                     if (!exists) {
                         likes.add(user);
                     } else {
-                        likes.remove(likes.indexOf(user) + 1);
+                        likes.remove(user);
                         repo.save(post);
                     }
                     return PostResponse.of(repo.save(post));

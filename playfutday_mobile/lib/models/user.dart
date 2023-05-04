@@ -9,6 +9,7 @@ class User {
   List<MyPost>? myPost;
   List<String>? roles;
   String? token;
+  String? refreshToken;
 
   User(
       {this.id,
@@ -20,7 +21,8 @@ class User {
       this.birthday,
       this.myPost,
       this.roles,
-      this.token});
+      this.token,
+      this.refreshToken});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -33,101 +35,45 @@ class User {
     if (json['myPost'] != null) {
       myPost = <MyPost>[];
       json['myPost'].forEach((v) {
-        myPost!.add(new MyPost.fromJson(v));
+        myPost!.add(MyPost.fromJson(v));
       });
     }
     roles = json['roles'].cast<String>();
     token = json['token'];
+    refreshToken = json['refreshToken'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['username'] = this.username;
-    data['email'] = this.email;
-    data['avatar'] = this.avatar;
-    data['biography'] = this.biography;
-    data['phone'] = this.phone;
-    data['birthday'] = this.birthday;
-    if (this.myPost != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['username'] = username;
+    data['email'] = email;
+    data['avatar'] = avatar;
+    data['biography'] = biography;
+    data['phone'] = phone;
+    data['birthday'] = birthday;
+    if (myPost != null) {
       data['myPost'] = myPost!.map((v) => v.toJson()).toList();
     }
-    data['roles'] = this.roles;
-    data['token'] = this.token;
+    data['roles'] = roles;
+    data['token'] = token;
+    data['refreshToken'] = refreshToken;
     return data;
-  }
-
-  copyWith({String? biography, String? birthday, String? phone}) {
-    return User(biography: biography, birthday: birthday, phone: phone);
   }
 }
 
 class MyPost {
-  int? id;
-  String? tag;
   String? image;
-  String? uploadDate;
-  String? author;
-  int? countLikes;
-  List<UserCommentaries>? commentaries;
 
-  MyPost(
-      {this.id,
-      this.tag,
-      this.image,
-      this.uploadDate,
-      this.author,
-      this.countLikes,
-      this.commentaries});
+  MyPost({this.image});
 
   MyPost.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    tag = json['tag'];
     image = json['image'];
-    uploadDate = json['uploadDate'];
-    author = json['author'];
-    countLikes = json['countLikes'];
-    if (json['commentaries'] != null) {
-      commentaries = <UserCommentaries>[];
-      json['commentaries'].forEach((v) {
-        commentaries!.add(new UserCommentaries.fromJson(v));
-      });
-    }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['tag'] = this.tag;
-    data['image'] = this.image;
-    data['uploadDate'] = this.uploadDate;
-    data['author'] = this.author;
-    data['countLikes'] = this.countLikes;
-    if (this.commentaries != null) {
-      data['commentaries'] = this.commentaries!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class UserCommentaries {
-  String? message;
-  String? authorName;
-  String? uploadCommentary;
-
-  UserCommentaries({this.message, this.authorName, this.uploadCommentary});
-
-  UserCommentaries.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
-    authorName = json['authorName'];
-    uploadCommentary = json['uploadCommentary'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    data['authorName'] = this.authorName;
-    data['uploadCommentary'] = this.uploadCommentary;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['image'] = image;
     return data;
   }
 }
@@ -155,8 +101,9 @@ class UserResponse extends User {
     token = json['token'];
   }
 
+  @override
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['username'] = username;
     data['email'] = email;

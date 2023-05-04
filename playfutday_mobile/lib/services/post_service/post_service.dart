@@ -1,11 +1,7 @@
-// ignore_for_file: override_on_non_overriding_member, avoid_print
-
-import 'dart:convert';
-
 import 'package:playfutday_flutter/models/models.dart';
 
 import 'package:playfutday_flutter/repositories/post_repository/post_repository.dart';
-import '../../models/my_fav_post.dart';
+import '../../models/image_post_grid.dart';
 import '../localstorage_service.dart';
 
 import 'package:get_it/get_it.dart';
@@ -27,84 +23,66 @@ class PostService {
         .then((value) => _localStorageService = value);
   }
 
-  @override
   Future<PostResponse?> getAllPosts([int page = 0]) async {
-    // ignore: avoid_print
-    print("get all posts");
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
       PostResponse response = await _postRepository.allPost(page);
-      // ignore: avoid_print
-      print(response.content);
       return response;
     }
     return null;
   }
 
-  @override
+  Future<List<ImagesPostGrid>?> getAllImageGridPost(String username) async {
+    String? token = _localStorageService.getFromDisk("user_token");
+    if (token != null) {
+      List<ImagesPostGrid> response =
+          await _postRepository.getAllImagesPostGridOfUser(username);
+      return response;
+    }
+    return null;
+  }
+
   Future<PostResponse?> getAllPostsByTag([int page = 0, query]) async {
-    // ignore: avoid_print
-    print("get all posts by tag");
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
       PostResponse response = await _postRepository.allPostByTag(
           page, query.toString().toUpperCase());
-      // ignore: avoid_print
-      print(response.content);
       return response;
     }
     return null;
   }
 
-  @override
   Future<void> newPost(String tag, String description, file) async {
-    print("New post now");
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
       await _postRepository.instanceNewPost(tag, description, file, token);
     }
   }
 
-  @override
   Future<PostResponse?> getMyPosts([int page = 0]) async {
-    // ignore: avoid_print
-    print("get my posts");
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
       PostResponse response = await _postRepository.myAllPost(page);
-      // ignore: avoid_print
-      print(response.content);
       return response;
     }
     return null;
   }
 
-  @override
   Future<PostResponse?> getPostsOfUser(int page, String username) async {
-    // ignore: avoid_print
-    print("get posts of a user");
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
       PostResponse response =
           await _postRepository.getPostsOfUser(page, username);
-      // ignore: avoid_print
-      print(response.content);
       return response;
     }
     return null;
   }
 
-
-  @override
   Future<PostResponse?> fetchPostsFav([int page = 0]) async {
-    // ignore: avoid_print
-    print("get fav posts");
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
       PostResponse response = await _postRepository.allFavPost(page);
-      // ignore: avoid_print
-      print(response.totalPages);
-      print(response.content);
+
       return response;
     }
     return null;
@@ -126,32 +104,16 @@ class PostService {
     String? token = _localStorageService.getFromDisk('user_token');
     if (token != null) {
       Post p = await _postRepository.postLike(idPost);
-      print(p);
       return p;
     }
     return null;
   }
 
-  /*
-
-  Future<MyFavPost?> postLikeByMeFav(int idPost) async {
-    String? token = _localStorageService.getFromDisk('user_token');
-    if (token != null) {
-      MyFavPost p = await _postRepository.postLikeFav(idPost);
-      print(p);
-      return p;
-    }
-    return null;
-  }
-
-  */
-  
   Future<Post?> sendCommentaries(String message, int idPost) async {
     String? token = _localStorageService.getFromDisk('user_token');
 
     if (token != null) {
       Post p = await _postRepository.sendComment(message, idPost);
-      print(p);
       return p;
     }
     return null;
