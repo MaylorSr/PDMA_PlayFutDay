@@ -102,9 +102,9 @@ class _HomePageState extends State<HomePage> {
                 body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                   builder: (context, state) {
                     if (state is AuthenticationAuthenticated) {
-                      return NewPostForm(
-                        postService: PostService(),
-                      );
+                      return const NewPostForm(
+                          // postService: PostService(),
+                          );
                     } else {
                       return const LoginPage();
                     }

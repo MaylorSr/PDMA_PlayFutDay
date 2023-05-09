@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
+import 'package:playfutday_flutter/models/apiError.dart';
 
 import '../../services/user_service/user_service.dart';
 
@@ -20,9 +22,6 @@ class ValidationChangePassword extends FormBloc<String, String> {
   ) {
     return (String? confirmPassword) {
       if (confirmPassword == passwordTextFieldBloc.value) {
-        if (confirmPassword == oldPassword.value) {
-          return 'The old password cannot be the same as the new one';
-        }
         return null;
       }
       return 'Must be equal to password';
@@ -41,13 +40,30 @@ class ValidationChangePassword extends FormBloc<String, String> {
 
   @override
   void onSubmitting() async {
-    debugPrint(password.value);
-    debugPrint(oldPassword.value);
-    debugPrint(confirmPassword.value);
-
-    await Future<void>.delayed(const Duration(seconds: 1));
-    _userService.changePassword(
+    var response = await _userService.changePassword(
         oldPassword.value, password.value, confirmPassword.value);
-    emitSuccess();
+    if (response.statusCode == 200) {
+      await Future<void>.delayed(const Duration(seconds: 1));
+      emitSuccess();
+    } else {
+      Error error = Error.fromJson(jsonDecode(response.body));
+
+      error.subErrors == null
+          ? oldPassword.addFieldError(error.message.toString())
+          : error.subErrors?.forEach((subError) {
+              switch (subError.field) {
+                case "newPassword":
+                  password.addFieldError(subError.message.toString());
+                  confirmPassword.addFieldError(subError.message.toString());
+                  break;
+                case "password":
+                  password.addFieldError(subError.message.toString());
+                  confirmPassword.addFieldError(subError.message.toString());
+                  break;
+              }
+            });
+      await Future<void>.delayed(const Duration(seconds: 1));
+      emitFailure(failureResponse: "Hubo un nerror con la respuesta");
+    }
   }
 }

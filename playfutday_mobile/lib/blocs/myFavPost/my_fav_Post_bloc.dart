@@ -82,21 +82,21 @@ class MyFavPostBloc extends Bloc<AllPostEvent, AllPostState> {
   }
 
   Future _onLikedPost(GiveLike event, Emitter<AllPostState> emit) async {
-    final updatedPost = await _postService.postLikeByMe(event.idPost);
+    await _postService.postLikeByMe(event.idPost);
 
-    final likeInProgress = state.allPost.map((post) {
-      return post.id == event.idPost
-          ? post.copyWith(
-              post.likesByAuthor = updatedPost?.likesByAuthor,
-              post.countLikes = updatedPost?.countLikes,
-              post.commentaries = updatedPost?.commentaries)
-          : post;
-    }).toList();
+    // final likeInProgress = state.allPost.map((post) {
+    //   return post.id == event.idPost
+    //       ? post.copyWith(
+    //           post.likesByAuthor = updatedPost?.likesByAuthor,
+    //           post.countLikes = updatedPost?.countLikes,
+    //           post.commentaries = updatedPost?.commentaries)
+    //       : post;
+    // }).toList();
 
-    emit(state.copyWith(
-        status: AllPostStatus.success,
-        allPost: likeInProgress,
-        hasReachedMax: false));
+    // emit(state.copyWith(
+    //     status: AllPostStatus.success,
+    //     allPost: likeInProgress,
+    //     hasReachedMax: false));
   }
 
   FutureOr<void> _onRefreshElements(

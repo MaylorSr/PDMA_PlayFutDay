@@ -1,12 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:playfutday_flutter/models/infoUser.dart';
 import 'package:playfutday_flutter/rest/rest.dart';
 import 'package:playfutday_flutter/services/user_service/user_service.dart';
 
 import '../../../blocs/blocs.dart';
 import '../../../theme/app_theme.dart';
+import '../../sing_up/sing_up.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({Key? key, required this.user}) : super(key: key);
@@ -17,11 +19,13 @@ class ChangePasswordScreen extends StatefulWidget {
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
-  bool _showOldPassword = true;
-  bool _showPassword = true;
-  bool _showConfirmPassword = true;
+  bool _showOldPassword = false;
+  bool _showPassword = false;
+  bool _showConfirmPassword = false;
   @override
   Widget build(BuildContext context) {
+    final authBloc = BlocProvider.of<AuthenticationBloc>(context);
+
     final urlBase = ApiConstants.baseUrl;
     return BlocProvider(
       create: (context) => ValidationChangePassword(UserService()),
@@ -31,16 +35,34 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
           return Scaffold(
             appBar: AppBar(
+              leadingWidth: MediaQuery.of(context).size.width * 0.25,
+              leading: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+              ),
               automaticallyImplyLeading: false,
               title: const Text(
                 'PlayFutDay',
                 style: TextStyle(
                   color: AppTheme.primary,
                   fontStyle: FontStyle.italic,
-                  fontSize: 25,
+                  fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
               ),
+              centerTitle: true,
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: loginFormBloc.submit,
+                    child: const Text('Save'),
+                  ),
+                ),
+              ],
             ),
             body: FormBlocListener<ValidationChangePassword, String, String>(
               onSubmitting: (context, state) {
@@ -51,14 +73,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               },
               onSuccess: (context, state) {
                 LoadingDialog.hide(context);
-
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (_) => SuccessScreen(widget.user)));
+                authBloc.add(UserLoggedOut());
+                Navigator.pop(context);
               },
               onFailure: (context, state) {
                 LoadingDialog.hide(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.failureResponse!)));
+                const SizedBox();
               },
               child: SingleChildScrollView(
                 physics: const ClampingScrollPhysics(),
@@ -67,22 +87,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('Cancel'),
-                            ),
-                            ElevatedButton(
-                              onPressed: loginFormBloc.submit,
-                              child: const Text('Save'),
-                            ),
-                          ],
-                        ),
-                      ),
                       CircleAvatar(
                         backgroundColor: Colors.black,
                         maxRadius: 50,
@@ -92,6 +96,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             child: CachedNetworkImage(
                               fit: BoxFit.cover,
                               width: double.infinity,
+                              height: 100.0,
                               placeholderFadeInDuration:
                                   const Duration(seconds: 12),
                               placeholder: (context, url) =>
@@ -118,10 +123,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       TextFieldBlocBuilder(
                         textColor: const MaterialStatePropertyAll(Colors.black),
                         cursorColor: Colors.black,
-                        textFieldBloc: loginFormBloc.oldPassword,
-                        autofocus: true,
                         animateWhenCanShow: true,
                         obscureText: !_showOldPassword,
+                        textFieldBloc: loginFormBloc.oldPassword,
+                        autofillHints: const [AutofillHints.password],
+                        keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           labelText: 'Old Password',
                           prefixIcon: const Icon(Icons.lock),
@@ -136,7 +142,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           focusedBorder: const OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10))),
-                          filled: true,
+                          filled: true, // habilitar el relleno
                           fillColor: Colors.white,
                           prefixIconColor: Colors.blue,
                           contentPadding: const EdgeInsets.symmetric(
@@ -156,6 +162,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               color: Colors.grey,
                             ),
                           ),
+                          errorMaxLines: 3,
                         ),
                       ),
                       TextFieldBlocBuilder(
@@ -167,39 +174,41 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         autofillHints: const [AutofillHints.password],
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
-                            labelText: 'Password',
-                            prefixIcon: const Icon(Icons.lock),
-                            floatingLabelStyle: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                backgroundColor: Colors.white),
-                            enabledBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            focusedBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            filled: true, // habilitar el relleno
-                            fillColor: Colors.white,
-                            prefixIconColor: Colors.blue,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
+                          labelText: 'Password',
+                          prefixIcon: const Icon(Icons.lock),
+                          floatingLabelStyle: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              backgroundColor: Colors.white),
+                          enabledBorder: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          focusedBorder: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          filled: true, // habilitar el relleno
+                          fillColor: Colors.white,
+                          prefixIconColor: Colors.blue,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _showPassword = !_showPassword;
+                              });
+                            },
+                            icon: Icon(
+                              _showPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.grey,
                             ),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _showPassword = !_showPassword;
-                                });
-                              },
-                              icon: Icon(
-                                _showPassword
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.grey,
-                              ),
-                            )),
+                          ),
+                          errorMaxLines: 3,
+                        ),
                       ),
                       TextFieldBlocBuilder(
                         textColor: const MaterialStatePropertyAll(Colors.black),
@@ -208,40 +217,42 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         obscureText: !_showConfirmPassword,
                         textFieldBloc: loginFormBloc.confirmPassword,
                         decoration: InputDecoration(
-                            labelText: 'Confirm Password',
-                            prefixIcon: const Icon(Icons.lock),
-                            floatingLabelStyle: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                backgroundColor: Colors.white),
-                            enabledBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            focusedBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            filled: true, // habilitar el relleno
-                            fillColor: Colors.white,
-                            prefixIconColor: Colors.blue,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
+                          labelText: 'Confirm Password',
+                          prefixIcon: const Icon(Icons.lock),
+                          floatingLabelStyle: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              backgroundColor: Colors.white),
+                          enabledBorder: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          focusedBorder: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          filled: true, // habilitar el relleno
+                          fillColor: Colors.white,
+                          prefixIconColor: Colors.blue,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _showConfirmPassword = !_showConfirmPassword;
+                              });
+                            },
+                            icon: Icon(
+                              _showConfirmPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.grey,
                             ),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _showConfirmPassword = !_showConfirmPassword;
-                                });
-                              },
-                              icon: Icon(
-                                _showConfirmPassword
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.grey,
-                              ),
-                            )),
-                      ),
+                          ),
+                          errorMaxLines: 3,
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -268,25 +279,16 @@ class LoadingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Center(
-        child: Card(
-          child: Container(
-            width: 80,
-            height: 80,
-            padding: const EdgeInsets.all(12.0),
-            child: const CircularProgressIndicator(),
-          ),
-        ),
-      ),
+    return Center(
+      child: LoadingAnimationWidget.dotsTriangle(
+          color: const Color.fromARGB(255, 6, 49, 122), size: 45),
     );
   }
 }
 
 class SuccessScreen extends StatelessWidget {
-  const SuccessScreen(this.user, {Key? key}) : super(key: key);
-  final UserInfo user;
+  const SuccessScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -297,13 +299,14 @@ class SuccessScreen extends StatelessWidget {
             const Icon(Icons.tag_faces, size: 100),
             const SizedBox(height: 10),
             const Text(
-              'Password Changed Successfully',
-              style: TextStyle(fontSize: 30, color: AppTheme.primary),
+              'Success',
+              style: TextStyle(fontSize: 54, color: Colors.black),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
             ElevatedButton.icon(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const SingUpPage())),
               icon: const Icon(Icons.replay),
               label: const Text('AGAIN'),
             ),

@@ -43,15 +43,6 @@ class _UserScreenState extends State<UserScreen> {
   final UserService userService = UserService();
   int _view = 1; // variable para cambiar la vista entre grid y lista
 
-  BlocProvider _buildGridListPostImage() {
-    return BlocProvider(
-      create: (_) =>
-          AllImagePostGridBloc(PostService(), widget.user!.username.toString())
-            ..add(AllImagePostGridFetched()),
-      child: const PostGridImageScreen(),
-    );
-  }
-
   BlocProvider _buildListMyPost() {
     // lista de widgets para la vista de lista
 
@@ -95,34 +86,47 @@ class _UserScreenState extends State<UserScreen> {
 
     return Scaffold(
       appBar: AppBar(
-          title: const Text('PlayFutDay',
-              style: TextStyle(
-                  color: AppTheme.primary,
-                  fontStyle: FontStyle.italic,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600))),
-      body: Column(children: [
-        const SizedBox(height: 2),
-        if (widget.user!.id == widget.userLoger.id)
-          Container(
-            margin: const EdgeInsets.only(right: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                          context: contextProfile,
-                          builder: (contextProfile) {
-                            return FadeInLeft(
-                              animate: true,
-                              delay: const Duration(seconds: 1),
-                              child: Column(
+        leading: widget.user!.id != widget.userLoger.id
+            ? IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(
+                    Platform.isAndroid
+                        ? Icons.arrow_back_rounded
+                        : Icons.arrow_back_ios_new_rounded,
+                    size: 25),
+              )
+            : null,
+        elevation: 0,
+        centerTitle: true,
+        title: Text('${widget.user?.username}'.toUpperCase(),
+            style: const TextStyle(
+                color: AppTheme.primary,
+                fontStyle: FontStyle.italic,
+                fontSize: 20,
+                fontWeight: FontWeight.w600)),
+        actions: [
+          if (widget.user!.id == widget.userLoger.id)
+            Container(
+              margin: const EdgeInsets.only(right: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            backgroundColor:
+                                const Color.fromARGB(255, 83, 83, 83),
+                            context: contextProfile,
+                            builder: (contextProfile) {
+                              return Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   ListTile(
-                                      leading:
-                                          const Icon(Icons.mode_edit_outlined),
+                                      minLeadingWidth: 5,
+                                      leading: const Icon(Icons.edit_outlined),
                                       title: const Text('Edit Profile'),
                                       onTap: () {
                                         BlocProvider.of<UserProfileBloc>(
@@ -130,7 +134,14 @@ class _UserScreenState extends State<UserScreen> {
                                             .add(EditProfileState());
                                         Navigator.pop(context);
                                       }),
+                                  const Divider(
+                                    color: AppTheme.primary,
+                                    indent: 20,
+                                    endIndent: 20,
+                                    thickness: 1,
+                                  ),
                                   ListTile(
+                                      minLeadingWidth: 5,
                                       leading: Icon(Platform.isAndroid
                                           ? Icons.close
                                           : Icons
@@ -151,7 +162,14 @@ class _UserScreenState extends State<UserScreen> {
                                                   Navigator.pop(context)
                                                 });
                                       }),
+                                  const Divider(
+                                    color: AppTheme.primary,
+                                    indent: 20,
+                                    endIndent: 20,
+                                    thickness: 1,
+                                  ),
                                   ListTile(
+                                    minLeadingWidth: 5,
                                     leading: Icon(Platform.isAndroid
                                         ? Icons.logout
                                         : Icons.logout_outlined),
@@ -169,43 +187,43 @@ class _UserScreenState extends State<UserScreen> {
                                       });
                                     },
                                   ),
+                                  const SizedBox(
+                                    height: 10,
+                                  )
                                 ],
-                              ),
-                            );
-                          });
-                    },
-                    icon: const Icon(Icons.menu, size: 40)),
-              ],
-            ),
-          ),
-        CircleAvatar(
-          backgroundColor: Colors.black,
-          maxRadius: 50,
-          child: Padding(
-            padding: const EdgeInsets.all(0.0),
-            child: ClipOval(
-              child: CachedNetworkImage(
-                placeholderFadeInDuration: const Duration(seconds: 15),
-                placeholder: (context, url) =>
-                    Image.asset('assets/images/reload.gif'),
-                imageUrl: '$urlBase/download/${widget.user!.avatar}',
-                errorWidget: (context, url, error) =>
-                    Image.asset('assets/images/image_notfound.png'),
-                width: double.infinity,
-                fit: BoxFit.cover,
+                              );
+                            });
+                      },
+                      icon: const Icon(Icons.menu, size: 30)),
+                ],
               ),
+            ),
+        ],
+      ),
+      body: Column(children: [
+        const SizedBox(height: 5),
+        CircleAvatar(
+          backgroundColor: Colors.transparent,
+          maxRadius: 40,
+          child: ClipOval(
+            child: CachedNetworkImage(
+              placeholderFadeInDuration: const Duration(seconds: 5),
+              placeholder: (context, url) =>
+                  Image.asset('assets/images/reload.gif'),
+              imageUrl: '$urlBase/download/${widget.user!.avatar}',
+              errorWidget: (context, url, error) =>
+                  Image.asset('assets/images/image_notfound.png'),
+              width: double.infinity,
+              height: 100.0,
+              fit: BoxFit.cover,
             ),
           ),
         ),
         Row(
           children: [
-            const SizedBox(
-              width: 16,
-              height: 20,
-            ),
             Expanded(
                 child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
                   children: [
@@ -213,7 +231,7 @@ class _UserScreenState extends State<UserScreen> {
                     Text(
                       '@${widget.user!.username}',
                       style: const TextStyle(
-                          fontSize: 25,
+                          fontSize: 15,
                           color: AppTheme.primary,
                           fontWeight: FontWeight.bold,
                           fontStyle: FontStyle.italic),

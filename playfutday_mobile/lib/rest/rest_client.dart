@@ -128,17 +128,11 @@ class RestClient {
     }
   }
 
-  Future<dynamic> put(String url, dynamic body) async {
-    try {
-      Uri uri = Uri.parse(ApiConstants.baseUrl + url);
+  Future<http.Response> put(String url, dynamic body) async {
+    Uri uri = Uri.parse(ApiConstants.baseUrl + url);
 
-      final response = await _httpClient.put(uri, body: jsonEncode(body));
-      var responseJson = _response(response);
-      return responseJson;
-    } on Exception catch (ex) {
-      // ignore: use_rethrow_when_possible
-      throw ex;
-    }
+    final response = await _httpClient.put(uri, body: jsonEncode(body));
+    return response;
   }
 
   Future<void> deleteP(String url) async {

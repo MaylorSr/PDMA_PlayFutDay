@@ -119,10 +119,11 @@ class UserRepository {
   Future<dynamic> changePassword(
       String oldPassword, String newPassword, String confirmPassword) async {
     String url = "/user/changePassword";
-    final body = ChangePasswordRequest(
+    ChangePasswordRequest request = ChangePasswordRequest(
         oldPassword: oldPassword,
         newPassword: newPassword,
         verifyNewPassword: confirmPassword);
-    await _client.put(url, body);
+    var response = await _client.put(url, request.toJson());
+    return response;
   }
 }

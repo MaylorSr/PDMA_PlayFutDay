@@ -156,34 +156,38 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
+          leadingWidth: MediaQuery.of(context).size.width * 0.25,
+          leading: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () => saveChange(context),
+              child: const Text('Cancel'),
+            ),
+          ),
+          centerTitle: true,
           title: const Text(
-            'PlayFutDay',
+            'Edit Profile',
             style: TextStyle(
               color: AppTheme.primary,
               fontStyle: FontStyle.italic,
-              fontSize: 25,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: () => saveChange(context),
+                child: const Text('Save'),
+              ),
+            ),
+          ],
         ),
         body: SingleChildScrollView(
             child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(children: [
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => saveChange(context),
-                        child: const Text('Cancel'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => saveChange(context),
-                        child: const Text('Save'),
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 16),
                   Column(
                     children: [
@@ -200,6 +204,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       ? CachedNetworkImage(
                                           fit: BoxFit.cover,
                                           width: double.infinity,
+                                          height: 100.0,
                                           placeholderFadeInDuration:
                                               const Duration(seconds: 12),
                                           placeholder: (context, url) =>
@@ -215,6 +220,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           _image!,
                                           fit: BoxFit.cover,
                                           width: double.infinity,
+                                          height: 100.0,
+                                          color: Colors.transparent,
                                         ),
                                 ),
                               ),
@@ -277,9 +284,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             focusedBorder: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
-                            filled: true, // habilitar el relleno
+                            filled: true, 
                             fillColor:
-                                Colors.white, // establecer el color de fondo
+                                Colors.white, 
                             hintText: 'Writte about you',
                             contentPadding: EdgeInsets.symmetric(
                               horizontal: 16,

@@ -52,7 +52,7 @@ class PostService {
     return null;
   }
 
-  Future<void> newPost(String tag, String description, file) async {
+  Future<dynamic> newPost(String tag, String description, file) async {
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
       await _postRepository.instanceNewPost(tag, description, file, token);

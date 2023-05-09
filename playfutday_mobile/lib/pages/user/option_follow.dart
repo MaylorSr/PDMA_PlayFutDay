@@ -42,15 +42,15 @@ class _OptionFollowScreenState extends State<OptionFollowScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('PlayFutDay',
-            style: TextStyle(
-                color: AppTheme.primary,
-                fontStyle: FontStyle.italic,
-                fontSize: 25,
-                fontWeight: FontWeight.w600)),
-      ),
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   title: const Text('PlayFutDay',
+      //       style: TextStyle(
+      //           color: AppTheme.primary,
+      //           fontStyle: FontStyle.italic,
+      //           fontSize: 25,
+      //           fontWeight: FontWeight.w600)),
+      // ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

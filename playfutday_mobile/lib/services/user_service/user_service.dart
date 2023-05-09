@@ -62,7 +62,7 @@ class UserService {
       String oldPassword, String newPassword, String confirmPassword) async {
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
-      await _userRepository.changePassword(
+      return await _userRepository.changePassword(
           oldPassword, newPassword, confirmPassword);
     }
   }

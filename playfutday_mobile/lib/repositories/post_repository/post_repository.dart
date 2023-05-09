@@ -56,7 +56,7 @@ class PostRepository {
     return PostResponse.fromJson(jsonDecode(jsonResponse));
   }
 
-  Future<void> instanceNewPost(
+  Future<dynamic> instanceNewPost(
       String tag, String description, file, accessToken) async {
     String url = "/post/";
     PostRequest request = PostRequest(tag: tag, description: description);
