@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:js_interop';
 
 // import 'package:get/get.dart';
 
@@ -210,6 +211,9 @@ class RestClient {
       }
 
       final response = await _httpClient!.send(request);
+      final statusCode = response.statusCode;
+      print(statusCode);
+
       var responseJson = response.stream.bytesToString();
       return responseJson;
     } on SocketException catch (ex) {

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cupertino_datetime_picker/flutter_cupertino_datetime_picker.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:playfutday_flutter/blocs/userProfile/user_profile.dart';
@@ -10,7 +11,6 @@ import 'package:playfutday_flutter/models/editProfile.dart';
 import 'package:playfutday_flutter/models/infoUser.dart';
 import 'package:playfutday_flutter/pages/user/change_password/change_password_screen.dart';
 import 'package:playfutday_flutter/rest/rest.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import '../../../theme/app_theme.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -284,9 +284,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             focusedBorder: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
-                            filled: true, 
-                            fillColor:
-                                Colors.white, 
+                            filled: true,
+                            fillColor: Colors.white,
                             hintText: 'Writte about you',
                             contentPadding: EdgeInsets.symmetric(
                               horizontal: 16,
@@ -371,30 +370,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 border: OutlineInputBorder(),
                               ),
                               onTap: () {
-                                DatePicker.showDatePicker(context,
-                                    showTitleActions: true,
-                                    minTime: DateTime(1900, 1, 1),
-                                    theme: const DatePickerTheme(
-                                        backgroundColor: Colors.brown,
-                                        itemStyle:
-                                            TextStyle(color: AppTheme.primary),
-                                        cancelStyle: TextStyle(
-                                            color: AppTheme.primary,
-                                            fontWeight: FontWeight.bold,
-                                            fontStyle: FontStyle.italic),
-                                        doneStyle: TextStyle(
-                                            color: AppTheme.primary,
-                                            fontWeight: FontWeight.bold,
-                                            fontStyle: FontStyle.italic)),
-                                    maxTime: DateTime.now(),
-                                    onChanged: (date) {}, onConfirm: (date) {
-                                  setState(() {
-                                    _birthDateController.text =
-                                        DateFormat('dd/MM/yyyy').format(date);
-                                  });
-                                },
-                                    currentTime: DateTime.now(),
-                                    locale: LocaleType.es);
+                                DatePicker.showDatePicker(
+                                  context,
+                                  minDateTime: DateTime(1900, 1, 1),
+                                  pickerTheme: const DateTimePickerTheme(
+                                    backgroundColor: Colors.brown,
+                                    itemTextStyle:
+                                        TextStyle(color: AppTheme.primary),
+                                    cancelTextStyle: TextStyle(
+                                        color: AppTheme.primary,
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic),
+                                    confirmTextStyle: TextStyle(
+                                        color: AppTheme.primary,
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic),
+                                    showTitle: true,
+                                  ),
+                                  maxDateTime: DateTime.now(),
+                                  onChange: (dateTime, selectedIndex) {},
+                                  onConfirm: (dateTime, selectedIndex) {
+                                    setState(() {
+                                      _birthDateController.text =
+                                          DateFormat('dd/MM/yyyy')
+                                              .format(dateTime);
+                                    });
+                                  },
+                                  initialDateTime: DateTime.now(),
+                                  pickerMode: DateTimePickerMode.date,
+                                  locale: DateTimePickerLocale.es,
+                                );
                               },
                             ),
                           ),

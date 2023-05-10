@@ -109,7 +109,6 @@ class StartScreen extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 0.0),
         Text(
           user.username.toString(),
           style: const TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),

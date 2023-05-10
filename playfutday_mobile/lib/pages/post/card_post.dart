@@ -52,7 +52,6 @@ class _CardScreenPostState extends State<CardScreenPost> {
 
   @override
   Widget build(BuildContext context) {
-    
     void displayDialogAndroid(BuildContext context) {
       showDialog(
           context: context,
@@ -212,13 +211,14 @@ class _CardScreenPostState extends State<CardScreenPost> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Tag: ${widget.post.tag}',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                  if (widget.post.tag != null)
+                    Text(
+                      'Tag: ${widget.post.tag}',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
                   const SizedBox(height: 8),
                   if (widget.post.description != null)
                     Text(
