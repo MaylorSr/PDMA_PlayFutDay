@@ -34,10 +34,10 @@ class _AllPostListState extends State<AllPostListBySearch> {
           case AllPostStatus.failure:
             // ignore: prefer_const_constructors
             return Center(
-              child: Column(
+              child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 // ignore: prefer_const_literals_to_create_immutables
-                children: const [
+                children: [
                   Icon(Icons.sports_soccer, size: 50),
                   SizedBox(height: 20),
                   Text(

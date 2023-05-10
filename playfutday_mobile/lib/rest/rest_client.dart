@@ -2,11 +2,9 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'dart:js_interop';
 
 // import 'package:get/get.dart';
 
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http_interceptor/http_interceptor.dart';
 import 'package:http/http.dart' as http;
@@ -14,7 +12,6 @@ import 'package:injectable/injectable.dart';
 import 'package:playfutday_flutter/models/models.dart';
 import 'package:playfutday_flutter/models/refresh_token_model.dart';
 import 'package:playfutday_flutter/services/localstorage_service.dart';
-import '../main.dart';
 import 'package:http_parser/http_parser.dart';
 
 class ApiConstants {
@@ -189,36 +186,28 @@ class RestClient {
       String url, dynamic body, File file, String accessToken) async {
     var bytes = await file.readAsBytes();
 
-    try {
-      Uri uri = Uri.parse(ApiConstants.baseUrl + url);
+    Uri uri = Uri.parse(ApiConstants.baseUrl + url);
 
-      Map<String, String> headers = Map();
-      headers.addAll({
-        'Content-Type': 'multipart/form-data',
-        'Authorization': 'Bearer ${accessToken}',
-      });
-      var bodyPart;
-      var request = new http.MultipartRequest('POST', uri);
-      final httpImage = http.MultipartFile.fromBytes('image', bytes,
-          contentType: MediaType('image', file.path.split('.').last),
-          filename: file.path.split('/').last);
-      request.files.add(httpImage);
-      request.headers.addAll(headers);
-      if (body != null) {
-        bodyPart = http.MultipartFile.fromString('post', jsonEncode(body),
-            contentType: MediaType('application', 'json'));
-        request.files.add(bodyPart);
-      }
-
-      final response = await _httpClient!.send(request);
-      final statusCode = response.statusCode;
-      print(statusCode);
-
-      var responseJson = response.stream.bytesToString();
-      return responseJson;
-    } on SocketException catch (ex) {
-      throw Exception('No internet connection: ${ex.message}');
+    Map<String, String> headers = Map();
+    headers.addAll({
+      'Content-Type': 'multipart/form-data',
+      'Authorization': 'Bearer ${accessToken}',
+    });
+    var bodyPart;
+    var request = new http.MultipartRequest('POST', uri);
+    final httpImage = http.MultipartFile.fromBytes('image', bytes,
+        contentType: MediaType('image', file.path.split('.').last),
+        filename: file.path.split('/').last);
+    request.files.add(httpImage);
+    request.headers.addAll(headers);
+    if (body != null) {
+      bodyPart = http.MultipartFile.fromString('post', jsonEncode(body),
+          contentType: MediaType('application', 'json'));
+      request.files.add(bodyPart);
     }
+
+    final response = await _httpClient!.send(request);
+    return response;
   }
 
   Future<http.Response> singUpPost(String url, dynamic body) async {

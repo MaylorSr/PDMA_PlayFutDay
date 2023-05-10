@@ -28,18 +28,20 @@ class _NewPostFormState extends State<NewPostForm> {
   Future _cropImage() async {
     CroppedFile? croppedFile = await ImageCropper().cropImage(
       sourcePath: image!.path,
+      aspectRatio: const CropAspectRatio(ratioX: 16, ratioY: 9),
       maxWidth: kMaxPhotoWidth.toInt(),
       maxHeight: kMaxPhotoHeight.toInt(),
+      compressQuality: 80,
       uiSettings: [
         AndroidUiSettings(
-            toolbarTitle: 'Cropper',
+            toolbarTitle: 'Edit Post',
             toolbarColor: Colors.blue,
             hideBottomControls: true,
             toolbarWidgetColor: Colors.white,
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false),
         IOSUiSettings(
-          title: 'Cropper',
+          title: 'Edit Post',
         )
       ],
     );
@@ -173,7 +175,35 @@ class _NewPostFormState extends State<NewPostForm> {
               onSuccess: (context, state) {
                 LoadingDialog.hide(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.successResponse!)));
+                  SnackBar(
+                    backgroundColor: Colors.green,
+                    duration: const Duration(seconds: 2),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    content: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Icon(Icons.check_circle_outline_rounded,
+                            color: Colors.white),
+                        const SizedBox(width: 8),
+                        Text(state.successResponse!,
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 18)),
+                      ],
+                    ),
+                    behavior: SnackBarBehavior.floating,
+                    margin: const EdgeInsets.all(16),
+                    animation: CurvedAnimation(
+                      parent: AnimationController(
+                        vsync: Scaffold.of(context),
+                        duration: const Duration(milliseconds: 500),
+                      )..forward(),
+                      curve: Curves.easeOutBack,
+                    ),
+                  ),
+                );
               },
               onFailure: (context, state) {
                 LoadingDialog.hide(context);

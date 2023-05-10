@@ -6,7 +6,6 @@ import 'package:playfutday_flutter/services/user_service/user_service.dart';
 
 import '../../blocs/followers/followers.dart';
 import '../../models/user.dart';
-import '../../theme/app_theme.dart';
 import 'followers_vertical/follower_v_page.dart';
 import 'follows_vertical/follow_v_page.dart';
 

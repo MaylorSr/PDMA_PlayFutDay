@@ -62,7 +62,6 @@ class PostRepository {
     PostRequest request = PostRequest(tag: tag, description: description);
 
     var jsonResponse = await _client.newPost(url, request, file, accessToken);
-    print(jsonDecode(jsonResponse));
     return jsonResponse;
   }
 

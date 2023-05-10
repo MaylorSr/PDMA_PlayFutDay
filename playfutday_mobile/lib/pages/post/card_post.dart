@@ -59,9 +59,9 @@ class _CardScreenPostState extends State<CardScreenPost> {
             return AlertDialog(
               elevation: 5,
               // ignore: prefer_const_literals_to_create_immutables
-              content: Column(mainAxisSize: MainAxisSize.min, children: [
-                const SizedBox(height: 10),
-                const Text('Are you sure to delete this post?')
+              content: const Column(mainAxisSize: MainAxisSize.min, children: [
+                SizedBox(height: 10),
+                Text('Are you sure to delete this post?')
               ]),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)),
@@ -91,7 +91,7 @@ class _CardScreenPostState extends State<CardScreenPost> {
           builder: (context) {
             return CupertinoAlertDialog(
               insetAnimationDuration: const Duration(seconds: 3),
-              content: Column(mainAxisSize: MainAxisSize.min, children: const [
+              content: const Column(mainAxisSize: MainAxisSize.min, children: [
                 SizedBox(height: 10),
                 Text('Are you sure to delete this post?')
               ]),

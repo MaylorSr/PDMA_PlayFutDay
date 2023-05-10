@@ -1,8 +1,6 @@
 import 'dart:io';
 
-import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -11,7 +9,6 @@ import 'package:playfutday_flutter/blocs/post_grid_user/post_grid_event.dart';
 import 'package:playfutday_flutter/blocs/userProfile/user_profile.dart';
 import 'package:playfutday_flutter/models/infoUser.dart';
 import 'package:playfutday_flutter/models/models.dart';
-import 'package:playfutday_flutter/pages/pages.dart';
 import 'package:playfutday_flutter/pages/user/post_user.dart';
 import 'package:playfutday_flutter/pages/user/post_view_grid_user/post_grid_view.dart';
 import 'package:playfutday_flutter/rest/rest.dart';

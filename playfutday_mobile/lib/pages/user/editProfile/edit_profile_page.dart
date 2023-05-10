@@ -58,7 +58,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             return AlertDialog(
               elevation: 5,
               // ignore: prefer_const_literals_to_create_immutables
-              content: Column(mainAxisSize: MainAxisSize.min, children: const [
+              content: const Column(mainAxisSize: MainAxisSize.min, children: [
                 SizedBox(height: 10),
                 Text('Please select a option')
               ]),
@@ -111,7 +111,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           builder: (context) {
             return CupertinoAlertDialog(
               insetAnimationDuration: const Duration(seconds: 3),
-              content: Column(mainAxisSize: MainAxisSize.min, children: const [
+              content: const Column(mainAxisSize: MainAxisSize.min, children: [
                 SizedBox(height: 10),
                 Text('Please select a option')
               ]),
