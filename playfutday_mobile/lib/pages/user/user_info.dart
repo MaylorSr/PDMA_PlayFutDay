@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -361,7 +362,8 @@ class _UserScreenState extends State<UserScreen> {
                                         BlocProvider.of<ButtonFollowCubit>(
                                             context)
                                           ..addFollow(),
-                                    child: Text(state.isFollow ? "Unfollow" : "Follow"),
+                                    child: Text(
+                                        state.isFollow ? "Unfollow" : "Follow"),
                                   );
                                 },
                               ),
@@ -470,15 +472,51 @@ class _UserScreenState extends State<UserScreen> {
                   IconButton(
                     icon: const Icon(Icons.list),
                     color: _view == 2 ? Colors.white : Colors.grey,
-                    onPressed: () => setState(() => _view = 2),
+                    onPressed: () {
+                      setState(() {
+                        _view == 1;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FadeInUpBig(
+                              duration: const Duration(milliseconds: 300),
+                              child: AllPostScreenUser(
+                                blocPost: _buildListMyPost(),
+                                user: widget.user!,
+                                isFav: true,
+                                userLogger: widget.userLoger,
+                              ),
+                            ),
+                          ),
+                        );
+                      });
+                    },
+                    // onPressed: ()  {setState(() => _view = 2}),),
                   ),
                   if ('${widget.user!.username}' ==
                       '${widget.userLoger.username}')
                     IconButton(
-                      icon: const Icon(Icons.favorite),
-                      color: _view == 3 ? Colors.white : Colors.grey,
-                      onPressed: () => setState(() => _view = 3),
-                    )
+                        icon: const Icon(Icons.favorite),
+                        color: _view == 3 ? Colors.white : Colors.grey,
+                        onPressed: () {
+                          setState(() {
+                            _view = 1;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FadeInUpBig(
+                                  duration: const Duration(milliseconds: 300),
+                                  child: AllPostScreenUser(
+                                    blocPost: _buildListMyFavPost(),
+                                    user: widget.user!,
+                                    isFav: false,
+                                    userLogger: widget.userLoger,
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
+                        })
                 ],
               ),
               // vista de grid o lista según la variable _isGridView
@@ -491,22 +529,71 @@ class _UserScreenState extends State<UserScreen> {
                           child: const PostGridImageScreen(),
                         )
                       : _view == 2
-                          ? BlocProvider(
-                              create: (_) => MyPostBloc(PostService(),
-                                  widget.user!.username.toString())
-                                ..add(AllPostFetched()),
-                              child: _buildListMyPost(),
-                            )
-                          : BlocProvider(
-                              create: (_) => MyFavPostBloc(PostService(),
-                                  widget.user!.username.toString())
-                                ..add(AllPostFetched()),
-                              child: _buildListMyFavPost(),
-                            )),
+                          ? const SizedBox()
+                          : const SizedBox()
+                  // : BlocProvider(
+                  //     create: (_) => MyFavPostBloc(
+                  //         PostService(), widget.user!.username.toString())
+                  //       ..add(AllPostFetched()),
+                  //     child: _buildListMyFavPost(),
+                  //   ),
+                  ),
             ],
           ),
         ),
       ]),
     );
+  }
+}
+
+class AllPostScreenUser extends StatelessWidget {
+  final UserInfo user;
+  final User userLogger;
+  final bool isFav;
+  final BlocProvider blocPost;
+  const AllPostScreenUser(
+      {super.key,
+      required this.blocPost,
+      required this.user,
+      required this.userLogger,
+      required this.isFav});
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+            leading: user.id != userLogger.id
+                ? IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(
+                        Platform.isAndroid
+                            ? Icons.arrow_back_rounded
+                            : Icons.arrow_back_ios_new_rounded,
+                        size: 25),
+                  )
+                : null,
+            elevation: 0,
+            centerTitle: true,
+            title: Text(
+              '${user.username}'.toUpperCase(),
+            )),
+        body: isFav
+            ? BlocProvider(
+                create: (_) =>
+                    MyPostBloc(PostService(), user.username.toString())
+                      ..add(AllPostFetched()),
+                child: blocPost)
+            : BlocProvider(
+                create: (_) =>
+                    MyFavPostBloc(PostService(), user.username.toString())
+                      ..add(AllPostFetched()),
+                child: blocPost)
+        // body: BlocProvider(
+        //   create: (context) => isFav ?
+        //               MyFavPostBloc(PostService(),  user.username.toString())..add(AllPostFetched()), child: blocPost :
+        //   MyPostBloc(PostService(), user.username.toString())
+        //     ..add(AllPostFetched()),
+        //   child: blocPost,
+        // ),
+        );
   }
 }

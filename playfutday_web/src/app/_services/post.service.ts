@@ -53,19 +53,17 @@ export class PostService {
       type: "application/vnd.api+json",
     });
 
-    const imageBlob = new Blob([image], { type: image.type }); // Convertir el archivo image en Blob
-
-    formData.append("image", imageBlob, image.name); // Especificar el nombre del archivo y el tipo de archivo
+    // imageBlob, 
+    formData.append("image", image); // Especificar el nombre del archivo y el tipo de archivo
     formData.append("post", blobBody);
 
     console.log("FormData.getAll():", formData.getAll("image")); // Obtener todos los valores del FormData
 
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.tokenService.getToken()}`,
-      "Content-Type":
-        "multipart/form-data; boundary=----WebKitFormBoundary<boundary>",
+      Authorization: `Bearer ${this.tokenService.getToken()}`
+      // "Content-Type": "multipart/form-data",
+      // "multipart/form-data; boundary=----WebKitFormBoundary<boundary>"
     });
-
     return this.http.post(`${API_URL}post/`, formData, { headers });
   }
 

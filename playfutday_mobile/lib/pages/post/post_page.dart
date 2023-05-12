@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:playfutday_flutter/pages/general_error/general_error.dart';
 import 'package:playfutday_flutter/services/post_service/post_service.dart';
+import 'package:playfutday_flutter/theme/app_theme.dart';
 
 import '../../blocs/blocs.dart';
 import '../../models/user.dart';
@@ -20,6 +22,8 @@ class _AllPostListState extends State<AllPostList> {
   final _scrollController = ScrollController();
   // ignore: unused_field
   final _postService = PostService();
+
+  final errorMessage = "Not found any post";
   @override
   void initState() {
     super.initState();
@@ -32,39 +36,12 @@ class _AllPostListState extends State<AllPostList> {
       builder: (context, state) {
         switch (state.status) {
           case AllPostStatus.failure:
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.sports_soccer, size: 50),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Not found any posts',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<AllPostBloc>().add(OnRefresh());
-                    },
-                    child: const Text('Try Again'),
-                  )
-                ],
-              ),
-            );
+            return ErrorWidget(errorMessage: errorMessage);
+
           case AllPostStatus.success:
             if (state.allPost.isEmpty) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Center(child: Text('Any posts found!')),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<AllPostBloc>().add(OnRefresh());
-                    },
-                    child: const Text('Try Again'),
-                  ),
-                ],
-              );
+              return const ErrorWidget(
+                  errorMessage: "The list of post is empty");
             }
             return Expanded(
                 child: RefreshIndicator(
@@ -74,11 +51,12 @@ class _AllPostListState extends State<AllPostList> {
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(
                     parent: BouncingScrollPhysics(
-                        decelerationRate: ScrollDecelerationRate.fast)),
+                        decelerationRate: ScrollDecelerationRate.normal)),
                 itemBuilder: (BuildContext context, int index) {
                   return index >= state.allPost.length
-                      ?  LoadingAnimationWidget.twoRotatingArc(
-                        color: const Color.fromARGB(255, 6, 49, 122), size: 45)
+                      ? LoadingAnimationWidget.twoRotatingArc(
+                          color: const Color.fromARGB(255, 6, 49, 122),
+                          size: 45)
                       : CardScreenPost(
                           post: state.allPost[index],
                           user: widget.user,
@@ -130,5 +108,43 @@ class _AllPostListState extends State<AllPostList> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.offset;
     return currentScroll >= (maxScroll * 0.9);
+  }
+}
+
+class ErrorWidget extends StatelessWidget {
+  const ErrorWidget({
+    super.key,
+    required this.errorMessage,
+  });
+
+  final String errorMessage;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.65,
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ErrorScreen(
+              errorMessage: errorMessage,
+              icon: Icons.sports_soccer_outlined,
+              size: 100,
+            ),
+            SizedBox(
+              height: AppTheme.minHeight,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                context.read<AllPostBloc>().add(OnRefresh());
+              },
+              child: const Text('reload page'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -5,7 +5,7 @@ class AppTheme {
   static const Color primary = Colors.white;
   static const Color blackSolid = Colors.black;
   static const Color transparent = Colors.transparent;
-
+  static const Color successEvent = Color.fromARGB(255, 6, 121, 9);
   //**STYLES TITLE GOOGLE FONTS */
 
   static TextStyle tittleApp = GoogleFonts.adamina(
@@ -15,8 +15,11 @@ class AppTheme {
   );
 
   static TextStyle nameUsersStyle = GoogleFonts.lora(
+      fontWeight: FontWeight.w400, fontSize: 13, color: AppTheme.primary);
+
+  static TextStyle errorMessageStyle = GoogleFonts.alata(
     fontWeight: FontWeight.w400,
-    fontSize: 13,
+    fontSize: 20,
   );
 
   //*COST HEIGHT */
@@ -28,7 +31,7 @@ class AppTheme {
   //* PADDING */
   static double minPadding = 5.0;
 
-    static double mediumPadding = 15.0;
+  static double mediumPadding = 15.0;
 
   //* theme data buttom, card...*/
 

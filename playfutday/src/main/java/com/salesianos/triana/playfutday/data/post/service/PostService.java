@@ -219,7 +219,11 @@ public class PostService {
                                     .map(
                                             user -> {
                                                 user.getMyPost().remove(oldPost);
-                                                storageService.deleteFile(oldPost.getImage());
+                                                try {
+                                                    storageService.deleteFile(oldPost.getImage());
+                                                } catch (Exception ex) {
+                                                }
+
                                                 repo.delete(oldPost);
                                                 userRepository.save(user);
                                                 return true;

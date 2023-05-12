@@ -20,9 +20,9 @@ public class PageResponse<T> {
     @JsonView({viewUser.UserDetailsViewWeb.class, viewPost.PostDetailsAngular.class, viewUser.UserDetailsByAdmin.class, viewPost.PostResponse.class, viewUser.UserFollow.class})
     private List<T> content;
 
-    private boolean last;
+  /*  private boolean last;
 
-    private boolean first;
+    private boolean first;*/
     @JsonView({viewUser.UserDetailsViewWeb.class, viewPost.PostDetailsAngular.class, viewUser.UserDetailsByAdmin.class, viewPost.PostResponse.class, viewUser.UserFollow.class})
 
     private int totalPages;
@@ -33,8 +33,8 @@ public class PageResponse<T> {
 
     public PageResponse(Page<T> page) {
         this.content = page.getContent();
-        this.last = page.isLast();
-        this.first = page.isFirst();
+        /*this.last = page.isLast();
+        this.first = page.isFirst();*/
         this.totalPages = page.getTotalPages();
         this.totalElements = page.getTotalElements();
     }

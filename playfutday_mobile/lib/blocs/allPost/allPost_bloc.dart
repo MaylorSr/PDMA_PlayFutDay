@@ -40,7 +40,6 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
     );
   }
 
-  // ignore: unused_field
   final PostService _postService;
 
   Future<void> _onAllPostFetched(
@@ -144,4 +143,5 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
       return null;
     }
   }
+
 }

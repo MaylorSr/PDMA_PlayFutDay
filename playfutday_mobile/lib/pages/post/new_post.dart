@@ -34,12 +34,14 @@ class _NewPostFormState extends State<NewPostForm> {
       compressQuality: 80,
       uiSettings: [
         AndroidUiSettings(
-            toolbarTitle: 'Edit Post',
-            toolbarColor: Colors.blue,
-            hideBottomControls: true,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
+          toolbarTitle: 'Edit Post',
+          toolbarColor: AppTheme.darkTheme.primaryColorDark,
+          hideBottomControls: true,
+          toolbarWidgetColor: AppTheme.primary,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: true,
+          showCropGrid: true,
+        ),
         IOSUiSettings(
           title: 'Edit Post',
         )
@@ -61,46 +63,57 @@ class _NewPostFormState extends State<NewPostForm> {
           builder: (context) {
             return AlertDialog(
               elevation: 5,
-              // ignore: prefer_const_literals_to_create_immutables
-              content: const Column(mainAxisSize: MainAxisSize.min, children: [
-                SizedBox(height: 10),
-                Text('Please select a option')
+              content: Column(mainAxisSize: MainAxisSize.min, children: [
+                SizedBox(height: AppTheme.minHeight),
+                Text(
+                  'Please select a option:',
+                  style: AppTheme.nameUsersStyle,
+                )
               ]),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25)),
               actions: [
-                TextButton.icon(
-                  onPressed: () async {
-                    final pickedFile =
-                        await picker.pickImage(source: ImageSource.camera);
-                    setState(() {
-                      if (pickedFile != null) {
-                        image = File(pickedFile.path);
-                        _cropImage();
-                        Navigator.pop(context);
-                      }
-                    });
-                  },
-                  label: const Text('Camara',
-                      style: TextStyle(color: AppTheme.primary)),
-                  icon: const Icon((Icons.camera_alt_rounded)),
+                SizedBox(
+                  width: double.infinity,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () async {
+                          final pickedFile = await picker.pickImage(
+                              source: ImageSource.camera);
+                          setState(() {
+                            if (pickedFile != null) {
+                              image = File(pickedFile.path);
+                              _cropImage();
+                              Navigator.pop(context);
+                            }
+                          });
+                        },
+                        label: const Text('Camara',
+                            style: TextStyle(color: AppTheme.primary)),
+                        icon: const Icon((Icons.camera_alt_rounded)),
+                      ),
+                      TextButton.icon(
+                        onPressed: () async {
+                          final pickedFile = await picker.pickImage(
+                              source: ImageSource.gallery);
+                          setState(() {
+                            if (pickedFile != null) {
+                              image = File(pickedFile.path);
+                              _cropImage();
+                            }
+                            Navigator.pop(context);
+                          });
+                        },
+                        label: const Text('Gallery',
+                            style: TextStyle(color: AppTheme.primary)),
+                        icon: const Icon((Icons.photo_library_outlined)),
+                      )
+                    ],
+                  ),
                 ),
-                TextButton.icon(
-                  onPressed: () async {
-                    final pickedFile =
-                        await picker.pickImage(source: ImageSource.gallery);
-                    setState(() {
-                      if (pickedFile != null) {
-                        image = File(pickedFile.path);
-                        _cropImage();
-                      }
-                      Navigator.pop(context);
-                    });
-                  },
-                  label: const Text('Gallery',
-                      style: TextStyle(color: AppTheme.primary)),
-                  icon: const Icon((Icons.photo_library_outlined)),
-                )
               ],
             );
           });
@@ -112,9 +125,12 @@ class _NewPostFormState extends State<NewPostForm> {
           builder: (context) {
             return CupertinoAlertDialog(
               insetAnimationDuration: const Duration(seconds: 3),
-              content: const Column(mainAxisSize: MainAxisSize.min, children: [
-                SizedBox(height: 10),
-                Text('Please select a option')
+              content: Column(mainAxisSize: MainAxisSize.min, children: [
+                SizedBox(height: AppTheme.minHeight),
+                Text(
+                  'Please select a option:',
+                  style: AppTheme.nameUsersStyle,
+                )
               ]),
               actions: [
                 TextButton.icon(
@@ -180,7 +196,7 @@ class _NewPostFormState extends State<NewPostForm> {
                 loginFormBloc.clear();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    backgroundColor: Colors.green,
+                    backgroundColor: AppTheme.successEvent,
                     duration: const Duration(seconds: 2),
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -190,11 +206,10 @@ class _NewPostFormState extends State<NewPostForm> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         const Icon(Icons.check_circle_outline_rounded,
-                            color: Colors.white),
+                            color: AppTheme.primary),
                         const SizedBox(width: 8),
                         Text(state.successResponse!,
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 18)),
+                            style: AppTheme.nameUsersStyle),
                       ],
                     ),
                     behavior: SnackBarBehavior.floating,

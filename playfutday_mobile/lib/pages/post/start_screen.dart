@@ -29,6 +29,7 @@ class StartScreen extends StatelessWidget {
               children: [
                 SizedBox(
                   width: size.width * 0.15,
+                  height: 82,
                   child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                     builder: (context, state) {
                       if (state is AuthenticationAuthenticated) {
@@ -42,9 +43,8 @@ class StartScreen extends StatelessWidget {
                 const SizedBox(width: 15),
                 SizedBox(
                   width: size.width * 0.78,
-                  child: SizedBox(
-                      child: SizedBox(
-                    height: 70,
+                  height: 75,
+                  child: SizedBox(child: SizedBox(
                     child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                       builder: (context, state) {
                         if (state is AuthenticationAuthenticated) {
@@ -100,7 +100,7 @@ class StartScreen extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.all(AppTheme.minPadding - 2),
+          padding: EdgeInsets.all(AppTheme.minPadding),
           child: CircleAvatar(
             maxRadius: 25,
             child: ClipOval(
