@@ -322,6 +322,7 @@ public class UserController {
                                               @RequestBody LoginRequest loginRequest) {
         Authentication authentication =
                 authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtProvider.generateToken(authentication);
@@ -744,6 +745,34 @@ public class UserController {
                                               @AuthenticationPrincipal User user, @Parameter(name = "Cuerpo de la petición", description = "Se debe proporcionar el cuerpo con su respectivo nuevo valor para la descripción")
                                               @RequestBody EditInfoUserRequest request) {
         return userService.editProfileBio(user, request);
+    }
+
+
+    @Operation(summary = "Este método devuelve true en caso de que el usuario logeado siga al usuario pasado el id o false en caso de que no")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se obtiene una respuesta correcta",
+                    content = {@Content(mediaType = "application/json",
+                            examples = {@ExampleObject(
+                                    value = """
+                                            true
+                                             """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "401",
+                    description = "No estas logeado",
+                    content = @Content),
+            @ApiResponse(responseCode = "400",
+                    description = "El usuario pasado por id no existe",
+                    content = @Content)
+            , @ApiResponse(responseCode = "403",
+            description = "No puedes consultar si te sigues a ti mismo ya que no es posible",
+            content = @Content)
+    })
+    @GetMapping("/state/follow/user/{id}")
+    @PreAuthorize("#id != authentication.principal.id")
+    public boolean getStateFollowUserByMeFollows(@AuthenticationPrincipal User user, @PathVariable UUID id) {
+        return userService.getStateFollowUserByMeFollows(user, id);
     }
 
 

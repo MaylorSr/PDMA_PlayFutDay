@@ -24,6 +24,7 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
     @EntityGraph(value = "user_with_posts", type = EntityGraph.EntityGraphType.FETCH)
     Optional<User> findByUsername(String username);
 
+
     @EntityGraph(value = "user_with_follows", type = EntityGraph.EntityGraphType.FETCH)
     Optional<User> findByPhone(String phone);
 

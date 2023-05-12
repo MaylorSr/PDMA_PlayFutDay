@@ -315,6 +315,12 @@ public class UserService {
         return res;
     }
 
+
+    public boolean getStateFollowUserByMeFollows(User user, UUID id) {
+        userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("The user not exists"));
+        return userRepository.existsUserByFollow(user.getId(), id);
+    }
+
     public String updateFollowers(User user, UUID id) {
         return userRepository.findById(id)
                 .map(userDestination -> {
