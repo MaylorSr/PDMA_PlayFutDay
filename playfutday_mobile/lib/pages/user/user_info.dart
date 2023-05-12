@@ -16,6 +16,7 @@ import 'package:playfutday_flutter/services/post_service/post_service.dart';
 import 'package:playfutday_flutter/services/user_service/user_service.dart';
 
 import '../../blocs/blocs.dart';
+import '../../blocs/cubit/button_follow_cubit.dart';
 import '../../blocs/followers/followers.dart';
 import '../../blocs/myFavPost/my_fav_Post_bloc.dart';
 import '../../blocs/postUser/post_user_bloc.dart';
@@ -209,7 +210,7 @@ class _UserScreenState extends State<UserScreen> {
                   Image.asset('assets/images/reload.gif'),
               imageUrl: '$urlBase/download/${widget.user!.avatar}',
               errorWidget: (context, url, error) =>
-                  Image.asset('assets/images/image_notfound.png'),
+                  Image.asset('assets/images/avatar.png'),
               width: double.infinity,
               height: 100.0,
               fit: BoxFit.cover,
@@ -338,6 +339,38 @@ class _UserScreenState extends State<UserScreen> {
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (widget.user!.id != widget.userLoger.id)
+                            BlocProvider(
+                              create: (context) => ButtonFollowCubit(
+                                  widget.user!.id.toString(), UserService())
+                                ..showFollowState(),
+                              child: BlocBuilder<ButtonFollowCubit,
+                                  ButtonFollowInitial>(
+                                builder: (context, state) {
+                                  return ElevatedButton(
+                                    onPressed: () =>
+                                        BlocProvider.of<ButtonFollowCubit>(
+                                            context)
+                                          ..addFollow(),
+                                    child: Text(state.isFollow ? "Unfollow" : "Follow"),
+                                  );
+                                },
+                              ),
+                            ),
+                          if (widget.user!.id != widget.userLoger.id)
+                            ElevatedButton(
+                                onPressed: () {}, child: const Text('messages'))
+                        ],
+                      ),
                     ),
                   ],
                 ),

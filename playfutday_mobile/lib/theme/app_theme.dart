@@ -1,8 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static const Color primary = Colors.white;
+  static const Color blackSolid = Colors.black;
   static const Color transparent = Colors.transparent;
+
+  //**STYLES TITLE GOOGLE FONTS */
+
+  static TextStyle tittleApp = GoogleFonts.adamina(
+    decorationThickness: 25.0,
+    fontWeight: FontWeight.w600,
+    fontSize: 23,
+  );
+
+  static TextStyle nameUsersStyle = GoogleFonts.lora(
+    fontWeight: FontWeight.w400,
+    fontSize: 13,
+  );
+
+  //*COST HEIGHT */
+
+  static double mediumHeight = 50.0;
+
+  static double minHeight = 5.0;
+
+  //* PADDING */
+  static double minPadding = 5.0;
+
+    static double mediumPadding = 15.0;
+
+  //* theme data buttom, card...*/
+
   static final ThemeData darkTheme = ThemeData.dark().copyWith(
       primaryColor: Colors.black12,
       appBarTheme: const AppBarTheme(

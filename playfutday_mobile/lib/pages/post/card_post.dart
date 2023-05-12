@@ -167,11 +167,11 @@ class _CardScreenPostState extends State<CardScreenPost> {
               Visibility(
                 visible: widget.user.id == widget.post.idAuthor,
                 child: PopupMenuButton(
-                  color: Colors.transparent,
+                  color: AppTheme.transparent,
                   elevation: 0,
                   enableFeedback: true,
                   icon: const Icon(Icons.more_horiz_sharp,
-                      color: Colors.black, size: 30),
+                      color: AppTheme.blackSolid, size: 30),
                   itemBuilder: (BuildContext bc) {
                     List<PopupMenuItem> items = [];
                     items.add(
@@ -215,17 +215,18 @@ class _CardScreenPostState extends State<CardScreenPost> {
                     Text(
                       'Tag: ${widget.post.tag}',
                       style: const TextStyle(
-                        color: Colors.black,
+                        color: AppTheme.blackSolid,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   const SizedBox(height: 8),
                   if (widget.post.description != null)
                     Text(
-                      overflow: TextOverflow.fade,
+                      maxLines: 5,
+                      overflow: TextOverflow.ellipsis,
                       '${widget.post.author}: ${widget.post.description!}',
                       style: const TextStyle(
-                        color: Colors.black,
+                        color: AppTheme.blackSolid,
                       ),
                     ),
                 ],

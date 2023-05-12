@@ -174,6 +174,10 @@ class _NewPostFormState extends State<NewPostForm> {
               },
               onSuccess: (context, state) {
                 LoadingDialog.hide(context);
+                setState(() {
+                  image = null;
+                });
+                loginFormBloc.clear();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     backgroundColor: Colors.green,

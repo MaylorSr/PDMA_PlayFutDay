@@ -7,6 +7,7 @@ import 'package:playfutday_flutter/pages/pages.dart';
 import 'package:playfutday_flutter/rest/rest.dart';
 import 'package:playfutday_flutter/services/post_service/post_service.dart';
 import 'package:playfutday_flutter/services/user_service/user_service.dart';
+import 'package:playfutday_flutter/theme/app_theme.dart';
 
 import '../../blocs/blocs.dart';
 import '../../blocs/follows/follow_bloc.dart';
@@ -19,15 +20,13 @@ class StartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      margin: const EdgeInsets.only(top: 0.5),
+      margin: EdgeInsets.only(top: AppTheme.minHeight),
       child: Column(
         children: [
-          Container(
-            width: size.width * 1,
-            padding: const EdgeInsets.symmetric(horizontal: 5),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppTheme.minHeight),
             child: Row(
               children: [
-                /**ENVOLER EN BLOC PROVIDER */
                 SizedBox(
                   width: size.width * 0.15,
                   child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
@@ -40,7 +39,7 @@ class StartScreen extends StatelessWidget {
                     },
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 15),
                 SizedBox(
                   width: size.width * 0.78,
                   child: SizedBox(
@@ -50,12 +49,16 @@ class StartScreen extends StatelessWidget {
                       builder: (context, state) {
                         if (state is AuthenticationAuthenticated) {
                           return BlocProvider(
-                              create: (_) => FollowBloc(
-                                  UserService(), state.user.id.toString())
-                                ..add(AllFollowFetched()),
-                              child: AllFollowList(
-                                user: state.user,
-                              ));
+                            create: (context) => FollowBloc(
+                              UserService(),
+                              state.user.id.toString(),
+                            )..add(
+                                AllFollowFetched(),
+                              ),
+                            child: AllFollowList(
+                              user: state.user,
+                            ),
+                          );
                         } else {
                           return const LoginPage();
                         }
@@ -66,16 +69,22 @@ class StartScreen extends StatelessWidget {
               ],
             ),
           ),
-          const Divider(height: 10, color: Colors.black, thickness: 3),
+          Divider(
+              height: AppTheme.minHeight,
+              color: AppTheme.primary,
+              thickness: 0.5),
           BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
               if (state is AuthenticationAuthenticated) {
                 return BlocProvider(
-                    create: (_) =>
-                        AllPostBloc(PostService())..add(AllPostFetched()),
-                    child: AllPostList(
-                      user: state.user,
-                    ));
+                  create: (context) => AllPostBloc(PostService())
+                    ..add(
+                      AllPostFetched(),
+                    ),
+                  child: AllPostList(
+                    user: state.user,
+                  ),
+                );
               } else {
                 return const LoginPage();
               }
@@ -91,28 +100,28 @@ class StartScreen extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(0.0),
+          padding: EdgeInsets.all(AppTheme.minPadding - 2),
           child: CircleAvatar(
             maxRadius: 25,
             child: ClipOval(
               child: CachedNetworkImage(
-                useOldImageOnUrlChange: true,
-                placeholderFadeInDuration: const Duration(seconds: 15),
+                placeholderFadeInDuration: const Duration(seconds: 5),
                 placeholder: (context, url) =>
                     Image.asset('assets/images/reload.gif'),
                 imageUrl: '$urlBase/download/${user.avatar}',
                 width: double.infinity,
+                height: 100.0,
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) =>
-                    Image.asset('assets/images/image_notfound.png'),
+                    Image.asset('assets/images/avatar.png'),
               ),
             ),
           ),
         ),
         Text(
           user.username.toString(),
-          style: const TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
           overflow: TextOverflow.ellipsis,
+          maxLines: 1,
         ),
       ],
     );

@@ -7,7 +7,7 @@ import 'package:stream_transform/stream_transform.dart';
 import 'user_profile_event.dart';
 import 'user_profile_state.dart';
 
-const throttleDuration = Duration(milliseconds: 500);
+const throttleDuration = Duration(milliseconds: 100);
 
 EventTransformer<E> throttleDroppable<E>(Duration duration) {
   return (events, mapper) {

@@ -37,6 +37,8 @@ dependencies:
   loading_animation_widget: ^1.2.0+4  
   pin_code_fields: ^7.4.0
   form_builder_file_picker: ^3.0.0
+  google_fonts: ^4.0.4
+  animations: ^2.0.7
 
 dev_dependencies:
   flutter_test:

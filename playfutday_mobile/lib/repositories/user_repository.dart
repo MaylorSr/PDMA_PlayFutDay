@@ -30,6 +30,12 @@ class UserRepository {
     return jsonResponse;
   }
 
+  Future<dynamic> getStateThatFollowUserByMe(String id) async {
+    String url = "/state/follow/user/$id";
+    var jsonResponse = await _client.get(url);
+    return jsonResponse;
+  }
+
   Future<dynamic> verifyCode(String code) async {
     String url = "/auth/verifyCode/$code";
     var jsonResponse = await _client.verifyCode(url, code);

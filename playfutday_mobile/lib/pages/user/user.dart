@@ -1,2 +1,10 @@
 export 'user_page.dart';
 export 'user_info.dart';
+export 'editProfile/edit_profile.dart';
+export 'change_password/change_password.dart';
+export 'followers_vertical/follower_v.dart';
+export 'follows/follows.dart';
+export 'follows_vertical/follows.dart';
+export 'post_view_grid_user/view_grid.dart';
+export 'option_follow.dart';
+export 'post_user.dart';

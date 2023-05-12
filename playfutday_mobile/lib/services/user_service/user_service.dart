@@ -115,4 +115,8 @@ class UserService {
   Future<dynamic> verifyCode(String code) async {
     return await _userRepository.verifyCode(code);
   }
+
+  Future<dynamic> getStateThatFollowUserByMe(String id) async {
+    return await _userRepository.getStateThatFollowUserByMe(id);
+  }
 }

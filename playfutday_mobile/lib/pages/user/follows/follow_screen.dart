@@ -6,6 +6,7 @@ import 'package:playfutday_flutter/rest/rest_client.dart';
 
 import '../../../blocs/userProfile/user_profile.dart';
 import '../../../services/user_service/user_service.dart';
+import '../../../theme/app_theme.dart';
 import '../user_page.dart';
 
 class FollowScreen extends StatefulWidget {
@@ -24,7 +25,7 @@ class _FollowAvatarScreenState extends State<FollowScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 1),
+      padding: EdgeInsets.symmetric(horizontal: AppTheme.minPadding, vertical:AppTheme.minPadding - 5 ),
       child: Column(
         children: [
           GestureDetector(
@@ -43,30 +44,36 @@ class _FollowAvatarScreenState extends State<FollowScreen> {
                 ),
               );
             },
-            child: CircleAvatar(
-              maxRadius: 25,
-              backgroundColor: Colors.grey[300],
-              child: ClipOval(
-                child: CachedNetworkImage(
-                  useOldImageOnUrlChange: true,
-                  placeholderFadeInDuration: const Duration(seconds: 15),
-                  placeholder: (context, url) =>
-                      Image.asset('assets/images/reload.gif'),
-                  imageUrl: '$urlBase/download/${widget.userFollow.avatar}',
-                  width: double.infinity,
-                  height: double.infinity,
-                  fit: BoxFit.cover,
-                  errorWidget: (context, url, error) =>
-                      Image.asset('assets/images/image_notfound.png'),
+            child: Container(
+              margin: const EdgeInsets.only(left: 10.0),
+              child: CircleAvatar(
+                maxRadius: 25,
+                backgroundColor: Colors.grey[300],
+                child: ClipOval(
+                  child: CachedNetworkImage(
+                    placeholderFadeInDuration: const Duration(seconds: 5),
+                    placeholder: (context, url) =>
+                        Image.asset('assets/images/reload.gif'),
+                    imageUrl: '$urlBase/download/${widget.userFollow.avatar}',
+                    width: double.infinity,
+                    height: 100.0,
+                    fit: BoxFit.cover,
+                    errorWidget: (context, url, error) =>
+                        Image.asset('assets/images/image_notfound.png'),
+                  ),
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 4.0),
-          Text(
-            widget.userFollow.username.toString(),
-            style: const TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
-            overflow: TextOverflow.ellipsis,
+          SizedBox(height: AppTheme.minHeight),
+          Container(
+            margin: EdgeInsets.only(left: AppTheme.mediumPadding),
+            child: Text(
+              widget.userFollow.username.toString(),
+              style: AppTheme.nameUsersStyle,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
           ),
         ],
       ),

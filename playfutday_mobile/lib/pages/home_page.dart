@@ -1,5 +1,7 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:playfutday_flutter/blocs/blocs.dart';
 import 'package:playfutday_flutter/models/searchPost.dart';
 import 'package:playfutday_flutter/services/services.dart';
@@ -44,15 +46,15 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
         index: _selectedIndex,
-        backgroundColor: Colors.grey,
-        color: Colors.black,
-        buttonBackgroundColor: Colors.black,
-        height: 50,
+        backgroundColor: AppTheme.primary,
+        color: AppTheme.blackSolid,
+        buttonBackgroundColor: AppTheme.blackSolid,
+        height: AppTheme.mediumHeight,
         items: const [
-          Icon(Icons.home, size: 20, color: Colors.white),
-          Icon(Icons.message_outlined, size: 20, color: Colors.white),
-          Icon(Icons.add, size: 20, color: Colors.white),
-          Icon(Icons.person, size: 20, color: Colors.white)
+          Icon(Icons.home, size: 20, color: AppTheme.primary),
+          Icon(Icons.message_outlined, size: 20, color: AppTheme.primary),
+          Icon(Icons.add, size: 20, color: AppTheme.primary),
+          Icon(Icons.person, size: 20, color: AppTheme.primary)
         ],
         onTap: (index) {
           setState(() {
@@ -69,48 +71,52 @@ class _HomePageState extends State<HomePage> {
             case 0:
               return Scaffold(
                   appBar: AppBar(
-                    title: const Text('PlayFutDay',
-                        style: TextStyle(
-                            color: AppTheme.primary,
-                            fontStyle: FontStyle.italic,
-                            fontSize: 25,
-                            fontWeight: FontWeight.w600)),
+                    title: Text('PlayFutDay', style: AppTheme.tittleApp),
                     actions: [
-                      Container(
-                        margin: const EdgeInsets.only(right: 8),
-                        child: ElevatedButton(
-                            style: const ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
-                            onPressed: () => showSearch(
-                                context: context, delegate: SearchPost()),
-                            child: const Icon(Icons.search_outlined)),
+                      ElevatedButton(
+                        autofocus: false,
+                        style: const ButtonStyle(
+                          elevation: MaterialStatePropertyAll(0),
+                          overlayColor:
+                              MaterialStatePropertyAll(AppTheme.transparent),
+                          backgroundColor:
+                              MaterialStatePropertyAll(AppTheme.transparent),
+                        ),
+                        onPressed: () => showSearch(
+                          context: context,
+                          delegate: SearchPost(),
+                        ),
+                        child: const Icon(
+                          Icons.search_outlined,
+                          color: AppTheme.primary,
+                          size: 30.0,
+                        ),
                       )
                     ],
                   ),
-                  body: const StartScreen());
+                  body: FadeInUpBig(
+                      from: 5.0,
+                      duration: const Duration(milliseconds: 700),
+                      child: const StartScreen()));
             case 2:
               return Scaffold(
                 appBar: AppBar(
-                  title: const Text('PlayFutDay',
-                      style: TextStyle(
-                          color: AppTheme.primary,
-                          fontStyle: FontStyle.italic,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w600)),
+                  title: Text('PlayFutDay', style: AppTheme.tittleApp),
                 ),
                 body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                   builder: (context, state) {
                     if (state is AuthenticationAuthenticated) {
-                      return const NewPostForm(
-                          // postService: PostService(),
-                          );
+                      return FadeInUp(
+                        duration: const Duration(milliseconds: 500),
+                        child: const NewPostForm(),
+                      );
                     } else {
                       return const LoginPage();
                     }
                   },
                 ),
               );
+
             case 3:
               return BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (context, state) {
@@ -118,13 +124,14 @@ class _HomePageState extends State<HomePage> {
                     return BlocProvider(
                         create: (context) => UserProfileBloc(UserService())
                           ..add(UserProfileFetched(state.user.id.toString())),
-                        child: UserProfilePage(user: state.user));
+                        child: FadeInRight(
+                            duration: const Duration(milliseconds: 500),
+                            child: UserProfilePage(user: state.user)));
                   } else {
                     return const LoginPage();
                   }
                 },
               );
-
             default:
               return Container();
           }
