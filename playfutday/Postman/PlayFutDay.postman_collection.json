@@ -65,7 +65,7 @@
 										"exec": [
 											"var json = pm.response.json();",
 											"pm.collectionVariables.set(\"token\", json.token);",
-											"",
+											"pm.collectionVariables.set(\"refresh_token\", json.refreshToken);",
 											""
 										],
 										"type": "text/javascript"
@@ -105,7 +105,9 @@
 									"script": {
 										"exec": [
 											"var json = pm.response.json();\r",
-											"pm.collectionVariables.set(\"token\", json.token);"
+											"pm.collectionVariables.set(\"token\", json.token);\r",
+											"pm.collectionVariables.set(\"refresh_token\", json.refreshToken);\r",
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -150,7 +152,9 @@
 									"script": {
 										"exec": [
 											"var json = pm.response.json();\r",
-											"pm.collectionVariables.set(\"token\", json.token);"
+											"pm.collectionVariables.set(\"token\", json.token);\r",
+											"pm.collectionVariables.set(\"refresh_token\", json.refreshToken);\r",
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -180,6 +184,54 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "REFRESH_TOKEN",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var json = pm.response.json();\r",
+											"pm.collectionVariables.set(\"token\", json.token);\r",
+											"pm.collectionVariables.set(\"refresh_token\", json.refreshToken);\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"refreshToken\": \"{{refresh_token}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/refresh/token",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"refresh",
+										"token"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -189,17 +241,20 @@
 						{
 							"name": "VERIFY CODE TO REGISTER",
 							"request": {
+								"auth": {
+									"type": "noauth"
+								},
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/auth/verifyCode/738632",
+									"raw": "{{baseUrl}}/auth/verifyCode/273452",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"auth",
 										"verifyCode",
-										"738632"
+										"273452"
 									],
 									"query": [
 										{
@@ -456,7 +511,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/post/delete/commentary/47",
+									"raw": "{{baseUrl}}/post/delete/commentary/53",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -464,7 +519,7 @@
 										"post",
 										"delete",
 										"commentary",
-										"47"
+										"53"
 									]
 								}
 							},
@@ -745,16 +800,16 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{baseUrl}}/post/user/4/user/d8825758-d02a-4bcc-8146-95fb6fa3ded7",
+											"raw": "{{baseUrl}}/post/user/1/user/681903b4-dc43-43c2-942c-86b81b15d1fc",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
 												"post",
 												"user",
-												"4",
+												"1",
 												"user",
-												"d8825758-d02a-4bcc-8146-95fb6fa3ded7"
+												"681903b4-dc43-43c2-942c-86b81b15d1fc"
 											]
 										},
 										"description": "El primer número es el **ID** del post a eliminar y el segundo /user/** es el **ID** del usuario que tiene dicho post."
@@ -772,7 +827,7 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{baseUrl}}/post/?page=0",
+											"raw": "{{baseUrl}}/post/?s=tag:PACHECO&page=0",
 											"host": [
 												"{{baseUrl}}"
 											],
@@ -783,8 +838,7 @@
 											"query": [
 												{
 													"key": "s",
-													"value": "tag:oyarzabal",
-													"disabled": true
+													"value": "tag:PACHECO"
 												},
 												{
 													"key": "page",
@@ -880,11 +934,11 @@
 												{
 													"key": "image",
 													"type": "file",
-													"src": "/C:/Users/User/Downloads/images.png"
+													"src": "/C:/Users/User/Downloads/logo_app.jpg"
 												},
 												{
 													"key": "post",
-													"value": "{\n    \"tag\": \"MESSI\",\n    \"description\": \"Lorem Ipsum Dolor Sit Amet....\"\n}",
+													"value": "{\n    \"tag\": \"nuevoPost\",\n    \"description\": \"hola buenas\"\n}",
 													"contentType": "application/vnd.api+json",
 													"type": "text"
 												}
@@ -959,7 +1013,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"oldPassword\": \"QUE1chC2Jv\",\n    \"newPassword\": \"MaylorDaa\",\n    \"verifyNewPassword\": \"MaylorDaa\"\n}",
+											"raw": "{\n    \"oldPassword\": \"M1n2345\",\n    \"newPassword\": \"MaylorDaa\",\n    \"verifyNewPassword\": \"MaylorDaa\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1175,13 +1229,13 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{baseUrl}}/user/d8825758-d02a-4bcc-8146-95fb6fa3ded7",
+											"raw": "{{baseUrl}}/user/{{id_user}}",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
 												"user",
-												"d8825758-d02a-4bcc-8146-95fb6fa3ded7"
+												"{{id_user}}"
 											]
 										}
 									},
@@ -1336,17 +1390,27 @@
 						{
 							"name": "LIKE_POST",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/post/like/1",
+									"raw": "{{baseUrl}}/post/like/2",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"post",
 										"like",
-										"1"
+										"2"
 									]
 								}
 							},
@@ -1619,6 +1683,25 @@
 										"post",
 										"grid",
 										"{{username}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET I FOLLOW USER BY ID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url_base}}state/follow/user/{{id_user}}",
+									"host": [
+										"{{url_base}}state"
+									],
+									"path": [
+										"follow",
+										"user",
+										"{{id_user}}"
 									]
 								}
 							},
