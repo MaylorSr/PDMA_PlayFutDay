@@ -192,15 +192,18 @@ public class PostService {
                     List<User> likes = post.getLikes();
                     boolean exists = repo.existsLikeByUser(id, user.getId());
                     if (!exists) {
-                        likes.add(user);
+                        User userToAdd = userRepository.findById(user.getId()).orElseThrow(() -> new GlobalEntityNotFounException(""));
+                        likes.add(userToAdd);
                     } else {
-//                        likes.remove(likes.indexOf(user));
+                        User userToRemove = userRepository.findById(user.getId()).orElseThrow(() -> new GlobalEntityNotFounException(""));
+                        likes.removeIf(u -> u.getId().equals(userToRemove.getId()));
                         repo.save(post);
                     }
                     return PostResponse.of(repo.save(post));
                 }
-        ).orElseThrow(() -> new GlobalEntityNotFounException("The post not found!"));
+        ).orElseThrow(() -> new GlobalEntityNotFounException("The post was not found!"));
     }
+
 
     /**
      * Metodo que se encarga de eliminar el post de un usuario, es necesario devolver un booleano para que no continue y devuelva la excepción,
