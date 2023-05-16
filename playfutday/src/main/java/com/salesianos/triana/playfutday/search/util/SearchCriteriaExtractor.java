@@ -15,7 +15,7 @@ public interface SearchCriteriaExtractor {
         if (!search.endsWith(",")) {
             search = search + ",";
         }
-        Matcher matcher = pattern.matcher(search);
+        Matcher matcher = pattern.matcher(search.toLowerCase());
 
         while (matcher.find()) {
             String key = matcher.group(1); // k1:v1 => k1

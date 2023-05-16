@@ -44,15 +44,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ),
               ),
               automaticallyImplyLeading: false,
-              title: const Text(
-                'PlayFutDay',
-                style: TextStyle(
-                  color: AppTheme.primary,
-                  fontStyle: FontStyle.italic,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              title: Text('PlayFutDay', style: AppTheme.tittleApp),
               centerTitle: true,
               actions: [
                 Padding(

@@ -39,6 +39,8 @@ dependencies:
   form_builder_file_picker: ^3.0.0
   google_fonts: ^4.0.4
   animations: ^2.0.7
+  readmore: ^2.2.0
+  flutter_scroll_to_top: ^2.3.0
 
 dev_dependencies:
   flutter_test:

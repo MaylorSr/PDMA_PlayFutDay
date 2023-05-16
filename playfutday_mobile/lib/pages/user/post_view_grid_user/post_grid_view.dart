@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:playfutday_flutter/rest/rest.dart';
 
 import '../../../blocs/post_grid_user/post_grid_bloc.dart';
@@ -62,7 +63,10 @@ class _PostGridImageScreenState extends State<PostGridImageScreen> {
                       )),
             );
           case ImagePostStatus.initial:
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: LoadingAnimationWidget.dotsTriangle(
+                  color: const Color.fromARGB(255, 6, 49, 122), size: 45),
+            );
         }
       },
     );

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:playfutday_flutter/blocs/follows/follow.dart';
 
 import '../../../blocs/follows/follow_event.dart';
 import '../../../models/models.dart';
-import '../../bottom_loader.dart';
 import 'follow_screen.dart';
 
 class AllFollowList extends StatefulWidget {
@@ -17,6 +17,7 @@ class AllFollowList extends StatefulWidget {
 
 class _AllFollowListState extends State<AllFollowList> {
   final _scrollController = ScrollController();
+
   // ignore: unused_field
   @override
   void initState() {
@@ -30,10 +31,10 @@ class _AllFollowListState extends State<AllFollowList> {
       builder: (context, state) {
         switch (state.status) {
           case AllFollowStatus.failure:
-            return const Center();
+            return const SizedBox();
           case AllFollowStatus.success:
             if (state.allFollow.isEmpty) {
-              return const Text('');
+              return const SizedBox();
             }
             return ListView.builder(
               physics: const BouncingScrollPhysics(
@@ -41,7 +42,8 @@ class _AllFollowListState extends State<AllFollowList> {
                       decelerationRate: ScrollDecelerationRate.fast)),
               itemBuilder: (BuildContext context, int index) {
                 return index >= state.allFollow.length
-                    ? const BottomLoader()
+                    ? LoadingAnimationWidget.twoRotatingArc(
+                        color: const Color.fromARGB(255, 6, 49, 122), size: 45)
                     : FollowScreen(
                         userFollow: state.allFollow[index],
                         user: widget.user,
@@ -54,7 +56,8 @@ class _AllFollowListState extends State<AllFollowList> {
               controller: _scrollController,
             );
           case AllFollowStatus.initial:
-            return const Center(child: CircularProgressIndicator());
+            return LoadingAnimationWidget.twoRotatingArc(
+                color: const Color.fromARGB(255, 6, 49, 122), size: 45);
         }
       },
     );

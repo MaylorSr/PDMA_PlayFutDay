@@ -5,7 +5,6 @@ import 'package:playfutday_flutter/pages/pages.dart';
 import '../../blocs/userProfile/user_profile.dart';
 import '../../models/user.dart';
 
-
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key, required this.user});
 

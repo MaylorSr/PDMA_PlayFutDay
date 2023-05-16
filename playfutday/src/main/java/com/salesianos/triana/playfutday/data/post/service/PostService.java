@@ -107,16 +107,6 @@ public class PostService {
     }
 
 
-    public PageResponse<PostResponse> findAllPost(String s, Pageable pageable) {
-        List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
-        PageResponse<PostResponse> res = search(params, pageable);
-        if (res.getContent().isEmpty()) {
-            throw new GlobalEntityListNotFounException(postExists);
-        }
-        return res;
-    }
-
-
     public PageResponse<PostResponse> findAllPostByUserName(String username, Pageable pageable) {
         PageResponse<PostResponse> res = pageablePost(username, pageable);
         if (res.getContent().isEmpty()) {
@@ -134,6 +124,15 @@ public class PostService {
     }
 
 
+    public PageResponse<PostResponse> findAllPost(String s, Pageable pageable) {
+        List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
+        PageResponse<PostResponse> res = search(params, pageable);
+        if (res.getContent().isEmpty()) {
+            throw new GlobalEntityListNotFounException(postExists);
+        }
+        return res;
+    }
+
     public PageResponse<PostResponse> search(List<SearchCriteria> params, Pageable pageable) {
         GenericSpecificationBuilder genericSpecificationBuilder = new GenericSpecificationBuilder(params);
         Specification<Post> spec = genericSpecificationBuilder.build();
@@ -146,7 +145,7 @@ public class PostService {
 
         return PostResponse.of(
                 repo.save(Post.builder()
-                        .tag(postRequest.getTag().toUpperCase())
+                        .tag(postRequest.getTag())
                         .image(filename)
                         .author(user)
                         .description(postRequest.getDescription())
@@ -195,7 +194,7 @@ public class PostService {
                     if (!exists) {
                         likes.add(user);
                     } else {
-                        likes.remove(user);
+//                        likes.remove(likes.indexOf(user));
                         repo.save(post);
                     }
                     return PostResponse.of(repo.save(post));

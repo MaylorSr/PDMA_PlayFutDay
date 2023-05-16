@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:playfutday_flutter/blocs/follows/follow.dart';
 import 'package:playfutday_flutter/blocs/post_grid_user/post_grid_event.dart';
 import 'package:playfutday_flutter/blocs/userProfile/user_profile.dart';
@@ -15,6 +16,7 @@ import 'package:playfutday_flutter/pages/user/post_view_grid_user/post_grid_view
 import 'package:playfutday_flutter/rest/rest.dart';
 import 'package:playfutday_flutter/services/post_service/post_service.dart';
 import 'package:playfutday_flutter/services/user_service/user_service.dart';
+import 'package:readmore/readmore.dart';
 
 import '../../blocs/blocs.dart';
 import '../../blocs/cubit/button_follow_cubit.dart';
@@ -97,12 +99,10 @@ class _UserScreenState extends State<UserScreen> {
             : null,
         elevation: 0,
         centerTitle: true,
-        title: Text('${widget.user?.username}'.toUpperCase(),
-            style: const TextStyle(
-                color: AppTheme.primary,
-                fontStyle: FontStyle.italic,
-                fontSize: 20,
-                fontWeight: FontWeight.w600)),
+        title: Text(
+          '${widget.user?.username}'.toUpperCase(),
+          style: AppTheme.tittleApp,
+        ),
         actions: [
           if (widget.user!.id == widget.userLoger.id)
             Container(
@@ -200,21 +200,24 @@ class _UserScreenState extends State<UserScreen> {
         ],
       ),
       body: Column(children: [
-        const SizedBox(height: 5),
-        CircleAvatar(
-          backgroundColor: Colors.transparent,
-          maxRadius: 40,
-          child: ClipOval(
-            child: CachedNetworkImage(
-              placeholderFadeInDuration: const Duration(seconds: 5),
-              placeholder: (context, url) =>
-                  Image.asset('assets/images/reload.gif'),
-              imageUrl: '$urlBase/download/${widget.user!.avatar}',
-              errorWidget: (context, url, error) =>
-                  Image.asset('assets/images/avatar.png'),
-              width: double.infinity,
-              height: 100.0,
-              fit: BoxFit.cover,
+        SizedBox(height: AppTheme.minHeight),
+        Hero(
+          tag: widget.user!.id.toString(),
+          child: CircleAvatar(
+            backgroundColor: AppTheme.transparent,
+            maxRadius: 40,
+            child: ClipOval(
+              child: CachedNetworkImage(
+                placeholderFadeInDuration: const Duration(seconds: 5),
+                placeholder: (context, url) =>
+                    Image.asset('assets/images/reload.gif'),
+                imageUrl: '$urlBase/download/${widget.user!.avatar}',
+                errorWidget: (context, url, error) =>
+                    Image.asset('assets/images/avatar.png'),
+                width: double.infinity,
+                height: 100.0,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
@@ -229,11 +232,7 @@ class _UserScreenState extends State<UserScreen> {
                     const SizedBox(height: 8),
                     Text(
                       '@${widget.user!.username}',
-                      style: const TextStyle(
-                          fontSize: 15,
-                          color: AppTheme.primary,
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.italic),
+                      style: AppTheme.nameUsersStyle.copyWith(fontSize: 17),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -246,7 +245,7 @@ class _UserScreenState extends State<UserScreen> {
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
-                                  color: Colors.white),
+                                  color: AppTheme.primary),
                             ),
                             const SizedBox(height: 5),
                             const Icon(
@@ -259,15 +258,19 @@ class _UserScreenState extends State<UserScreen> {
                         InkWell(
                           onTap: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => OptionFollowScreen(
-                                          id: widget.user!.id.toString(),
-                                          username:
-                                              widget.user!.username.toString(),
-                                          followersView: true,
-                                          user: widget.userLoger,
-                                        )));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FadeInRight(
+                                  duration: const Duration(milliseconds: 500),
+                                  child: OptionFollowScreen(
+                                    id: widget.user!.id.toString(),
+                                    username: widget.user!.username.toString(),
+                                    followersView: true,
+                                    user: widget.userLoger,
+                                  ),
+                                ),
+                              ),
+                            );
                           },
                           child: Column(
                             children: [
@@ -281,11 +284,15 @@ class _UserScreenState extends State<UserScreen> {
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
-                                        color: Colors.white,
+                                        color: AppTheme.primary,
                                       ),
                                     );
                                   } else {
-                                    return const CircularProgressIndicator();
+                                    return LoadingAnimationWidget
+                                        .twoRotatingArc(
+                                            color: const Color.fromARGB(
+                                                255, 6, 49, 122),
+                                            size: 45);
                                   }
                                 },
                               ),
@@ -301,15 +308,19 @@ class _UserScreenState extends State<UserScreen> {
                         InkWell(
                           onTap: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => OptionFollowScreen(
-                                          id: widget.user!.id.toString(),
-                                          username:
-                                              widget.user!.username.toString(),
-                                          followersView: false,
-                                          user: widget.userLoger,
-                                        )));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FadeInRight(
+                                  duration: const Duration(milliseconds: 500),
+                                  child: OptionFollowScreen(
+                                    id: widget.user!.id.toString(),
+                                    username: widget.user!.username.toString(),
+                                    followersView: false,
+                                    user: widget.userLoger,
+                                  ),
+                                ),
+                              ),
+                            );
                           },
                           child: Column(
                             children: [
@@ -323,11 +334,14 @@ class _UserScreenState extends State<UserScreen> {
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
-                                        color: Colors.white,
+                                        color: AppTheme.primary,
                                       ),
                                     );
                                   } else {
-                                    return const CircularProgressIndicator();
+                                    return LoadingAnimationWidget.dotsTriangle(
+                                        color: const Color.fromARGB(
+                                            255, 6, 49, 122),
+                                        size: 45);
                                   }
                                 },
                               ),
@@ -345,9 +359,9 @@ class _UserScreenState extends State<UserScreen> {
                       height: 10,
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.6,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           if (widget.user!.id != widget.userLoger.id)
                             BlocProvider(
@@ -363,6 +377,8 @@ class _UserScreenState extends State<UserScreen> {
                                             context)
                                           ..addFollow(),
                                     child: Text(
+                                        style: AppTheme.nameUsersStyle
+                                            .copyWith(fontSize: 14),
                                         state.isFollow ? "Unfollow" : "Follow"),
                                   );
                                 },
@@ -370,7 +386,11 @@ class _UserScreenState extends State<UserScreen> {
                             ),
                           if (widget.user!.id != widget.userLoger.id)
                             ElevatedButton(
-                                onPressed: () {}, child: const Text('messages'))
+                                onPressed: () {},
+                                child: Text(
+                                    style: AppTheme.nameUsersStyle
+                                        .copyWith(fontSize: 14),
+                                    'messages'))
                         ],
                       ),
                     ),
@@ -382,7 +402,7 @@ class _UserScreenState extends State<UserScreen> {
         ),
         const Divider(
           color: AppTheme.primary,
-          thickness: 3,
+          thickness: 0.5,
         ),
         Container(
           margin: const EdgeInsetsDirectional.only(start: 22),
@@ -390,11 +410,14 @@ class _UserScreenState extends State<UserScreen> {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(
               children: [
-                const Icon(Icons.person, color: Colors.white),
+                const Icon(Icons.person, color: AppTheme.primary),
                 const SizedBox(width: 10),
-                Text(
-                  '@${widget.user!.username}',
-                  style: const TextStyle(color: Colors.white),
+                Expanded(
+                  child: Text(
+                    '@${widget.user!.username}',
+                    style: AppTheme.nameUsersStyle
+                        .copyWith(color: AppTheme.primary, fontSize: 16),
+                  ),
                 ),
               ],
             ),
@@ -402,54 +425,76 @@ class _UserScreenState extends State<UserScreen> {
               children: [
                 const Icon(
                   Icons.email,
-                  color: Colors.white,
+                  color: AppTheme.primary,
                 ),
                 const SizedBox(width: 10),
-                Text('${widget.user!.email}',
-                    style: const TextStyle(color: Colors.white)),
+                Expanded(
+                  child: Text(
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    '${widget.user!.email}',
+                    style: AppTheme.nameUsersStyle
+                        .copyWith(color: AppTheme.primary, fontSize: 16),
+                  ),
+                ),
               ],
             ),
             Row(
               children: [
                 const Icon(
                   Icons.phone,
-                  color: Colors.white,
+                  color: AppTheme.primary,
                 ),
                 const SizedBox(width: 10),
-                Text('${widget.user!.phone}',
-                    style: const TextStyle(color: Colors.white)),
-              ],
-            ),
-            Row(
-              children: [
-                widget.user!.birthday == null
-                    ? const SizedBox()
-                    : const Icon(
-                        Icons.calendar_month,
-                        color: Colors.white,
-                      ),
-                const SizedBox(width: 10),
-                // ignore: unnecessary_string_interpolations
                 Text(
-                  widget.user!.birthday ?? '',
-                  style: const TextStyle(color: Colors.white),
+                  '${widget.user!.phone}',
+                  style: AppTheme.nameUsersStyle
+                      .copyWith(color: AppTheme.primary, fontSize: 16),
                 ),
               ],
             ),
+            if (widget.user!.birthday != null)
+              Row(
+                children: [
+                  widget.user!.birthday == null
+                      ? const SizedBox()
+                      : const Icon(
+                          Icons.calendar_month,
+                          color: AppTheme.primary,
+                        ),
+                  const SizedBox(width: 10),
+                  // ignore: unnecessary_string_interpolations
+                  Text(
+                    widget.user!.birthday ?? '',
+                    style: AppTheme.nameUsersStyle
+                        .copyWith(color: AppTheme.primary, fontSize: 16),
+                  ),
+                ],
+              ),
             Row(
               children: [
                 widget.user!.biography == null
                     ? const SizedBox()
                     : const Icon(
                         Icons.message_rounded,
-                        color: Colors.white,
+                        color: AppTheme.primary,
                       ),
                 const SizedBox(width: 10),
                 // ignore: unnecessary_string_interpolations
                 Expanded(
-                  child: Text(
+                  child: ReadMoreText(
+                    delimiter: "...",
+                    trimLength: 60,
+                    colorClickableText: AppTheme.grey.withBlue(10),
+                    delimiterStyle: AppTheme.tittleApp.copyWith(
+                        fontSize: 15,
+                        color: AppTheme.primary,
+                        fontWeight: FontWeight.w600),
+                    trimCollapsedText: " read more.",
+                    trimExpandedText: " show less.",
                     widget.user!.biography ?? '',
-                    style: const TextStyle(color: Colors.white),
+                    style: AppTheme.nameUsersStyle
+                        .copyWith(color: AppTheme.primary, fontSize: 14),
                   ),
                 ),
               ],
@@ -466,12 +511,12 @@ class _UserScreenState extends State<UserScreen> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.grid_on),
-                    color: _view == 1 ? Colors.white : Colors.grey,
+                    color: _view == 1 ? AppTheme.primary : AppTheme.grey,
                     onPressed: () => setState(() => _view = 1),
                   ),
                   IconButton(
                     icon: const Icon(Icons.list),
-                    color: _view == 2 ? Colors.white : Colors.grey,
+                    color: _view == 2 ? AppTheme.primary : AppTheme.grey,
                     onPressed: () {
                       setState(() {
                         _view == 1;
@@ -497,7 +542,7 @@ class _UserScreenState extends State<UserScreen> {
                       '${widget.userLoger.username}')
                     IconButton(
                         icon: const Icon(Icons.favorite),
-                        color: _view == 3 ? Colors.white : Colors.grey,
+                        color: _view == 3 ? AppTheme.primary : AppTheme.grey,
                         onPressed: () {
                           setState(() {
                             _view = 1;

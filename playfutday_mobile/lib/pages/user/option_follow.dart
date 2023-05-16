@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:playfutday_flutter/blocs/follows/follow.dart';
@@ -6,6 +8,7 @@ import 'package:playfutday_flutter/services/user_service/user_service.dart';
 
 import '../../blocs/followers/followers.dart';
 import '../../models/user.dart';
+import '../../theme/app_theme.dart';
 import 'followers_vertical/follower_v_page.dart';
 import 'follows_vertical/follow_v_page.dart';
 
@@ -41,26 +44,25 @@ class _OptionFollowScreenState extends State<OptionFollowScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   automaticallyImplyLeading: false,
-      //   title: const Text('PlayFutDay',
-      //       style: TextStyle(
-      //           color: AppTheme.primary,
-      //           fontStyle: FontStyle.italic,
-      //           fontSize: 25,
-      //           fontWeight: FontWeight.w600)),
-      // ),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(
+              Platform.isAndroid
+                  ? Icons.arrow_back_rounded
+                  : Icons.arrow_back_ios_new_rounded,
+              size: 25),
+        ),
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          widget.username.toUpperCase(),
+          style: AppTheme.tittleApp,
+        ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          AppBar(
-            centerTitle: true,
-            title: Text(
-              '@${widget.username}',
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -75,8 +77,9 @@ class _OptionFollowScreenState extends State<OptionFollowScreen> {
                       style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
-                          color:
-                              showFollowersView ? Colors.white : Colors.grey))),
+                          color: showFollowersView
+                              ? AppTheme.primary
+                              : AppTheme.grey))),
               TextButton(
                   onPressed: () {
                     setState(() {
@@ -88,8 +91,9 @@ class _OptionFollowScreenState extends State<OptionFollowScreen> {
                       style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
-                          color:
-                              showFollowersView ? Colors.grey : Colors.white))),
+                          color: showFollowersView
+                              ? Colors.grey
+                              : AppTheme.primary))),
             ],
           ),
           Expanded(

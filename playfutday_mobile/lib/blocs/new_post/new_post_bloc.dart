@@ -33,7 +33,9 @@ class ValidationBasedOnNewPostFieldFormBloc extends FormBloc<String, String> {
       emitSuccess(successResponse: "The post was save!");
     } else {
       var responseJson = jsonResponse.stream.bytesToString();
-      Error error = Error.fromJson(jsonDecode(responseJson.body));
+      Error error = Error.fromJson(
+        jsonDecode(responseJson.body),
+      );
       error.subErrors?.forEach((subError) {
         switch (subError.field) {
           case "tag":

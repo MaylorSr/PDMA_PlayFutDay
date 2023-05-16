@@ -1,13 +1,15 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../blocs/blocs.dart';
 import '../../../blocs/myFavPost/my_fav_Post_bloc.dart';
 import '../../../models/user.dart';
 import '../../../services/services.dart';
+import '../../../theme/app_theme.dart';
+import '../../general_error/general_error.dart';
 import '../../pages.dart';
-
 
 class MyFavPostList extends StatefulWidget {
   const MyFavPostList({Key? key, required this.user}) : super(key: key);
@@ -34,38 +36,57 @@ class _AllPostListState extends State<MyFavPostList> {
       builder: (context, state) {
         switch (state.status) {
           case AllPostStatus.failure:
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.sports_soccer, size: 50),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Not found any posts',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<MyFavPostBloc>().add(OnRefresh());
-                    },
-                    child: const Text('Try Again'),
-                  )
-                ],
+            return SizedBox(
+              height: MediaQuery.of(context).size.height * 0.65,
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const ErrorScreen(
+                      errorMessage: "Not found any favorite post",
+                      icon: Icons.favorite_rounded,
+                      size: 100,
+                    ),
+                    SizedBox(
+                      height: AppTheme.minHeight,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<MyFavPostBloc>().add(OnRefresh());
+                      },
+                      child: const Text('Try Again'),
+                    )
+                  ],
+                ),
               ),
             );
           case AllPostStatus.success:
             if (state.allPost.isEmpty) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Center(child: Text('Any posts found!')),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<MyFavPostBloc>().add(OnRefresh());
-                    },
-                    child: const Text('Try Again'),
+              return SizedBox(
+                height: MediaQuery.of(context).size.height * 0.65,
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const ErrorScreen(
+                        errorMessage: "Not found any favorite post",
+                        icon: Icons.favorite_rounded,
+                        size: 100,
+                      ),
+                      SizedBox(
+                        height: AppTheme.minHeight,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          context.read<MyFavPostBloc>().add(OnRefresh());
+                        },
+                        child: const Text('Try Again'),
+                      )
+                    ],
                   ),
-                ],
+                ),
               );
             }
             return ListView.builder(
@@ -74,7 +95,8 @@ class _AllPostListState extends State<MyFavPostList> {
                       decelerationRate: ScrollDecelerationRate.fast)),
               itemBuilder: (BuildContext context, int index) {
                 return index >= state.allPost.length
-                    ? const BottomLoader()
+                    ? LoadingAnimationWidget.dotsTriangle(
+                        color: const Color.fromARGB(255, 6, 49, 122), size: 45)
                     : CardScreenPost(
                         post: state.allPost[index],
                         user: widget.user,
@@ -99,7 +121,10 @@ class _AllPostListState extends State<MyFavPostList> {
               controller: _scrollController,
             );
           case AllPostStatus.initial:
-            return const Center(child: CircularProgressIndicator());
+            return Center(
+              child: LoadingAnimationWidget.dotsTriangle(
+                  color: const Color.fromARGB(255, 6, 49, 122), size: 45),
+            );
         }
       },
     );

@@ -1,5 +1,7 @@
 package com.salesianos.triana.playfutday.search.spec;
 
+import com.salesianos.triana.playfutday.exception.GlobalEntityNotFounException;
+import com.salesianos.triana.playfutday.search.util.QueryableEntity;
 import com.salesianos.triana.playfutday.search.util.SearchCriteria;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
@@ -25,7 +27,13 @@ public class GenericSpecification<T> implements Specification<T> {
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query,
                                  CriteriaBuilder criteriaBuilder) {
 
-        Class type = root.get(searchCriteria.getKey()).getJavaType();
+        Class type = null;
+
+        try {
+            type = root.get(searchCriteria.getKey()).getJavaType();
+        } catch (Exception exception) {
+            throw new GlobalEntityNotFounException("This attribute not found in the entity!");
+        }
         String key = searchCriteria.getKey();
         String operator = searchCriteria.getOperator();
         Object value = searchCriteria.getValue();

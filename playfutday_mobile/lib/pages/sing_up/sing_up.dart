@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -23,24 +25,11 @@ class _SingUpPageState extends State<SingUpPage> {
       child: Builder(
         builder: (context) {
           final loginFormBloc = context.read<ValidationSingUpForm>();
-
           return Scaffold(
             backgroundColor: AppTheme.primary,
-            resizeToAvoidBottomInset: false,
-            appBar: AppBar(
-              backgroundColor: const Color.fromARGB(255, 0, 38, 100),
-              title: const Text('Sing Up'),
-              elevation: 0,
-              titleTextStyle: const TextStyle(
-                  color: AppTheme.primary,
-                  fontStyle: FontStyle.italic,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600),
-            ),
             body: FormBlocListener<ValidationSingUpForm, String, String>(
               onSubmitting: (context, state) {
                 LoadingDialog.show(context);
-      
               },
               onSubmissionFailed: (context, state) {
                 LoadingDialog.hide(context);
@@ -61,40 +50,90 @@ class _SingUpPageState extends State<SingUpPage> {
                 const SizedBox();
               },
               child: SingleChildScrollView(
-                child: Container(
-                  margin: const EdgeInsets.all(25),
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      emailWidget(loginFormBloc),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      userNameWidget(loginFormBloc),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      phoneNumberWidget(loginFormBloc),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      passwordWidget(loginFormBloc),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      verifyPasswordWidget(loginFormBloc),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      ElevatedButton(
-                        onPressed: loginFormBloc.submit,
-                        child: const Text('SING UP'),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Stack(
+                          children: [
+                            Container(
+                              color: const Color(0xFF00446A),
+                              alignment: Alignment.topCenter,
+                              child: SizedBox(
+                                height: MediaQuery.of(context).size.height,
+                                child: AppBar(
+                                  leading: IconButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    icon: Icon(
+                                        Platform.isAndroid
+                                            ? Icons.arrow_back_rounded
+                                            : Icons.arrow_back_ios_new_rounded,
+                                        size: 25),
+                                  ),
+                                  centerTitle: true,
+                                  title: Text("SING UP",
+                                      style: AppTheme.tittleApp),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              height: MediaQuery.of(context).size.height -
+                                  MediaQuery.of(context).size.height * 0.16,
+                              // top: MediaQuery.of(context).size.height * 0.16,
+                              bottom: 0,
+                              child: Container(
+                                // height: MediaQuery.of(context).size.height,
+                                width: MediaQuery.of(context).size.width,
+                                alignment: Alignment.topCenter,
+                                padding:
+                                    EdgeInsets.all(AppTheme.mediumPadding + 15),
+                                decoration: const BoxDecoration(
+                                  color: AppTheme.primary,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(100),
+                                  ),
+                                ),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    children: [
+                                      emailWidget(loginFormBloc),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      userNameWidget(loginFormBloc),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      phoneNumberWidget(loginFormBloc),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      passwordWidget(loginFormBloc),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      verifyPasswordWidget(loginFormBloc),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: loginFormBloc.submit,
+                                        child: const Text('SING UP'),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

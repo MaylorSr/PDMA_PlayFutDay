@@ -77,7 +77,7 @@ class UserService {
   Future<dynamic> editPhone(String phone) async {
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
-      await _userRepository.editPhoneByMe(phone);
+      return await _userRepository.editPhoneByMe(phone);
     }
   }
 

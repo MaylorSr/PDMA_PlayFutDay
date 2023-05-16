@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:playfutday_flutter/services/user_service/user_service.dart';
@@ -59,37 +58,29 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
 
   Future<void> _updateUser(
       UpdateUser event, Emitter<UserProfileState> emit) async {
-    /**
-         * Variable para evitar realizar la petición cuando el usuario le de a cancelar
-         */
-    // bool changeUser = false;
-    try {
-      if (event.userNow.biography != event.updateUser.biography) {
-        await _userService.editBio(event.updateUser.biography!);
-        // changeUser = true;
-      }
+    event.updateUser.biography != event.userNow.biography
+        ? await _userService.editBio(event.updateUser.biography!)
+        : "";
+    event.updateUser.birthday != event.userNow.birthday
+        ? await _userService.editBirthday(event.updateUser.birthday!)
+        : event.userNow.birthday;
 
-      if (event.userNow.birthday != event.updateUser.birthday) {
-        await _userService.editBirthday(event.updateUser.birthday!);
-        // changeUser = true;
-      }
+    event.updateUser.avatar != null
+        ? await _userService.editAvatar(event.updateUser.avatar!)
+        : event.userNow.birthday;
 
-      if (event.userNow.phone != event.updateUser.phone) {
-        await _userService.editPhone(event.updateUser.phone!);
-        // changeUser = true;
-      }
-      if (event.updateUser.avatar != null) {
-        if (event.updateUser.avatar!.path.split('/').last !=
-            event.userNow.avatar!.toString()) {
-          await _userService.editAvatar(event.updateUser.avatar!);
-        }
-      }
-      // changeUser = true;
+    final updateUser =
+        await _userService.getCurrentUserInfo(event.userNow.id.toString());
+    return emit(
+        state.copyWith(status: UserProfileStatus.success, user: updateUser));
+  }
 
-      final updateUser =
-          await _userService.getCurrentUserInfo(event.userNow.id.toString());
-      return emit(
-          state.copyWith(status: UserProfileStatus.success, user: updateUser));
-    } catch (_) {}
+  Future<bool> updatePhoneNumber(String phone) async {
+    final response = await _userService.editPhone(phone);
+
+    if (response.statusCode == 400) {
+      return true;
+    }
+    return false;
   }
 }

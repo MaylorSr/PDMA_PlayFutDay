@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:playfutday_flutter/blocs/follows/follow.dart';
 import '../../../blocs/follows/follow_event.dart';
 import '../../../models/user.dart';
 import '../../bottom_loader.dart';
+import '../../general_error/general_error.dart';
 import 'follow_v.dart';
 
 class AllFollowListVertical extends StatefulWidget {
@@ -17,7 +19,8 @@ class AllFollowListVertical extends StatefulWidget {
 
 class _AllFollowListVercialState extends State<AllFollowListVertical> {
   final _scrollController = ScrollController();
-  // ignore: unused_field
+  final message = "You not follows any user...";
+
   @override
   void initState() {
     super.initState();
@@ -30,13 +33,27 @@ class _AllFollowListVercialState extends State<AllFollowListVertical> {
       builder: (context, state) {
         switch (state.status) {
           case AllFollowStatus.failure:
-            return const Center(
-              child: Text('You not have any user to follow'),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ErrorScreen(
+                    errorMessage: message,
+                    icon: Icons.mood_bad_outlined,
+                    size: 50),
+              ],
             );
           case AllFollowStatus.success:
             if (state.allFollow.isEmpty) {
-              return const Center(
-                child: Text('You not have any user to follow'),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ErrorScreen(
+                      errorMessage: message,
+                      icon: Icons.mood_bad_outlined,
+                      size: 50),
+                ],
               );
             }
             return ListView.builder(
@@ -58,7 +75,8 @@ class _AllFollowListVercialState extends State<AllFollowListVertical> {
               controller: _scrollController,
             );
           case AllFollowStatus.initial:
-            return const Center(child: CircularProgressIndicator());
+            return LoadingAnimationWidget.twoRotatingArc(
+                color: const Color.fromARGB(255, 6, 49, 122), size: 45);
         }
       },
     );

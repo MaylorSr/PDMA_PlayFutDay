@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:playfutday_flutter/pages/general_error/general_error.dart';
 import '../../../blocs/followers/followers.dart';
 import '../../../models/user.dart';
 import '../../bottom_loader.dart';
@@ -18,6 +20,8 @@ class AllFollowerListVertical extends StatefulWidget {
 
 class _AllFollowerListVercialState extends State<AllFollowerListVertical> {
   final _scrollController = ScrollController();
+  final message = "You not have followers...";
+
   // ignore: unused_field
   @override
   void initState() {
@@ -31,13 +35,27 @@ class _AllFollowerListVercialState extends State<AllFollowerListVertical> {
       builder: (context, state) {
         switch (state.status) {
           case AllFollowerStatus.failure:
-            return const Center(
-              child: Text('You not have followers'),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ErrorScreen(
+                    errorMessage: message,
+                    icon: Icons.mood_bad_outlined,
+                    size: 50),
+              ],
             );
           case AllFollowerStatus.success:
             if (state.allFollower.isEmpty) {
-              return const Center(
-                child: Text('You not have any followers'),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ErrorScreen(
+                      errorMessage: message,
+                      icon: Icons.mood_bad_outlined,
+                      size: 50),
+                ],
               );
             }
             return ListView.builder(
@@ -59,7 +77,8 @@ class _AllFollowerListVercialState extends State<AllFollowerListVertical> {
               controller: _scrollController,
             );
           case AllFollowerStatus.initial:
-            return const Center(child: CircularProgressIndicator());
+            return LoadingAnimationWidget.twoRotatingArc(
+                color: const Color.fromARGB(255, 6, 49, 122), size: 45);
         }
       },
     );
