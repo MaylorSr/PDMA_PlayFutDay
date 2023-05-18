@@ -15,23 +15,23 @@ Por ello ha de tener en cuenta lo siguiente:
  <img src="https://niixer.com/wp-content/uploads/2020/11/spring-boot.png" width="500" alt="Spring Logo"/>
  
 ___
-Ha de tener en cuenta que el backend se encuentra realizado con una versiónd de java 17, para más información puedes entrar en la carpeta de [PlayFutDay](https://github.com/MaylorSr/PDMA_PlayFutDay/tree/main/playfutday)
+Ha de tener en cuenta que el backend se encuentra realizado con una versiónd de java 17, para más información puedes entrar en la carpeta de [PlayFutDay](https://github.com/MaylorSr/PDMA_PlayFutDay/tree/develop_api/playfutday)
 
 ### MOBILE - FLUTTER - Proyecto 2ºDAM
 
 <img src="https://docs.flutter.dev/assets/images/shared/brand/flutter/logo/flutter-lockup.png" width="500" alt="Flutter Logo"/>
 
 ___
-Ha de tener en cuenta que la parte del mobile se encuentra realizado con (versión de Dart de 3.0.0 y de Flutter la 3.8.0-13.0.pre.74) , para más información puedes entrar en la carpeta de [Playfutday_mobile](https://github.com/MaylorSr/PDMA_PlayFutDay/tree/main/playfutday_mobile)
+Ha de tener en cuenta que la parte del mobile se encuentra realizado con (versión de Dart de 3.0.0 y de Flutter la 3.8.0-13.0.pre.74) , para más información puedes entrar en la carpeta de [Playfutday_mobile](https://github.com/MaylorSr/PDMA_PlayFutDay/tree/develop_mobile/playfutday_mobile)
 
 ### WEB - ANGULAR - Proyecto 2ºDAM
 
 <img src="https://user-images.githubusercontent.com/93126452/228478221-9fdd0b24-7755-4506-99cb-278dd1a4ee36.png" width="250" alt="Angular Logo"/>
 
 ___
-Ha de tener en cuenta que la parte de web se encuentra realizado con Angular, con una versiones... Angular: 15.2.4, Nodejs: 18.15.0 , para más información puedes entrar en la carpeta de [PlayFutDay_web](https://github.com/MaylorSr/PDMA_PlayFutDay/tree/main/playfutday_web) <br>
+Ha de tener en cuenta que la parte de web se encuentra realizado con Angular, con una versiones... Angular: 15.2.4, Nodejs: 18.15.0 , para más información puedes entrar en la carpeta de [PlayFutDay_web](https://github.com/MaylorSr/PDMA_PlayFutDay/tree/develop_web/playfutday_web) <br>
 
 
 ## **EJECUCIÓN DEL PROYECTO** :speech_balloon:
-Para llevar a cabo la ejecución del proyecto, necesitarás las versiones mencionadas anteriormente. En primer lugar necestirás clonarte el proyecto, abrir en Sprin Boot la carpeta de playfutday , en ella deberás iniciar el proyecto, una vez iniciado la parte del backend, podrás realizar en tu terminarl, "flutter pub get" para obtener las dependencias necesarias y porteriormente "flutter run".
+Para llevar a cabo la ejecución del proyecto, necesitarás las versiones mencionadas anteriormente. En primer lugar necestirás clonarte el proyecto, abrir en Sprin Boot la carpeta de playfutday , en ella deberás iniciar el proyecto, una vez iniciado la parte del backend, podrás realizar en tu terminal, "flutter pub get" para obtener las dependencias necesarias y porteriormente "flutter run". Por otro lado en Angular, necesitarás instalar las dependencias y para llevar a cabo la ejecución del proyecto realizarás ng serve -o
 
