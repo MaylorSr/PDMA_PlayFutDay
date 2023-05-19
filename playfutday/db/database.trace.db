@@ -24469,3 +24469,7 @@ SELECT * FROM POST_ENTITY WHERE user_id = '95ac21-9cef-4655-a816-29a1eee80841' [
 org.h2.jdbc.JdbcSQLDataException: Conversión de datos fallida, convirtiendo "95ac21-9cef-4655-a816-29a1eee80841"
 Data conversion error converting "95ac21-9cef-4655-a816-29a1eee80841"; SQL statement:
 SELECT * FROM POST_ENTITY WHERE user_id = '95ac21-9cef-4655-a816-29a1eee80841' [22018-214]
+2023-05-19 01:54:12 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "[*]where 7495ac21-9cef-4655-a816-29a1eee80841"
+Syntax error in SQL statement "[*]where 7495ac21-9cef-4655-a816-29a1eee80841"; SQL statement:
+where 7495ac21-9cef-4655-a816-29a1eee80841 [42000-214]
