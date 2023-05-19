@@ -9,6 +9,10 @@ import { MatSort } from "@angular/material/sort";
 import { UserResponseInfo } from "../../interfaces/user/user_info_id";
 import { LastThreeCommentaries } from "../../interfaces/commentaries/last_three_commentaries";
 import { PostByUserName } from "../../interfaces/post/post_user_by_username";
+import { MatDialog } from "@angular/material/dialog";
+import { SureDeleteComponent } from "../../components/sure-delete/sure-delete.component";
+import { ListAllCommentaries } from "../../interfaces/commentaries/list_all_commentaries";
+import { PostResponse } from "../../interfaces/post/post_list";
 
 @Component({
   selector: "app-user-info",
@@ -89,6 +93,7 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
   }
 
   constructor(
+    public dialog: MatDialog,
     private route: ActivatedRoute,
     private userService: UserService,
     private postService: PostService
@@ -138,11 +143,32 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  deleteCommentary(id_comment: string) {
-    return this.postService.deleteCommentarie(id_comment);
+  // deleteCommentary(id_comment: string) {
+  //   return this.postService.deleteCommentarie(id_comment);
+  // }
+
+
+  openDialogDelete(commentarie_emit: ListAllCommentaries) {
+    console.log(commentarie_emit);
+
+    this.dialog.open(SureDeleteComponent, {
+      width: "450px",
+      height: "120px",
+      data: {
+        dataInfo: commentarie_emit,
+      },
+    });
   }
 
-  deletePostOfUser(){
-    
+  openDialogDeletePost(post_emit: PostResponse) {
+    console.log(post_emit);
+    this.dialog.open(SureDeleteComponent, {
+      width: "450px",
+      height: "120px",
+      data: {
+        dataInfo: post_emit,
+      },
+    });
   }
+
 }

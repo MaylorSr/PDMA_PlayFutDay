@@ -13,7 +13,7 @@
           </button>
         </div>
 
-        <div class="filter-container">
+        <div class="filter-container" *ngIf="!error">
           <span>Search: </span>
           <mat-form-field>
             <mat-label>Filter</mat-label>
@@ -26,7 +26,13 @@
           </mat-form-field>
         </div>
       </div>
-      <div class="table-container">
+      <div class="alert success" *ngIf="error">
+        
+        <strong>Error: </strong> {{ message }}
+      </div>
+
+
+      <div class="table-container" *ngIf="!error">
         <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
           <!-- id Column -->
           <ng-container matColumnDef="id">
@@ -73,7 +79,11 @@
       </div>
       <!--ACABA LA TABLA -->
 
-      <div fxFlex="5" style="display: inline-table; text-align: end">
+      <div
+        fxFlex="5"
+        style="display: inline-table; text-align: end"
+        *ngIf="!error"
+      >
         <span style="margin-right: 1em; font-size: 14px; color: #777">
           {{ pageIndex + 1 }} - {{ totalPages }}
         </span>

@@ -89,7 +89,7 @@
                       <h3>Email</h3>
                       <div style="text-align: center">
                         <div style="font-size: 18px; font-weight: bold"></div>
-                        <div style="font-size: 20px;">
+                        <div style="font-size: 20px">
                           <i class="fa fa-envelope" style="color: white"></i>
                           {{ userSelected.email }}
                         </div>
@@ -132,7 +132,11 @@
                             {{ commentarieResponse.uploadCommentary }}
                           </div>
                         </div>
-                        <button mat-icon-button color="primary">
+                        <button
+                          mat-icon-button
+                          color="primary"
+                          (click)="openDialogDelete(commentarieResponse)"
+                        >
                           <mat-icon>delete</mat-icon>
                         </button>
                       </div>
@@ -179,7 +183,7 @@
                     >
                       <!-- Icono de delete -->
 
-                      <button mat-icon-button>
+                      <button mat-icon-button  (click)="openDialogDeletePost(post)">
                         <mat-icon style="color: brown">delete</mat-icon>
                       </button>
 

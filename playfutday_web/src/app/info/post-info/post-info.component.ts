@@ -9,6 +9,9 @@ import { CommentariResponseByPost } from "../../interfaces/commentaries/list_rep
 import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
+import { SureDeleteComponent } from "../../components/sure-delete/sure-delete.component";
+import { ListAllCommentaries } from "../../interfaces/commentaries/list_all_commentaries";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
   selector: "app-post-info",
@@ -43,6 +46,7 @@ export class PostInfoComponent implements OnInit, AfterViewInit {
   loading: boolean = true;
   loadingUserInfo: boolean = true;
   constructor(
+    public dialog: MatDialog,
     private route: ActivatedRoute,
     private userService: UserService,
     private postService: PostService
@@ -146,5 +150,17 @@ export class PostInfoComponent implements OnInit, AfterViewInit {
       this.pageIndex--;
       this.showListCommentariesByPostId();
     }
+  }
+
+  openDialogDelete(commentarie_emit: ListAllCommentaries) {
+    console.log(commentarie_emit);
+
+    this.dialog.open(SureDeleteComponent, {
+      width: "450px",
+      height: "120px",
+      data: {
+        dataInfo: commentarie_emit,
+      },
+    });
   }
 }

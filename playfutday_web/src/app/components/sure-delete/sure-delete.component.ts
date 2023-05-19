@@ -3,7 +3,6 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { PostService } from "../../_services/post.service";
 import { UserService } from "../../_services/user.service";
-import { UserResponse } from "../../interfaces/user/user_list";
 import { UserResponseInfo } from "../../interfaces/user/user_info_id";
 
 @Component({
@@ -67,7 +66,14 @@ export class SureDeleteComponent implements OnInit {
           }
         );
     } else {
-      console.log("es un comentario");
+      this.postService.deleteCommentarie(this.data.dataInfo.id).subscribe(
+        (response) => {
+          console.log("Comentario eliminado");
+        },
+        (error) => {
+          console.log(error.message);
+        }
+      );
     }
   }
 }

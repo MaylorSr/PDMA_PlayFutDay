@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { UserListResponse, UserResponse } from "../interfaces/user/user_list";
 import { environment } from "../../environments/environment.prod";
@@ -9,14 +9,18 @@ import { LastThreeCommentaries } from "../interfaces/commentaries/last_three_com
 import { PostListByUserName } from "../interfaces/post/post_user_by_username";
 import { ChangePasswordResponse } from "../interfaces/user/changePassword";
 // import { environment } from '../../environments/environment';
-
+import { ChangeDataUser } from "../interfaces/user/change_data";
+import { TokenStorageService } from "./token-storage.service";
 const API_URL = environment.api_hosting + "/";
 
 @Injectable({
   providedIn: "root",
 })
 export class UserService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenStorageService
+  ) {}
 
   getListPeople(page: number): Observable<UserListResponse> {
     return this.http.get<UserListResponse>(`${API_URL}user?page=${page}`);
@@ -33,6 +37,18 @@ export class UserService {
 
   getProfile(): Observable<UserResponseInfo> {
     return this.http.get<UserResponseInfo>(API_URL + "me");
+  }
+
+  changeAvatar(image: File) {
+    const formData = new FormData();
+    formData.append("image", image); // Especificar el nombre del archivo y el tipo de archivo
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+      // "Content-Type": "multipart/form-data",
+      // "multipart/form-data; boundary=----WebKitFormBoundary<boundary>"
+    });
+    return this.http.post(`${API_URL}edit/avatar`, formData, { headers });
   }
 
   /**
@@ -88,11 +104,22 @@ export class UserService {
   }
 
   changeBio(bio: string): Observable<String> {
-    return this.http.put<String>(`${API_URL}edit/bio`, bio);
+    const body: ChangeDataUser = {
+      biography: bio,
+      birthday: null,
+      phone: null,
+    };
+
+    return this.http.put<String>(`${API_URL}edit/bio`, body);
   }
 
   changePhone(phone: string): Observable<String> {
-    return this.http.put<String>(`${API_URL}edit/phone`, phone);
+    const body: ChangeDataUser = {
+      biography: null,
+      birthday: null,
+      phone: phone,
+    };
+    return this.http.put<String>(`${API_URL}edit/phone`, body);
   }
 
   changePassword(

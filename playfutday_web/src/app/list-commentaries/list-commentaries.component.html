@@ -3,7 +3,14 @@
   <div class="first-container">
     <div class="parent-container">
       <div class="table-container">
-        <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <div class="alert success" *ngIf="error">
+          <strong>Error: </strong> {{ message }}
+        </div>
+        <mat-table
+          [dataSource]="dataSource"
+          class="mat-elevation-z8"
+          *ngIf="!error"
+        >
           <!-- id Column -->
           <ng-container matColumnDef="id">
             <mat-header-cell *matHeaderCellDef> id </mat-header-cell>
@@ -81,7 +88,7 @@
         </mat-table>
       </div>
       <!--ACABA LA TABLA -->
-      <div style="display: inline-table; text-align: end">
+      <div style="display: inline-table; text-align: end" *ngIf="!error">
         <span style="margin-right: 1em; font-size: 14px; color: #777">
           {{ pageIndex + 1 }} - {{ totalPages }}
         </span>

@@ -2,11 +2,13 @@
 <div class="main-content" style="background-color: gray">
   <div class="first-container">
     <div class="parent-container">
+      <div class="success" *ngIf="showSuccesUpload">
+        <strong>The data was successfully changed</strong>
+      </div>
       <div style="display: grid; padding: 2em; color: brown">
         <h3>Account Settings</h3>
-        <mat-divider
-          style="width: 100%; background: black; margin: auto"
-        ></mat-divider>
+        <mat-divider style="width: 100%; background: black; margin: auto">
+        </mat-divider>
 
         <form class="example-form">
           <div
@@ -22,8 +24,9 @@
                   (change)="getFile($event)"
                   #fileInput
                 />
-
                 <img
+                  onerror="this.onerror = null; 
+                  this.src='https://programacion.net/files/article/20161110041116_image-not-found.png'"
                   #fileImage
                   class="file-image"
                   [src]="imageUrl || '/assets/img/upload.jpg'"
@@ -33,7 +36,7 @@
             </div>
           </div>
 
-          <mat-form-field class="example-full-width">
+          <!--  <mat-form-field class="example-full-width">
             <mat-label>Old Password</mat-label>
             <input
               [(ngModel)]="oldPassword"
@@ -70,8 +73,9 @@
             <mat-form-field class="example-full-width">
               <mat-label>Phone</mat-label>
               <input
+                id="phone"
                 matInput
-                type="text"
+                type="tel"
                 placeholder="Enter your new phone number"
                 pattern="[0-9]*"
                 minlength="9"
@@ -92,9 +96,78 @@
                 maxlength="200"
               />
             </mat-form-field>
+          </div> -->
+          <div class="form-row">
+            <div class="form-group col">
+              <label for="oldPassword" style="color: #000">Old Password</label>
+              <input
+                id="oldPassword"
+                type="password"
+                class="form-control"
+                [(ngModel)]="oldPassword"
+                name="oldPassword"
+                placeholder="Enter your old password"
+              />
+            </div>
+            <div class="form-group col">
+              <label for="newPassword" style="color: #000">New Password</label>
+              <input
+                id="newPassword"
+                type="password"
+                class="form-control"
+                [(ngModel)]="newPassword"
+                name="newPassword"
+                placeholder="Enter your new password"
+              />
+            </div>
+            <div class="form-group col">
+              <label for="verifyPassword" style="color: #000"
+                >Verify Password</label
+              >
+              <input
+                id="verifyPassword"
+                type="password"
+                class="form-control"
+                [(ngModel)]="verifyPassword"
+                name="verifyPassword"
+                placeholder="Verify your new password"
+              />
+            </div>
+          </div>
+
+          <div class="form-group" style="width: 50%">
+            <label for="phone" style="color: #000">Number of Phone</label>
+            <input
+              id="phone"
+              type="text"
+              class="form-control"
+              [(ngModel)]="phone"
+              name="phone"
+              maxlength="9"
+              minlength="9"
+              placeholder="Enter your phone number"
+            />
+            <div class="alert" *ngIf="showErrorPhoneBool">
+              <strong>Error: </strong> {{ showErrorPhone }}
+            </div>
+          </div>
+          <div class="form-group" style="width: 50%">
+            <label for="description" style="color: #000">Bio</label>
+            <textarea
+              id="description"
+              class="form-control"
+              [(ngModel)]="bio"
+              name="description"
+              placeholder="Enter your description"
+              maxlength="200"
+            >
+            </textarea>
+            <div class="alert success" *ngIf="showErrorBioBool">
+              <strong>Error: </strong> {{ showErrorBio }}
+            </div>
           </div>
           <button
-          style="margin-top: 1em;"
+            style="margin-top: 1em"
             mat-raised-button
             color="primary"
             type="submit"
