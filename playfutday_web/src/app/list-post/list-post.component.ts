@@ -56,22 +56,20 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
 
   showListPost(page: number) {
-    this.postService
-      .getListPost(page)
-      // .pipe(delay(600))
-      .subscribe({
-        next: (u) => {
-          this.posts = u.content;
-          this.dataSource.data = this.posts;
-          this.dataSource.paginator = this.paginator;
-          this.dataSource.sort = this.sort;
-          this.totalPages = u.totalPages;
-        },
-        error: (err) => {
-          this.message = err.error.status;
-          this.error = true;
-        },
-      });
+    this.postService.getListPost(page).subscribe({
+      next: (u) => {
+        this.posts = u.content;
+        this.dataSource.data = this.posts;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.totalPages = u.totalPages;
+        this.error = false;
+      },
+      error: (err) => {
+        this.message = err.error.message;
+        this.error = true;
+      },
+    });
   }
 
   applyFilter(event: Event) {
@@ -83,9 +81,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     }
   }
 
-  openDialogDelete(post_emit : PostResponse) {
+  openDialogDelete(post_emit: PostResponse) {
     console.log(post_emit);
-    this.dialog.open(SureDeleteComponent, {      
+    this.dialog.open(SureDeleteComponent, {
       width: "450px",
       height: "120px",
       data: {

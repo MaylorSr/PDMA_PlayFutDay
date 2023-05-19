@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { environment } from "../../environments/environment.prod";
 import { PostListResponse } from "../interfaces/post/post_list";
 import { TokenStorageService } from "./token-storage.service";
@@ -8,6 +8,9 @@ import { PostRequestResponse } from "../interfaces/post/post_request";
 import { PostInfoByIdResponse } from "../interfaces/post/post_info_by_id";
 import { ListPostCommentaryRespone } from "../interfaces/commentaries/list_reponse";
 import { AllCommentariesResponse } from "../interfaces/commentaries/list_all_commentaries";
+import { ErrorResponse } from "../interfaces/error/general_error";
+import { catchError } from "rxjs/operators";
+
 const API_URL = environment.api_hosting + "/";
 
 @Injectable({
@@ -19,7 +22,7 @@ export class PostService {
     private tokenService: TokenStorageService
   ) {}
 
-  getListPost(page: number): Observable<PostListResponse> {
+  getListPost(page: number): Observable<any> {
     return this.http.get<PostListResponse>(`${API_URL}post/?page=${page}`);
   }
 
@@ -53,14 +56,14 @@ export class PostService {
       type: "application/vnd.api+json",
     });
 
-    // imageBlob, 
+    // imageBlob,
     formData.append("image", image); // Especificar el nombre del archivo y el tipo de archivo
     formData.append("post", blobBody);
 
     console.log("FormData.getAll():", formData.getAll("image")); // Obtener todos los valores del FormData
 
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${this.tokenService.getToken()}`
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
       // "Content-Type": "multipart/form-data",
       // "multipart/form-data; boundary=----WebKitFormBoundary<boundary>"
     });
