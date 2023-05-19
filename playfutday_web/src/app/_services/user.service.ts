@@ -122,12 +122,8 @@ export class UserService {
     return this.http.put<String>(`${API_URL}edit/phone`, body);
   }
 
-  changePassword(
-    body: ChangePasswordResponse
-  ): Observable<ChangePasswordResponse> {
-    return this.http.put<ChangePasswordResponse>(
-      `${API_URL}user/changePassword`,
-      body
-    );
+  changePassword(body: ChangePasswordResponse): Observable<ChangePasswordResponse> {
+    console.log(body);
+    return this.http.put<ChangePasswordResponse>(`${API_URL}user/changePassword`,body);
   }
 }

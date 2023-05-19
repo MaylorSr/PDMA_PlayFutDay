@@ -36,67 +36,6 @@
             </div>
           </div>
 
-          <!--  <mat-form-field class="example-full-width">
-            <mat-label>Old Password</mat-label>
-            <input
-              [(ngModel)]="oldPassword"
-              matInput
-              type="password"
-              placeholder="Enter your old password"
-            />
-            <mat-icon matSuffix>lock</mat-icon>
-          </mat-form-field>
-
-          <mat-form-field class="example-full-width">
-            <mat-label>New Password</mat-label>
-            <input
-              [(ngModel)]="newPassword"
-              matInput
-              type="password"
-              placeholder="Enter your new password"
-            />
-            <mat-icon matSuffix>lock</mat-icon>
-          </mat-form-field>
-
-          <mat-form-field class="example-full-width">
-            <mat-label>Verify Password</mat-label>
-            <input
-              [(ngModel)]="veryfiPassword"
-              matInput
-              type="password"
-              placeholder="Verify your new password"
-            />
-            <mat-icon matSuffix>lock</mat-icon>
-          </mat-form-field>
-
-          <div style="margin-top: 1em">
-            <mat-form-field class="example-full-width">
-              <mat-label>Phone</mat-label>
-              <input
-                id="phone"
-                matInput
-                type="tel"
-                placeholder="Enter your new phone number"
-                pattern="[0-9]*"
-                minlength="9"
-                maxlength="9"
-                [(ngModel)]="phone"
-              />
-              <mat-icon matSuffix>phone</mat-icon>
-            </mat-form-field>
-          </div>
-          <div style="margin-top: 1em">
-            <mat-form-field class="example-full-width">
-              <mat-label>Bio</mat-label>
-              <input
-                [(ngModel)]="bio"
-                matInput
-                type="text"
-                placeholder="Enter your new bio"
-                maxlength="200"
-              />
-            </mat-form-field>
-          </div> -->
           <div class="form-row">
             <div class="form-group col">
               <label for="oldPassword" style="color: #000">Old Password</label>
@@ -133,6 +72,9 @@
                 placeholder="Verify your new password"
               />
             </div>
+          </div>
+          <div class="alert" *ngIf="showErrorPasswordBool">
+            <strong>Error: </strong> {{ showErrorMessagePassword }}
           </div>
 
           <div class="form-group" style="width: 50%">
