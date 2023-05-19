@@ -602,6 +602,44 @@ public class UserController {
     }
 
 
+    @Operation(summary = "Este método lo que hace es cambiar tu contraseña")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "{Se ha cambiado la contraseña con éxito}",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ChangePasswordRequest.class),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            [
+                                                {
+                                                  "username": "wbeetham0",
+                                                  "avatar": "avatar.png",
+                                                  "enabled": true,
+                                                  "roles": [
+                                                      "ADMIN",
+                                                      "USER"
+                                                  ]
+                                                }
+                                            ]
+                                             """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "401",
+                    description = "No estas logeado",
+                    content = @Content),
+            @ApiResponse(responseCode = "400",
+                    description = "Estas otorgando datos erróneos",
+                    content = @Content)
+    })
+    @PutMapping("/user/changePassword")
+    @JsonView(viewUser.UserResponse.class)
+    public UserResponse changePassword(@Parameter(name = "ChangePasswordRequest",
+            description = "Se debe proporcionar la contraseña antigua y las dos nuevas respectivamente", content = @Content, allowEmptyValue = true)
+                                       @Valid @RequestBody ChangePasswordRequest changePasswordRequest, @AuthenticationPrincipal User user) {
+        return userService.editPassword(user, changePasswordRequest);
+    }
+
+
 //    @Operation(summary = "Este sirve para logear a un usuario administrador ya creado")
 //    @ApiResponses(value = {
 //            @ApiResponse(responseCode = "201",
