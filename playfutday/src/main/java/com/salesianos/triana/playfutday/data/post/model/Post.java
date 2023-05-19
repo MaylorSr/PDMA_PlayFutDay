@@ -51,7 +51,7 @@ public class Post implements Serializable {
     )
     private List<User> likes;
 
-    @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Commentary> commentaries = new ArrayList<>();
 

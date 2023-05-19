@@ -63,14 +63,29 @@ export class ListCommentariesComponent implements OnInit, AfterViewInit {
   }
 
   showListCommentaries(page: number) {
-    this.postService.getAllCommentaries(page).subscribe((c) => {
+    this.postService.getAllCommentaries(page).subscribe({
+      next: (c) => {
+        this.listCommentaries = c.content;
+        this.dataSource.data = this.listCommentaries;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.totalElements = c.totalElements;
+        this.totalPages = c.totalPages;
+        this.error = false;
+      },
+      error: (err) => {
+        this.message = err.error.message;
+        this.error = true;
+      },
+    });
+    /* this.postService.getAllCommentaries(page).subscribe((c) => {
       this.listCommentaries = c.content;
       this.dataSource.data = this.listCommentaries;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.totalElements = c.totalElements;
       this.totalPages = c.totalPages;
-    });
+    }); */
   }
 
   openDialogDelete(commentarie_emit: ListAllCommentaries) {

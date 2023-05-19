@@ -31,3 +31,9 @@
   flex-grow: 1;
   overflow-y: auto;
 }
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+  padding: 0;
+  border-bottom-width: 0px;
+  border-bottom-style: none;
+}
