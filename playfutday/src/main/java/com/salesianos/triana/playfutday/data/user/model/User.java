@@ -1,6 +1,7 @@
 package com.salesianos.triana.playfutday.data.user.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.salesianos.triana.playfutday.data.chat.model.Chat;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.user.database.EnumSetUserRoleConverter;
 import lombok.AllArgsConstructor;
@@ -31,7 +32,8 @@ import java.util.stream.Collectors;
 @Builder
 @NamedEntityGraph(
         name = "user_with_posts",
-        attributeNodes = @NamedAttributeNode(value = "myPost"))
+        attributeNodes = @NamedAttributeNode(value = "myPost")
+)
 @NamedEntityGraph(
         name = "user_with_follows",
         attributeNodes = @NamedAttributeNode(value = "follows"))
@@ -39,7 +41,6 @@ import java.util.stream.Collectors;
 @NamedEntityGraph(
         name = "user_with_followers",
         attributeNodes = @NamedAttributeNode(value = "followers"))
-
 public class User implements UserDetails {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -71,6 +72,18 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Post> myPost = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "members", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @Builder.Default
+//    private List<Chat> myChats = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_chats",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "chat_id")
+    )
+    private Set<Chat> myChats;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthday;

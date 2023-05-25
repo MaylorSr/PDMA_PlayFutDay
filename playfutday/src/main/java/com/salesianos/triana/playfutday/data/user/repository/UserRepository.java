@@ -20,11 +20,14 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
 
     Optional<User> findFirstByUsername(String username);
 
-
     @EntityGraph(value = "user_with_posts", type = EntityGraph.EntityGraphType.FETCH)
     Optional<User> findByUsername(String username);
 
 
+
+    /** OBTENER EL USUARIO CON CHATS**/
+    @Query("SELECT u FROM User u JOIN FETCH u.myChats WHERE u.id = :id")
+    Optional<User> findAllChatsByIdUser(@Param("id") UUID id);
     @EntityGraph(value = "user_with_follows", type = EntityGraph.EntityGraphType.FETCH)
     Optional<User> findByPhone(String phone);
 
@@ -98,6 +101,8 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
                 ORDER BY FUNCTION('MONTH', u.createdAt) ASC
             """)
     List<IUserResponseCreated> getUsersByMonthAndYear(int year);
+
+
 
 }
 

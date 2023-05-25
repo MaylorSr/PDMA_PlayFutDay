@@ -1,14 +1,35 @@
+package com.salesianos.triana.playfutday.data.message.dto;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.salesianos.triana.playfutday.data.message.model.Message;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public MessageResponse {
+public class MessageResponse {
 
-    /**ID DEL MENSAJE */
+    /**
+     * ID DEL MENSAJE
+     */
     protected Long id;
 
     // protected Long idChat;
+
+
+    /***
+     * ID DEL USUARIO QUE ENVÍA EL MENSAJE
+     */
+    protected UUID idUserWhoSendMessage;
 
     protected String usernameWhoSendMessage;
 
@@ -16,20 +37,20 @@ public MessageResponse {
 
     protected String bodyMessage;
 
-    // protected UUID idUserWhoSendMessage;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm")
-    protected LocalDateTime timeWhoSendMessage
+    protected LocalDateTime timeWhoSendMessage;
 
-    public static MessageResponse(Message message){
+    public static MessageResponse of(Message message) {
         return MessageResponse.builder()
-                .id(message.id)
-                // .idChat()   
-                .usernameWhoSendMessage(message.username)
-                .avatarWhoSendMessage(message.avatar)
-                .bodyMessage(message.body)
-                // .idUserWhoSendMessage(message.idUser)
-        
-        .build();
+                .id(message.getId())
+                // .idChat() // DE MOMENTO NO HACE FALTA
+                .idUserWhoSendMessage(message.getIdUser()) // ID DEL USUARIO QUE ENVÍA EL MENSAJE PARA PODER NAVEGAR A LA PANTALLA DE DICHO USUARIO
+                .usernameWhoSendMessage(message.getUsername())
+                .avatarWhoSendMessage(message.getAvatar())
+                .bodyMessage(message.getBody())
+                .timeWhoSendMessage(message.getCreatedMessage())
+                .build();
     }
+
+
 }
