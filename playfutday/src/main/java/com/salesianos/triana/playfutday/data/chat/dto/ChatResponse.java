@@ -36,13 +36,13 @@ public class ChatResponse {
      * SERVIRÁ PARA MARCAR EL CHAT COMO QUE TIENE MENSAJES SIN ABRIR
      */
 //     private bool isReaded;
-    public static ChatResponse of(Chat chat, User userWhoReceive, Message message) {
+    public static ChatResponse of(Chat chat, User userWhoReceive, String message) {
         return ChatResponse.builder()
                 .id(chat.getId())
                 /**AVERIGUAR COMO SE LE PASARÁ EL USUARIO DESTINATARIO */
                 .avatarUserDestinity(userWhoReceive.getAvatar())
                 .usernameUserDestinity(userWhoReceive.getUsername())
-                .lastMessage(message.getBody())
+                .lastMessage(message)
                 .build();
     }
 

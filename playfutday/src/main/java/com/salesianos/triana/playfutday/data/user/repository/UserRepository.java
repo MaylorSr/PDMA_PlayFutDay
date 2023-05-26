@@ -1,5 +1,6 @@
 package com.salesianos.triana.playfutday.data.user.repository;
 
+import com.salesianos.triana.playfutday.data.chat.model.Chat;
 import com.salesianos.triana.playfutday.data.commentary.model.Commentary;
 import com.salesianos.triana.playfutday.data.user.interfaces.IUserResponseCreated;
 import com.salesianos.triana.playfutday.data.user.interfaces.IUserResponseEnabled;
@@ -24,10 +25,12 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
     Optional<User> findByUsername(String username);
 
 
+    /** OBTENER TODOS LOS CHATS DE UN USUARIO **/
+    @Query("""
+            SELECT m FROM User u JOIN u.myChats m WHERE u.id= :id
+            """)
+    List<Chat> findChatsByUserId(UUID id);
 
-    /** OBTENER EL USUARIO CON CHATS**/
-    @Query("SELECT u FROM User u JOIN FETCH u.myChats WHERE u.id = :id")
-    Optional<User> findAllChatsByIdUser(@Param("id") UUID id);
     @EntityGraph(value = "user_with_follows", type = EntityGraph.EntityGraphType.FETCH)
     Optional<User> findByPhone(String phone);
 

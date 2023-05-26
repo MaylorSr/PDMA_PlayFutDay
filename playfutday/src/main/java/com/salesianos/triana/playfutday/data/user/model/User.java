@@ -1,13 +1,12 @@
 package com.salesianos.triana.playfutday.data.user.model;
 
+import ch.qos.logback.core.boolex.EvaluationException;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salesianos.triana.playfutday.data.chat.model.Chat;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.user.database.EnumSetUserRoleConverter;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jdk.jfr.Name;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.data.annotation.CreatedDate;
@@ -26,7 +25,9 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "user_entity")
 @EntityListeners(AuditingEntityListener.class)
-@Data
+//@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -41,6 +42,11 @@ import java.util.stream.Collectors;
 @NamedEntityGraph(
         name = "user_with_followers",
         attributeNodes = @NamedAttributeNode(value = "followers"))
+
+@NamedEntityGraph(
+        name = "user_with_chats"
+        ,attributeNodes = @NamedAttributeNode(value = "myChats")
+)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -77,13 +83,14 @@ public class User implements UserDetails {
 //    @Builder.Default
 //    private List<Chat> myChats = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "user_chats",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "chat_id")
     )
-    private Set<Chat> myChats;
+    @Builder.Default
+    private Set<Chat> myChats = new HashSet<>();
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthday;

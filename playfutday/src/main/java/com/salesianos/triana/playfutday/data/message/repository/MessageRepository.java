@@ -1,5 +1,6 @@
 package com.salesianos.triana.playfutday.data.message.repository;
 
+import com.salesianos.triana.playfutday.data.chat.model.Chat;
 import com.salesianos.triana.playfutday.data.message.model.Message;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -15,7 +16,10 @@ public interface MessageRepository extends JpaRepository<Message, Long>, JpaSpec
 
 
     @Query("SELECT m FROM Message m WHERE m.chat.id = :chatId")
-    List<Message> findAllMessagesByChatId(@Param("chatId") Long chatId);
+    List<Message> findAllMessagesByChatId(Long chatId);
 
+
+//    @Query("SELECT m FROM Message m JOIN Chat c ON (m.chat.id = c.id) WHERE c.id= :id AND ROWNUM <= 1 ORDER BY m.createdMessages ASC ")
+//    Message lastMessageByChatId(@Param("id") Long id);
 
 }

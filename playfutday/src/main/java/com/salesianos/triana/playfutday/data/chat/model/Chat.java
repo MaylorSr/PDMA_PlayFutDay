@@ -32,21 +32,13 @@ public class Chat implements Serializable {
     private Long id;
 
     //**A CONFIGURAR MÁS TARDE DEPENDIENDO DE LA POLÍTICA DE BORRADO DESEADA */ @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "chat_members",
-//            joinColumns = @JoinColumn(name = "chat_id"),
-//            inverseJoinColumns = @JoinColumn(name = "user_id")
-//    )
-//    private Set<User> members = new HashSet<>();
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_chats",
             joinColumns = @JoinColumn(name = "chat_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> members;
+    private List<User> members;
     /**
      * CREO QUE DEBE SER LIST NO HASHSET, YA QUE AL BORRAR LA CUENTA DEL USUARIO, LOS MENSAJES DE ESTE EL USUARIO NO APARECERÁ Y SE PONDRÁ EN NULL
      */

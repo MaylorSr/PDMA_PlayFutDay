@@ -25,7 +25,7 @@ public class ChatController {
 
 
     @GetMapping("/")
-    public List<String> findAllChatByUser(@AuthenticationPrincipal User user) {
+    public List<ChatResponse> findAllChatByUser(@AuthenticationPrincipal User user) {
         return chatService.findAllChatByUser(user);
     }
 

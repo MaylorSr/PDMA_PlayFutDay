@@ -13,12 +13,10 @@ import com.salesianos.triana.playfutday.exception.GlobalEntityNotFounException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,13 +34,15 @@ public class MessageService {
     @Transactional
     public MessageResponse createNewMessage(MessageRequest messageRequest,
                                             User user, UUID id) {
+//        User userWhoReceiveMessage = userRepository.findUserWithCommonChats(id.toString()).get();
+        User userWhoReceiveMessage = userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("User not found with that id"));
+//                .orElseThrow(
+//                        () -> new GlobalEntityNotFounException("User not found with that id")
+//                );
 
-        User userWhoReceiveMessage = userRepository.findAllChatsByIdUser(id)
-                .orElseThrow(
-                        () -> new GlobalEntityNotFounException("User not found with that id")
-                );
-        User userWhoSend = userRepository.findAllChatsByIdUser(user.getId()).orElseThrow(() -> new GlobalEntityNotFounException(""));
-        Chat exitsChat = chatRepo.findChatByUserIds(userWhoSend.getId(), userWhoReceiveMessage.getId());
+//        User userWhoReceiveMessage = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(""));
+//        User userWhoSend = userRepository.findAllChatsByIdUser(user.getId()).orElseThrow(() -> new GlobalEntityNotFounException(""));
+        Chat exitsChat = chatRepo.findChatByUserIds(user.getId(), userWhoReceiveMessage.getId());
 
         Message message = Message.builder()
                 .idUser(user.getId())
@@ -53,10 +53,12 @@ public class MessageService {
 
         Chat chat = exitsChat == null ? chatRepo.save(
                 Chat.builder()
-                        .members(new HashSet<>(Set.of(user, userWhoReceiveMessage)))
+                        .members(new ArrayList<>(List.of(user, userWhoReceiveMessage)))
                         .messages(List.of(message))
                         .build()
         ) : exitsChat;
+
+//        user.getMyChats().add(chat);
 
         message.setChat(chat);
 
