@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 
 @NamedEntityGraph(
         name = "user_with_chats"
-        ,attributeNodes = @NamedAttributeNode(value = "myChats")
+        , attributeNodes = @NamedAttributeNode(value = "myChats")
 )
 public class User implements UserDetails {
     @Id
@@ -174,6 +174,10 @@ public class User implements UserDetails {
      */
     @PreRemove
     public void deleteUser() {
+        this.getMyChats().forEach(c -> {
+            c.getMessages().remove(this);
+        });
+
         this.follows.forEach(f -> {
             f.followers.remove(this);
         });

@@ -12,7 +12,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 
 @Entity
@@ -28,7 +27,7 @@ public class Message implements Serializable {
     @GeneratedValue()
     private Long id; //id del mensaje
 
-    private UUID idUser;
+    private String idUser;
 
     private String avatar;
 

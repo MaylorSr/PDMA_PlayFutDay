@@ -314,7 +314,6 @@ public class UserController {
                     description = "No estas logeado u autenticado",
                     content = @Content)
     })
-
     @PostMapping("/auth/login")
     @JsonView(viewUser.UserInfo.class)
     public ResponseEntity<UserResponse> login(@Parameter(name = "Usuario",

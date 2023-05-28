@@ -4,9 +4,7 @@ package com.salesianos.triana.playfutday.data.chat.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salesianos.triana.playfutday.data.message.model.Message;
 import com.salesianos.triana.playfutday.data.user.model.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -20,7 +18,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "chat_entity")
-@Data
+//@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
@@ -45,7 +45,7 @@ public class Chat implements Serializable {
 
     //** A CONFIGURAR MÁS TARDE DEPENDIENDO DE LA POLÍTICA DE BORRADO DESEADA */ @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
     // @Order ORDENAMOS DIRECTAMENTE LA LISTA DE LOS ULTIMOS MENSAJES ENVIADOS
-    @OneToMany(mappedBy = "chat")
+    @OneToMany(mappedBy = "chat", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Message> messages;
 
     /**
@@ -54,6 +54,5 @@ public class Chat implements Serializable {
     @CreatedDate
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime createdChat = LocalDateTime.now();
-
 
 }

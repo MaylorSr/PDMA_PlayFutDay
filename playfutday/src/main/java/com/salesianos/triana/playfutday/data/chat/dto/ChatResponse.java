@@ -2,8 +2,6 @@ package com.salesianos.triana.playfutday.data.chat.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.salesianos.triana.playfutday.data.chat.model.Chat;
-import com.salesianos.triana.playfutday.data.message.model.Message;
-import com.salesianos.triana.playfutday.data.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,12 +34,12 @@ public class ChatResponse {
      * SERVIRÁ PARA MARCAR EL CHAT COMO QUE TIENE MENSAJES SIN ABRIR
      */
 //     private bool isReaded;
-    public static ChatResponse of(Chat chat, User userWhoReceive, String message) {
+    public static ChatResponse of(Chat chat, String username, String avatar, String message) {
         return ChatResponse.builder()
                 .id(chat.getId())
                 /**AVERIGUAR COMO SE LE PASARÁ EL USUARIO DESTINATARIO */
-                .avatarUserDestinity(userWhoReceive.getAvatar())
-                .usernameUserDestinity(userWhoReceive.getUsername())
+                .avatarUserDestinity(avatar)
+                .usernameUserDestinity(username)
                 .lastMessage(message)
                 .build();
     }

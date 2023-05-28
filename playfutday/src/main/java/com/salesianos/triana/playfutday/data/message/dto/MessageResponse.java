@@ -29,7 +29,7 @@ public class MessageResponse {
     /***
      * ID DEL USUARIO QUE ENVÍA EL MENSAJE
      */
-    protected UUID idUserWhoSendMessage;
+    protected String idUserWhoSendMessage;
 
     protected String usernameWhoSendMessage;
 
@@ -44,9 +44,9 @@ public class MessageResponse {
         return MessageResponse.builder()
                 .id(message.getId())
                 // .idChat() // DE MOMENTO NO HACE FALTA
-                .idUserWhoSendMessage(message.getIdUser()) // ID DEL USUARIO QUE ENVÍA EL MENSAJE PARA PODER NAVEGAR A LA PANTALLA DE DICHO USUARIO
-                .usernameWhoSendMessage(message.getUsername())
-                .avatarWhoSendMessage(message.getAvatar())
+                .idUserWhoSendMessage(message.getIdUser() == null ? "" : message.getIdUser()) // ID DEL USUARIO QUE ENVÍA EL MENSAJE PARA PODER NAVEGAR A LA PANTALLA DE DICHO USUARIO
+                .usernameWhoSendMessage(message.getUsername() == null ? "Unknown" : message.getUsername())
+                .avatarWhoSendMessage(message.getAvatar() == null ? "avatar.jpg" : message.getAvatar())
                 .bodyMessage(message.getBody())
                 .timeWhoSendMessage(message.getCreatedMessage())
                 .build();

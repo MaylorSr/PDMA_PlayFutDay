@@ -25,11 +25,13 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
     Optional<User> findByUsername(String username);
 
 
-    /** OBTENER TODOS LOS CHATS DE UN USUARIO **/
+    /**
+     * OBTENER TODOS LOS CHATS DE UN USUARIO
+     **/
     @Query("""
-            SELECT m FROM User u JOIN u.myChats m WHERE u.id= :id
+            SELECT m FROM User u JOIN u.myChats m WHERE u.id= :id ORDER BY m.createdChat DESC
             """)
-    List<Chat> findChatsByUserId(UUID id);
+    Page<Chat> findChatsByUserId(UUID id, Pageable pageable);
 
     @EntityGraph(value = "user_with_follows", type = EntityGraph.EntityGraphType.FETCH)
     Optional<User> findByPhone(String phone);
@@ -104,7 +106,6 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
                 ORDER BY FUNCTION('MONTH', u.createdAt) ASC
             """)
     List<IUserResponseCreated> getUsersByMonthAndYear(int year);
-
 
 
 }
