@@ -1,5 +1,6 @@
 package com.salesianos.triana.playfutday.data.user.repository;
 
+import com.salesianos.triana.playfutday.data.chat.model.Chat;
 import com.salesianos.triana.playfutday.data.commentary.model.Commentary;
 import com.salesianos.triana.playfutday.data.user.interfaces.IUserResponseCreated;
 import com.salesianos.triana.playfutday.data.user.interfaces.IUserResponseEnabled;
@@ -20,10 +21,17 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
 
     Optional<User> findFirstByUsername(String username);
 
-
     @EntityGraph(value = "user_with_posts", type = EntityGraph.EntityGraphType.FETCH)
     Optional<User> findByUsername(String username);
 
+
+    /**
+     * OBTENER TODOS LOS CHATS DE UN USUARIO
+     **/
+    @Query("""
+            SELECT m FROM User u JOIN u.myChats m WHERE u.id= :id ORDER BY m.createdChat DESC
+            """)
+    Page<Chat> findChatsByUserId(UUID id, Pageable pageable);
 
     @EntityGraph(value = "user_with_follows", type = EntityGraph.EntityGraphType.FETCH)
     Optional<User> findByPhone(String phone);
@@ -98,6 +106,7 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
                 ORDER BY FUNCTION('MONTH', u.createdAt) ASC
             """)
     List<IUserResponseCreated> getUsersByMonthAndYear(int year);
+
 
 }
 

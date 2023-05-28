@@ -1,12 +1,12 @@
 package com.salesianos.triana.playfutday.data.user.model;
 
+import ch.qos.logback.core.boolex.EvaluationException;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.salesianos.triana.playfutday.data.chat.model.Chat;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.user.database.EnumSetUserRoleConverter;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jdk.jfr.Name;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.data.annotation.CreatedDate;
@@ -25,13 +25,16 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "user_entity")
 @EntityListeners(AuditingEntityListener.class)
-@Data
+//@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @NamedEntityGraph(
         name = "user_with_posts",
-        attributeNodes = @NamedAttributeNode(value = "myPost"))
+        attributeNodes = @NamedAttributeNode(value = "myPost")
+)
 @NamedEntityGraph(
         name = "user_with_follows",
         attributeNodes = @NamedAttributeNode(value = "follows"))
@@ -40,6 +43,10 @@ import java.util.stream.Collectors;
         name = "user_with_followers",
         attributeNodes = @NamedAttributeNode(value = "followers"))
 
+@NamedEntityGraph(
+        name = "user_with_chats"
+        , attributeNodes = @NamedAttributeNode(value = "myChats")
+)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -71,6 +78,19 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Post> myPost = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "members", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @Builder.Default
+//    private List<Chat> myChats = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "user_chats",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "chat_id")
+    )
+    @Builder.Default
+    private Set<Chat> myChats = new HashSet<>();
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthday;
@@ -154,6 +174,10 @@ public class User implements UserDetails {
      */
     @PreRemove
     public void deleteUser() {
+        this.getMyChats().forEach(c -> {
+            c.getMessages().remove(this);
+        });
+
         this.follows.forEach(f -> {
             f.followers.remove(this);
         });
