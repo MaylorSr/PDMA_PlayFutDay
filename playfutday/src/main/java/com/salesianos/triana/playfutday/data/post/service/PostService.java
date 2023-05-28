@@ -20,6 +20,9 @@ import com.salesianos.triana.playfutday.search.spec.GenericSpecificationBuilder;
 import com.salesianos.triana.playfutday.search.util.SearchCriteria;
 import com.salesianos.triana.playfutday.search.util.SearchCriteriaExtractor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -45,27 +48,27 @@ public class PostService {
 
     private final FileSystemStorageService storageService;
 
-    public String postExists = "The list of post is empty";
+    @Autowired
+    private MessageSource messageSource;
 
 
     public PostResponse findDetailsPostById(Long id) {
         return PostResponse.of(repo.findById(id).orElseThrow(
-                () -> new GlobalEntityNotFounException("The post with that id not exits")
+                () -> new GlobalEntityNotFounException(
+                        messageSource.getMessage("exception.post.notExists.id", null, LocaleContextHolder.getLocale())
+                )
         ));
     }
 
-
     public List<PostResponse> findAllPostGridByUserName(String username) {
-
         return userRepository.findFirstByUsername(username).map(
                 user -> {
                     if (user.getMyPost() == null) {
-                        throw new GlobalEntityListNotFounException("The user not have any post");
+                        throw new GlobalEntityListNotFounException(messageSource.getMessage("exception.user.noPost", null, LocaleContextHolder.getLocale()));
                     }
                     return user.getMyPost().stream().map(PostResponse::of).toList();
                 }
-        ).orElseThrow(() -> new GlobalEntityNotFounException("The user not exits"));
-
+        ).orElseThrow(() -> new GlobalEntityNotFounException(messageSource.getMessage("exception.user.notExists", null, LocaleContextHolder.getLocale())));
     }
 
 
@@ -78,11 +81,16 @@ public class PostService {
     }
 
     public PageResponse<CommentaryResponse> findCommentariesByPostId(Pageable pageable, Long id) {
-        Post post = repo.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("The post with that id not exits"));
+        Post post = repo.findById(id).orElseThrow(() -> new GlobalEntityNotFounException(
+                        messageSource.getMessage("exception.post.notExists.id", null, LocaleContextHolder.getLocale())
+                )
+        );
 
         PageResponse<CommentaryResponse> res = pageableCommentary(post.getId(), pageable);
         if (res.getContent().isEmpty()) {
-            throw new GlobalEntityNotFounException("The found any commentaries in this page of the post");
+            throw new GlobalEntityNotFounException(
+                    messageSource.getMessage("exception.post.notExists.comments", null, LocaleContextHolder.getLocale())
+            );
         } else {
             return res;
         }
@@ -100,7 +108,9 @@ public class PostService {
     public PageResponse<CommentaryResponse> findAllCommentaries(Pageable pageable) {
         PageResponse<CommentaryResponse> res = pageableAllCommentary(pageable);
         if (res.getContent().isEmpty()) {
-            throw new GlobalEntityNotFounException("The found any commentaries in this page");
+            throw new GlobalEntityNotFounException(
+                    messageSource.getMessage("exception.post.notExists.comments", null, LocaleContextHolder.getLocale())
+            );
         } else {
             return res;
         }
@@ -108,9 +118,13 @@ public class PostService {
 
 
     public PageResponse<PostResponse> findAllPostByUserName(String username, Pageable pageable) {
+        userRepository.findFirstByUsername(username).orElseThrow(() -> new GlobalEntityListNotFounException(
+                messageSource.getMessage("exception.user.notExists", null, LocaleContextHolder.getLocale())));
         PageResponse<PostResponse> res = pageablePost(username, pageable);
         if (res.getContent().isEmpty()) {
-            throw new GlobalEntityNotFounException(postExists);
+            throw new GlobalEntityListNotFounException(
+                    messageSource.getMessage("exception.post.isEmpty", null, LocaleContextHolder.getLocale())
+            );
         }
         return res;
     }
@@ -128,7 +142,9 @@ public class PostService {
         List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
         PageResponse<PostResponse> res = search(params, pageable);
         if (res.getContent().isEmpty()) {
-            throw new GlobalEntityListNotFounException(postExists);
+            throw new GlobalEntityListNotFounException(
+                    messageSource.getMessage("exception.post.isEmpty", null, LocaleContextHolder.getLocale())
+            );
         }
         return res;
     }
@@ -172,7 +188,10 @@ public class PostService {
                     repo.save(post);
                     return PostResponse.of(post);
                 }
-        ).orElseThrow(() -> new GlobalEntityNotFounException(postExists));
+        ).orElseThrow(() -> new GlobalEntityNotFounException(
+                        messageSource.getMessage("exception.post.notExists.id", null, LocaleContextHolder.getLocale())
+                )
+        );
     }
 
 
@@ -180,7 +199,9 @@ public class PostService {
         if (month == 0) {
             return repo.getTotalPost();
         } else if (month > 12 || month < 0) {
-            throw new GlobalEntityNotFounException("Select one of the months between 1 and 12. Remember that 0 is for see all post");
+            throw new GlobalEntityNotFounException(
+                    messageSource.getMessage("exception.post.select.month", null, LocaleContextHolder.getLocale())
+            );
         }
         return repo.getTotalPostByMonth(month);
     }
@@ -201,7 +222,10 @@ public class PostService {
                     }
                     return PostResponse.of(repo.save(post));
                 }
-        ).orElseThrow(() -> new GlobalEntityNotFounException("The post was not found!"));
+        ).orElseThrow(() -> new GlobalEntityNotFounException(
+                        messageSource.getMessage("exception.post.notExists.id", null, LocaleContextHolder.getLocale())
+                )
+        );
     }
 
 
@@ -231,10 +255,14 @@ public class PostService {
                                                 return true;
                                             }
                                     )
-                                    .orElseThrow(() -> new GlobalEntityNotFounException("The post not exists in this user"));
+                                    .orElseThrow(() -> new GlobalEntityNotFounException(
+                                            messageSource.getMessage("exception.post.notExists.in.user.id", null, LocaleContextHolder.getLocale())
+                                    ));
                         }
                 )
-                .orElseThrow(() -> new GlobalEntityNotFounException("The post not exists"));
+                .orElseThrow(() -> new GlobalEntityNotFounException(
+                        messageSource.getMessage("exception.post.notExists.id", null, LocaleContextHolder.getLocale())
+                ));
         return false;
     }
 
@@ -245,13 +273,17 @@ public class PostService {
                             return repo.findIdOfUserPost(id);
                         }
                 )
-                .orElseThrow(() -> new GlobalEntityNotFounException("The post not exists or user not exists!"));
+                .orElseThrow(() -> new GlobalEntityNotFounException(
+                        messageSource.getMessage("exception.post.user.notExists", null, LocaleContextHolder.getLocale())
+                ));
     }
 
     public void deleteCommentary(Long id) {
         Commentary commentaryOptional = repoCommentary
                 .findById(id)
-                .orElseThrow(() -> new GlobalEntityNotFounException("The commentary id not exists"));
+                .orElseThrow(() -> new GlobalEntityNotFounException(
+                        messageSource.getMessage("exception.comment.notExists.id", null, LocaleContextHolder.getLocale())
+                ));
         repoCommentary.delete(commentaryOptional);
     }
 
