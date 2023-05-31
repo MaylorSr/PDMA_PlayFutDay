@@ -8,7 +8,7 @@ El proyecto se trata principalmente de una red social enfocada en un único tema
 
 ## **INSTALACIÓN PRE-REQUISITOS :bookmark:**
 ```
-FLUTTER Versión de Dart de 3.0.0 y de Flutter la 3.8.0-13.0.pre.74
+FLUTTER Versión de Dart de 3.0.0 y de Flutter la 3.0.0-109.0.dev <4.0.0
 ```
 
 ## DIVISIÓN DEL PROYECTO Y TECNOLOGÍAS EMPLEADAS :hammer_and_wrench:
@@ -24,7 +24,7 @@ FLUTTER Versión de Dart de 3.0.0 y de Flutter la 3.8.0-13.0.pre.74
 ### Tecnologías empleadas
 * [Spring Boot - Java](https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started.html) : Versión 17 
 * [Angular](https://angular.io/) : Versión 15.2.4
-* [Flutter](https://flutter.dev/) : Versión de Dart de 3.0.0 y de Flutter la 3.8.0-13.0.pre.74
+* [Flutter](https://flutter.dev/) : Versión de Dart de 3.0.0 y de Flutter la 3.0.0-109.0.dev < 4.0.0
 ***
 # **Algunas consideraciones importantes:** :red_circle:
 ### USUARIOS
@@ -43,17 +43,20 @@ Puedes encontrar toda la información necesaria en: [PlayFutDay](https://github.
 ___
 ### MOBILE - FLUTTER :pushpin:
 
+![Flutter Version](https://img.shields.io/badge/Flutter-v4.0.0-blue) ![Dart Version](https://img.shields.io/badge/Dart-v3.0.0-blue)
+
+
 <img src="https://docs.flutter.dev/assets/images/shared/brand/flutter/logo/flutter-lockup.png" width="500" alt="Flutter Logo"/>
 
 Puedes encontrar toda la información necesaria en: [Playfutday_mobile](https://github.com/MaylorSr/PDMA_PlayFutDay/tree/develop_mobile/playfutday_mobile)
 ___
 ### WEB - ANGULAR :pushpin:
-
+![Angular Compiler Version](https://img.shields.io/badge/Angular_Compiler-v13.2.6-blue)
 <img src="https://user-images.githubusercontent.com/93126452/228478221-9fdd0b24-7755-4506-99cb-278dd1a4ee36.png" width="250" alt="Angular Logo"/>
 
 Puedes encontrar toda la información necesaria en: [PlayFutDay_web](https://github.com/MaylorSr/PDMA_PlayFutDay/tree/develop_web/playfutday_web) <br>
-
 ___
 ## **EJECUCIÓN DEL PROYECTO** :speech_balloon:
-Para llevar a cabo la ejecución del proyecto, necesitarás las versiones mencionadas anteriormente. En primer lugar necestirás clonarte el proyecto, abrir en Sprin Boot la carpeta de playfutday , en ella deberás iniciar el proyecto, una vez iniciado la parte del backend, podrás realizar en tu terminal, "flutter pub get" para obtener las dependencias necesarias y porteriormente "flutter run". Por otro lado en Angular, necesitarás instalar las dependencias y para llevar a cabo la ejecución del proyecto realizarás ng serve -o
+Para llevar a cabo la ejecución del proyecto, necesitarás las versiones mencionadas anteriormente en caso de no querer usarlo en modo despliegue. En primer lugar necestirás clonarte el proyecto, abrir en Sprin Boot la carpeta **playfutday** , en ella deberás iniciar el proyecto, una vez iniciado la parte del backend, podrás realizar en tu terminal, **flutter pub get** para obtener las dependencias necesarias y porteriormente "flutter run,, ten en cuenta que deberás seleccionar un emulador ya sea de android o el propio dispositivo físico". Por otro lado en Angular, necesitarás instalar las dependencias necesarias, deberás escribir en tu terminal dentro de la carpeta **playtuday_web** npm i y para llevar a cabo la ejecución del proyecto realizarás **ng serve -o**. 
+En caso de querer usarlo con modo despliegue, necesitarás sólo ejecutarlo con Flutter.
 
