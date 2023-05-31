@@ -22,7 +22,7 @@ public interface MessageRepository extends JpaRepository<Message, Long>, JpaSpec
     List<Message> findAllMessagesByChatId(Long chatId);
 
 
-    @Query("SELECT m FROM Message m WHERE m.chat.id = :chatId")
+    @Query("SELECT m FROM Message m WHERE m.chat.id = :chatId ORDER BY m.createdMessage DESC")
     Page<Message> findAllMessagesByChatIdPage(Long chatId, Pageable pageable);
 
     @Query("SELECT m FROM Message m WHERE m.idUser= :idUser")

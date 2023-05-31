@@ -89,36 +89,47 @@ class _AllPostListState extends State<MyFavPostList> {
                 ),
               );
             }
-            return ListView.builder(
-              physics: const BouncingScrollPhysics(
-                  parent: BouncingScrollPhysics(
-                      decelerationRate: ScrollDecelerationRate.fast)),
-              itemBuilder: (BuildContext context, int index) {
-                return index >= state.allPost.length
-                    ? LoadingAnimationWidget.dotsTriangle(
-                        color: const Color.fromARGB(255, 6, 49, 122), size: 45)
-                    : CardScreenPost(
-                        post: state.allPost[index],
-                        user: widget.user,
-                        onDeletePressed: (id) {
-                          context
-                              .read<MyFavPostBloc>()
-                              .add(DeletePost(id, widget.user.id.toString()));
-                        },
-                        onLikePressed: (id) {
-                          context.read<MyFavPostBloc>().add(GiveLike(id));
-                        },
-                        onCommentPressed: (id, message) {
-                          context
-                              .read<MyFavPostBloc>()
-                              .add(SendComment(id, message));
-                        });
+            return RefreshIndicator(
+              edgeOffset: 0,
+              backgroundColor: AppTheme.grey,
+              color: AppTheme.successEvent,
+              strokeWidth: 3.5,
+              triggerMode: RefreshIndicatorTriggerMode.onEdge,
+              onRefresh: () async {
+                BlocProvider.of<MyFavPostBloc>(context).add(OnRefresh());
               },
-              scrollDirection: Axis.vertical,
-              itemCount: state.hasReachedMax
-                  ? state.allPost.length
-                  : state.allPost.length + 1,
-              controller: _scrollController,
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics(
+                    parent: BouncingScrollPhysics(
+                        decelerationRate: ScrollDecelerationRate.fast)),
+                itemBuilder: (BuildContext context, int index) {
+                  return index >= state.allPost.length
+                      ? LoadingAnimationWidget.dotsTriangle(
+                          color: const Color.fromARGB(255, 6, 49, 122),
+                          size: 45)
+                      : CardScreenPost(
+                          post: state.allPost[index],
+                          user: widget.user,
+                          onDeletePressed: (id) {
+                            context
+                                .read<MyFavPostBloc>()
+                                .add(DeletePost(id, widget.user.id.toString()));
+                          },
+                          onLikePressed: (id) {
+                            context.read<MyFavPostBloc>().add(GiveLike(id));
+                          },
+                          onCommentPressed: (id, message) {
+                            context
+                                .read<MyFavPostBloc>()
+                                .add(SendComment(id, message));
+                          });
+                },
+                scrollDirection: Axis.vertical,
+                itemCount: state.hasReachedMax
+                    ? state.allPost.length
+                    : state.allPost.length + 1,
+                controller: _scrollController,
+              ),
             );
           case AllPostStatus.initial:
             return Center(

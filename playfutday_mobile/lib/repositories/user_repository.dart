@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:playfutday_flutter/models/change_password_request.dart';
 import 'package:playfutday_flutter/models/editProfile.dart';
+import 'package:playfutday_flutter/models/send_message_response.dart';
 import 'package:playfutday_flutter/models/sing_up.dart';
 
 import '../config/locator.dart';
@@ -86,6 +87,11 @@ class UserRepository {
     // ignore: unused_local_variable
     var jsonResponse = await _client.deleteP(url);
   }
+  Future<void>deleteMessage(int idMessage) async{
+    String url = "/message/$idMessage";
+    // ignore: unused_local_variable
+    var jsonResponse = await _client.deleteP(url);
+  }
 
   Future<dynamic> banUser(String uuid) async {
 // ignore: unnecessary_brace_in_string_interps, unused_local_variable
@@ -131,5 +137,30 @@ class UserRepository {
         verifyNewPassword: confirmPassword);
     var response = await _client.put(url, request.toJson());
     return response;
+  }
+
+  Future<dynamic> getMyChats([int page = 0]) async {
+    String url = "/chat/?page=$page";
+
+    final jsonResponse = await _client.get(url);
+
+    return ChatResponse.fromJson(jsonDecode(jsonResponse));
+  }
+
+  Future<dynamic> getMessagesByChat([idUser, int page = 0]) async {
+    String url = "/message/$idUser?page=$page";
+
+    final jsonResponse = await _client.get(url);
+
+    return MessageResponse.fromJson(jsonDecode(jsonResponse));
+  }
+
+  Future<dynamic> sendMessageToUser(String body, String idUser) async {
+    String url = "/message/$idUser";
+    SendMessageResponse m = SendMessageResponse(bodyMessage: body);
+
+    final jsonResponse = await _client.post(url, m.toJson());
+
+    return Message.fromJson(jsonDecode(jsonResponse));
   }
 }

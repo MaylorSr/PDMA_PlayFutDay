@@ -25,6 +25,7 @@ import '../../blocs/myFavPost/my_fav_Post_bloc.dart';
 import '../../blocs/postUser/post_user_bloc.dart';
 import '../../blocs/post_grid_user/post_grid_bloc.dart';
 import '../../theme/app_theme.dart';
+import '../pages.dart';
 import '../post/myFavPost/post_pageFav.dart';
 import 'option_follow.dart';
 
@@ -386,11 +387,28 @@ class _UserScreenState extends State<UserScreen> {
                             ),
                           if (widget.user!.id != widget.userLoger.id)
                             ElevatedButton(
-                                onPressed: () {},
-                                child: Text(
-                                    style: AppTheme.nameUsersStyle
-                                        .copyWith(fontSize: 14),
-                                    'messages'))
+                              onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FadeInRight(
+                                      animate: true,
+                                      duration:
+                                          const Duration(milliseconds: 700),
+                                      child: ScreenMessage(
+                                          user: widget.userLoger,
+                                          otherUserName:
+                                              widget.user!.username.toString(),
+                                          uuidOtherUser:
+                                              widget.user!.id.toString(),
+                                          otherUser:
+                                              widget.user!.avatar.toString()),
+                                    ),
+                                  )),
+                              child: Text(
+                                  style: AppTheme.nameUsersStyle
+                                      .copyWith(fontSize: 14),
+                                  'messages'),
+                            )
                         ],
                       ),
                     ),
@@ -482,19 +500,22 @@ class _UserScreenState extends State<UserScreen> {
                 const SizedBox(width: 10),
                 // ignore: unnecessary_string_interpolations
                 Expanded(
-                  child: ReadMoreText(
-                    delimiter: "...",
-                    trimLength: 60,
-                    colorClickableText: AppTheme.grey.withBlue(10),
-                    delimiterStyle: AppTheme.tittleApp.copyWith(
-                        fontSize: 15,
-                        color: AppTheme.primary,
-                        fontWeight: FontWeight.w600),
-                    trimCollapsedText: " read more.",
-                    trimExpandedText: " show less.",
-                    widget.user!.biography ?? '',
-                    style: AppTheme.nameUsersStyle
-                        .copyWith(color: AppTheme.primary, fontSize: 14),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: ReadMoreText(
+                      delimiter: "...",
+                      trimLength: 60,
+                      colorClickableText: AppTheme.grey.withBlue(10),
+                      delimiterStyle: AppTheme.tittleApp.copyWith(
+                          fontSize: 15,
+                          color: AppTheme.primary,
+                          fontWeight: FontWeight.w600),
+                      trimCollapsedText: " read more.",
+                      trimExpandedText: " show less.",
+                      widget.user!.biography ?? '',
+                      style: AppTheme.nameUsersStyle
+                          .copyWith(color: AppTheme.primary, fontSize: 14),
+                    ),
                   ),
                 ),
               ],

@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.UUID;
 
@@ -71,7 +73,7 @@ public class MessageController {
     @PostMapping("/{id}")
     @PreAuthorize("#id != authentication.principal.id")
     public ResponseEntity<MessageResponse> createNewChat(
-            @RequestBody MessageRequest request,
+            @Valid @RequestBody MessageRequest request,
             @AuthenticationPrincipal User user,
             @PathVariable(name = "id") UUID id
     ) {
@@ -133,12 +135,14 @@ public class MessageController {
             @ApiResponse(responseCode = "401", description = "No estas logeado", content = @Content)
 
     })
-    @GetMapping("/{idChat}")
-    public PageResponse<MessageResponse> getAllMessagesByIdChat(@PathVariable(name = "idChat") Long idChat,
+    @GetMapping("/{idUser}")
+    public PageResponse<MessageResponse> getAllMessagesByIdChat(@PathVariable(name = "idUser") UUID idUser,
+                                                                @AuthenticationPrincipal User user,
                                                                 @PageableDefault(size = 30, page = 0)
-                                                                Pageable pageable) {
+                                                                Pageable pageable
+    ) {
 
-        return messageService.findAllMessagesByChatId(idChat, pageable);
+        return messageService.findAllMessagesByChatId(idUser, user, pageable);
     }
 
     @Operation(summary = "Este método elmina el mensaje de un chat")

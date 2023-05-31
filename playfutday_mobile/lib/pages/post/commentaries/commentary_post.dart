@@ -150,7 +150,7 @@ class FormFieldCommentary extends StatelessWidget {
             autofocus: true,
             controller: _commentController,
             style: const TextStyle(fontSize: 16, color: Colors.black),
-            maxLength: 50,
+            maxLength: 80,
             textInputAction: TextInputAction.send,
             decoration: InputDecoration(
               contentPadding:

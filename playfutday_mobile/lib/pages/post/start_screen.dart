@@ -11,7 +11,6 @@ import 'package:playfutday_flutter/theme/app_theme.dart';
 
 import '../../blocs/blocs.dart';
 import '../../blocs/follows/follow_bloc.dart';
-import '../user/follows/follow_page.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});

@@ -211,7 +211,8 @@ class RestClient {
       request.files.add(bodyPart);
     }
 
-    final response = await _httpClient!.send(request);
+    final response = await _httpClient!.post(request);
+
     return response;
     // final response = await _httpClient!.send(request);
     // return response;

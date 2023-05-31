@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -56,7 +57,8 @@ public class ChatService {
                             User otherUser = chatRepository.findOtherUserByChatId(chat.getId(), user.getId());
 
                             String otherUserName = otherUser != null ? otherUser.getUsername() : "Unknown";
-                            String otherUserAvatar = otherUser != null ? otherUser.getAvatar() : "avatar.jpg";
+                            String otherUserAvatar = otherUser != null ? otherUser.getAvatar() : "avatar.png";
+                            UUID idUserDestiny = otherUser != null ? otherUser.getId() : null;
 
                             String lastMessageBody = messageRepository.findAllMessagesByChatId(chat.getId())
                                     .stream()
@@ -64,7 +66,7 @@ public class ChatService {
                                     .reduce((first, second) -> second)
                                     .orElse(null);
 
-                            return ChatResponse.of(chat, otherUserName, otherUserAvatar, lastMessageBody);
+                            return ChatResponse.of(chat, otherUserName, otherUserAvatar, lastMessageBody, idUserDestiny);
                         }).toList(), pageable, myChats == null || myChats.isEmpty() ? 0 : myChats.getTotalPages());
         return new PageResponse<>(myChatsPage);
     }

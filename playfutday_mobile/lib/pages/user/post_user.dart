@@ -5,6 +5,7 @@ import 'package:playfutday_flutter/blocs/postUser/post_user_bloc.dart';
 import '../../blocs/blocs.dart';
 import '../../models/user.dart';
 import '../../services/services.dart';
+import '../../theme/app_theme.dart';
 import '../bottom_loader.dart';
 import '../post/card_post.dart';
 
@@ -67,35 +68,45 @@ class _AllPostListState extends State<MyPostList> {
                 ],
               );
             }
-            return ListView.builder(
-              physics: const BouncingScrollPhysics(
-                  parent: BouncingScrollPhysics(
-                      decelerationRate: ScrollDecelerationRate.fast)),
-              itemBuilder: (BuildContext context, int index) {
-                return index >= state.allPost.length
-                    ? const BottomLoader()
-                    : CardScreenPost(
-                        post: state.allPost[index],
-                        user: widget.user,
-                        onDeletePressed: (id) {
-                          context
-                              .read<MyPostBloc>()
-                              .add(DeletePost(id, widget.user.id.toString()));
-                        },
-                        onLikePressed: (id) {
-                          context.read<MyPostBloc>().add(GiveLike(id));
-                        },
-                        onCommentPressed: (id, message) {
-                          context
-                              .read<MyPostBloc>()
-                              .add(SendComment(id, message));
-                        });
+            return RefreshIndicator(
+              edgeOffset: 0,
+              backgroundColor: AppTheme.grey,
+              color: AppTheme.successEvent,
+              strokeWidth: 3.5,
+              triggerMode: RefreshIndicatorTriggerMode.onEdge,
+              onRefresh: () async {
+                BlocProvider.of<MyPostBloc>(context).add(OnRefresh());
               },
-              scrollDirection: Axis.vertical,
-              itemCount: state.hasReachedMax
-                  ? state.allPost.length
-                  : state.allPost.length + 1,
-              controller: _scrollController,
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics(
+                    parent: BouncingScrollPhysics(
+                        decelerationRate: ScrollDecelerationRate.fast)),
+                itemBuilder: (BuildContext context, int index) {
+                  return index >= state.allPost.length
+                      ? const BottomLoader()
+                      : CardScreenPost(
+                          post: state.allPost[index],
+                          user: widget.user,
+                          onDeletePressed: (id) {
+                            context
+                                .read<MyPostBloc>()
+                                .add(DeletePost(id, widget.user.id.toString()));
+                          },
+                          onLikePressed: (id) {
+                            context.read<MyPostBloc>().add(GiveLike(id));
+                          },
+                          onCommentPressed: (id, message) {
+                            context
+                                .read<MyPostBloc>()
+                                .add(SendComment(id, message));
+                          });
+                },
+                scrollDirection: Axis.vertical,
+                itemCount: state.hasReachedMax
+                    ? state.allPost.length
+                    : state.allPost.length + 1,
+                controller: _scrollController,
+              ),
             );
           case AllPostStatus.initial:
             return const Center(child: CircularProgressIndicator());

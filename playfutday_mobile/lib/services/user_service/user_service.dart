@@ -44,6 +44,15 @@ class UserService {
     return null;
   }
 
+  Future<void> deleteMessage(int idMessage) async {
+    String? token = _localStorageService.getFromDisk('user_token');
+    if (token != null) {
+      _userRepository.deleteMessage(idMessage);
+    }
+    // ignore: avoid_returning_null_for_void
+    return null;
+  }
+
   Future<dynamic> editBirthday(String birthday) async {
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
@@ -118,5 +127,34 @@ class UserService {
 
   Future<dynamic> getStateThatFollowUserByMe(String id) async {
     return await _userRepository.getStateThatFollowUserByMe(id);
+  }
+
+  Future<dynamic> getMyChats(int page) async {
+    String? token = _localStorageService.getFromDisk("user_token");
+    if (token != null) {
+      ChatResponse response = await _userRepository.getMyChats(page);
+      return response;
+    }
+    return null;
+  }
+
+  Future<dynamic> getMessagesByChat(String idUser, int page) async {
+    String? token = _localStorageService.getFromDisk("user_token");
+    if (token != null) {
+      MessageResponse response =
+          await _userRepository.getMessagesByChat(idUser, page);
+      return response;
+    }
+    return null;
+  }
+
+  Future<dynamic> sendMessageToUser(String body, String idUser) async {
+    String? token = _localStorageService.getFromDisk("user_token");
+    if (token != null) {
+      _userRepository.sendMessageToUser(body, idUser);
+      // Message response =
+      // return response;
+    }
+    return null;
   }
 }

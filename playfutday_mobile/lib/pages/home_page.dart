@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:playfutday_flutter/blocs/blocs.dart';
 import 'package:playfutday_flutter/models/searchPost.dart';
 import 'package:playfutday_flutter/services/services.dart';
@@ -70,34 +69,44 @@ class _HomePageState extends State<HomePage> {
           switch (snapshot.data) {
             case 0:
               return Scaffold(
-                  appBar: AppBar(
-                    title: Text('PlayFutDay', style: AppTheme.tittleApp),
-                    actions: [
-                      ElevatedButton(
-                        autofocus: false,
-                        style: const ButtonStyle(
-                          elevation: MaterialStatePropertyAll(0),
-                          overlayColor:
-                              MaterialStatePropertyAll(AppTheme.transparent),
-                          backgroundColor:
-                              MaterialStatePropertyAll(AppTheme.transparent),
-                        ),
-                        onPressed: () => showSearch(
-                          context: context,
-                          delegate: SearchPost(),
-                        ),
-                        child: const Icon(
-                          Icons.search_outlined,
-                          color: AppTheme.primary,
-                          size: 30.0,
-                        ),
-                      )
-                    ],
-                  ),
-                  body: FadeInUpBig(
-                      from: 5.0,
-                      duration: const Duration(milliseconds: 700),
-                      child: const StartScreen()));
+                appBar: AppBar(
+                  title: Text('PlayFutDay', style: AppTheme.tittleApp),
+                  actions: [
+                    ElevatedButton(
+                      autofocus: false,
+                      style: const ButtonStyle(
+                        elevation: MaterialStatePropertyAll(0),
+                        overlayColor:
+                            MaterialStatePropertyAll(AppTheme.transparent),
+                        backgroundColor:
+                            MaterialStatePropertyAll(AppTheme.transparent),
+                      ),
+                      onPressed: () => showSearch(
+                        context: context,
+                        delegate: SearchPost(),
+                      ),
+                      child: const Icon(
+                        Icons.search_outlined,
+                        color: AppTheme.primary,
+                        size: 30.0,
+                      ),
+                    )
+                  ],
+                ),
+                body: FadeInUpBig(
+                  from: 5.0,
+                  duration: const Duration(milliseconds: 700),
+                  child: const StartScreen(),
+                ),
+              );
+
+            case 1:
+              return FadeInDownBig(
+                animate: true,
+                from: 3.0,
+                duration: const Duration(milliseconds: 500),
+                child: const MyChatScreen(),
+              );
             case 2:
               return Scaffold(
                 appBar: AppBar(
@@ -122,11 +131,18 @@ class _HomePageState extends State<HomePage> {
                 builder: (context, state) {
                   if (state is AuthenticationAuthenticated) {
                     return BlocProvider(
-                        create: (context) => UserProfileBloc(UserService())
-                          ..add(UserProfileFetched(state.user.id.toString())),
-                        child: FadeInRight(
-                            duration: const Duration(milliseconds: 500),
-                            child: UserProfilePage(user: state.user)));
+                      create: (context) => UserProfileBloc(
+                        UserService(),
+                      )..add(
+                          UserProfileFetched(
+                            state.user.id.toString(),
+                          ),
+                        ),
+                      child: FadeInRight(
+                        duration: const Duration(milliseconds: 500),
+                        child: UserProfilePage(user: state.user),
+                      ),
+                    );
                   } else {
                     return const LoginPage();
                   }
