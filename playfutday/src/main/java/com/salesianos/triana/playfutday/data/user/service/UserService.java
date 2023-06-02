@@ -1,10 +1,15 @@
 package com.salesianos.triana.playfutday.data.user.service;
 
 
+import com.salesianos.triana.playfutday.data.chat.model.Chat;
+import com.salesianos.triana.playfutday.data.chat.repository.ChatRepository;
+import com.salesianos.triana.playfutday.data.chat.service.ChatService;
 import com.salesianos.triana.playfutday.data.commentary.dto.CommentaryResponse;
 import com.salesianos.triana.playfutday.data.commentary.model.Commentary;
 import com.salesianos.triana.playfutday.data.files.exception.StorageException;
 import com.salesianos.triana.playfutday.data.files.service.FileSystemStorageService;
+import com.salesianos.triana.playfutday.data.message.model.Message;
+import com.salesianos.triana.playfutday.data.message.repository.MessageRepository;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
@@ -25,9 +30,10 @@ import com.salesianos.triana.playfutday.search.util.SearchCriteria;
 import com.salesianos.triana.playfutday.search.util.SearchCriteriaExtractor;
 import com.salesianos.triana.playfutday.security.refresh.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -53,6 +59,11 @@ public class UserService {
     private final FileSystemStorageService storageService;
 
     private final RefreshTokenService refreshTokenService;
+    private final MessageRepository messageRepository;
+
+    private final ChatService chatService;
+    @Autowired
+    private MessageSource messageSource;
 
 
     public User createUser(UserRequest createUserRequest, EnumSet<UserRole> roles) {
@@ -107,12 +118,28 @@ public class UserService {
                 .map(
                         oldUser -> {
                             List<Post> myLikes = postRepository.findOnIlikePost(oldUser.getId());
+                            /** LISTA DE MENSAJES QUE ESCRIBE EL USUARIO **/
+                            List<Message> messagesWhereIsend = messageRepository.findAllMessagesByUserId(idU.toString());
+                            List<Commentary> commentariesWhereIWrite = postRepository.findAllCommentariesWhereIWrite(oldUser.getUsername());
+
                             for (Post p : myLikes) {
                                 postService.giveLikeByUser(p.getId(), oldUser);
                             }
-                            refreshTokenService.deleteByUser(oldUser);
 
+                            for (Commentary c : commentariesWhereIWrite) {
+                                postService.deleteCommentary(c.getId());
+                            }
+
+                            for (Message m : messagesWhereIsend) {
+                                m.setIdUser(null);
+                                m.setAvatar(null);
+                                m.setUsername(null);
+                                messageRepository.save(m);
+                            }
+                            refreshTokenService.deleteByUser(oldUser);
                             userRepository.delete(oldUser);
+                            /** eliminamos el chat si no tiene miembros **/
+                            chatService.deleteChatIfMembersNull();
                             return null;
                         }
                 );
@@ -122,7 +149,7 @@ public class UserService {
         if (!userRepository.existsByUsernameIgnoreCase(createUserRequest.getUsername())) {
             return createUser(createUserRequest, EnumSet.of(UserRole.USER));
         } else {
-            throw new UserExistsException("The user already exists!");
+            throw new UserExistsException(messageSource.getMessage("exception.user.createUser.exists", null, LocaleContextHolder.getLocale()));
         }
 
     }
@@ -130,17 +157,26 @@ public class UserService {
 
     public PageResponse<UserResponse> findAll(String s, Pageable pageable) {
         List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
-        PageResponse<UserResponse> res = search(params, pageable);
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Pageable pageableWithSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        PageResponse<UserResponse> res = search(params, pageableWithSort);
         if (res.getContent().isEmpty()) {
-            throw new GlobalEntityListNotFounException("In this page the list of users is empty");
+            throw new GlobalEntityListNotFounException(
+                    messageSource.getMessage("exception.user.isEmpty", null, LocaleContextHolder.getLocale()));
         }
         return res;
     }
 
     public PageResponse<UserResponse> search(List<SearchCriteria> params, Pageable pageable) {
         GenericSpecificationBuilder genericSpecificationBuilder = new GenericSpecificationBuilder(params);
+//        Specification<User> spec = genericSpecificationBuilder.build();
         Specification<User> spec = genericSpecificationBuilder.build();
-        Page<UserResponse> userResponsePage = userRepository.findAll(spec, pageable).map(UserResponse::fromUser);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+//        Page<UserResponse> userResponsePage = userRepository.findAll(spec, pageable).map(UserResponse::fromUser);
+        Page<UserResponse> userResponsePage = userRepository.findAll(spec, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort)).map(UserResponse::fromUser);
+
         return new PageResponse<>(userResponsePage);
     }
 
@@ -148,7 +184,9 @@ public class UserService {
     public PageResponse<PostResponse> findMyFavPost(User user, Pageable pageable) {
         PageResponse<PostResponse> res = pageablePost(pageable, user);
         if (res.getContent().isEmpty()) {
-            throw new GlobalEntityListNotFounException("The list of post is empty");
+            throw new GlobalEntityListNotFounException(
+                    messageSource.getMessage("exception.post.isEmpty", null, LocaleContextHolder.getLocale())
+            );
         }
         return res;
     }
@@ -169,7 +207,10 @@ public class UserService {
             return UserResponse.fromUser(
                     userRepository.save(oldUser)
             );
-        }).orElseThrow(() -> new GlobalEntityNotFounException("Not found a user"));
+        }).orElseThrow(() -> new GlobalEntityNotFounException(
+                        messageSource.getMessage("exception.user.notExists", null, LocaleContextHolder.getLocale())
+                )
+        );
 
 
     }
@@ -184,7 +225,9 @@ public class UserService {
             }
             userRepository.save(old);
             return UserResponse.fromUser(old);
-        }).orElseThrow(() -> new GlobalEntityNotFounException("Not found a user"));
+        }).orElseThrow(() -> new GlobalEntityNotFounException(
+                messageSource.getMessage("exception.user.notExists", null, LocaleContextHolder.getLocale())
+        ));
     }
 
 
@@ -229,12 +272,18 @@ public class UserService {
     }
 
     public UserResponse findByIdInfoUser(UUID id) {
-        return UserResponse.fromUser(userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("User not found")));
+        return UserResponse.fromUser(userRepository.findById(id).orElseThrow(() ->
+                new GlobalEntityNotFounException(
+                        messageSource.getMessage("exception.user.notExists", null, LocaleContextHolder.getLocale())
+                )));
     }
 
 
     public PageResponse<UserFollow> pageableUser(UUID id, Pageable pageable) {
-        User user = userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("Not found the user"));
+        User user = userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException(
+                        messageSource.getMessage("exception.user.notExists", null, LocaleContextHolder.getLocale())
+                )
+        );
         Page<User> followersOfOneUser = userRepository.findAllFollowers(id, pageable);
         Page<UserFollow> userFollowPage =
                 new PageImpl<>
@@ -244,21 +293,36 @@ public class UserService {
 
 
     public PageResponse<UserFollow> getFollowers(UUID id, Pageable pageable) {
-        userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("The user not exists"));
+        userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException(
+                        messageSource.getMessage("exception.user.notExists", null, LocaleContextHolder.getLocale())
+                )
+        );
         PageResponse<UserFollow> res = pageableUser(id, pageable);
         if (res.getContent().isEmpty()) {
-            throw new GlobalEntityNotFounException("The list of followers is empty");
+            throw new GlobalEntityListNotFounException(
+                    messageSource.getMessage("exception.followers.isEmpty",
+                            null, LocaleContextHolder.getLocale()
+                    )
+            );
         }
         return res;
     }
 
     public List<CommentaryResponse> getLast3CommentariesOfUser(String id) {
         /**CASTEAMOS DE STRING A UUID PARA BUSCAR AL USUARIO**/
-        userRepository.findById(UUID.fromString(id)).orElseThrow(() -> new GlobalEntityNotFounException("The user with that id not exits"));
+        userRepository.findById(UUID.fromString(id)).orElseThrow(() -> new GlobalEntityNotFounException(
+                        messageSource.getMessage("exception.user.notExists.id",
+                                null, LocaleContextHolder.getLocale()
+                        )
+                )
+        );
         List<Commentary> commentaryList = userRepository.geLastsComments(id);
 
         if (commentaryList.isEmpty()) {
-            throw new GlobalEntityListNotFounException("This user not have any comments");
+            throw new GlobalEntityListNotFounException(messageSource.getMessage("exception.user.noComments",
+                    null, LocaleContextHolder.getLocale()
+            )
+            );
         }
         return commentaryList.stream().map(CommentaryResponse::of).toList();
     }
@@ -271,7 +335,10 @@ public class UserService {
         List<IUserResponseEnabled> enabledList = userRepository.getUsersState();
 
         if (enabledList.isEmpty()) {
-            throw new GlobalEntityListNotFounException("Not found any users in data base");
+            throw new GlobalEntityListNotFounException(messageSource.getMessage("exception.user.isEmpty",
+                    null, LocaleContextHolder.getLocale()
+            )
+            );
         }
         return enabledList;
     }
@@ -281,9 +348,9 @@ public class UserService {
         List<IUserResponseCreated> createdList = userRepository.getUsersByMonthAndYear(year);
 
         if (createdList.isEmpty() || LocalDateTime.now().getYear() < year) {
-            throw new GlobalEntityListNotFounException("Any user was created in this year, select a correct year");
+            throw new GlobalEntityListNotFounException(messageSource.getMessage("exception.user.created.user",
+                    null, LocaleContextHolder.getLocale()));
         }
-
         return createdList;
     }
 
@@ -296,7 +363,12 @@ public class UserService {
 
 
     public PageResponse<UserFollow> pageableUserFollow(UUID id, Pageable pageable) {
-        User user = userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("Not found the user"));
+        User user = userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException(
+                        messageSource.getMessage("exception.user.notExists.id",
+                                null, LocaleContextHolder.getLocale()
+                        )
+                )
+        );
 
         Page<User> followsOfOneUser = userRepository.findAllFollows(id, pageable);
         Page<UserFollow> userFollowPage =
@@ -307,17 +379,27 @@ public class UserService {
 
 
     public PageResponse<UserFollow> getFollows(UUID id, Pageable pageable) {
-        userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("The user not exists"));
+        userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException(
+                messageSource.getMessage("exception.user.notExists.id",
+                        null, LocaleContextHolder.getLocale()
+                )
+        ));
         PageResponse<UserFollow> res = pageableUserFollow(id, pageable);
         if (res.getContent().isEmpty()) {
-            throw new GlobalEntityNotFounException("The list of follows is empty");
+            throw new GlobalEntityListNotFounException(messageSource.getMessage("exception.follows.isEmpty",
+                    null, LocaleContextHolder.getLocale()
+            ));
         }
         return res;
     }
 
 
     public boolean getStateFollowUserByMeFollows(User user, UUID id) {
-        userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("The user not exists"));
+        userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException(
+                messageSource.getMessage("exception.user.notExists.id",
+                        null, LocaleContextHolder.getLocale()
+                )
+        ));
         return userRepository.existsUserByFollow(user.getId(), id);
     }
 
@@ -348,7 +430,13 @@ public class UserService {
                     //EN EL POSTMAN.
                     return message;
                 })
-                .orElseThrow(() -> new GlobalEntityNotFounException("The user not found"));
+                .orElseThrow(() -> new GlobalEntityNotFounException(
+                                messageSource.getMessage("exception.user.notExists",
+                                        null, LocaleContextHolder.getLocale()
+                                )
+                        )
+
+                );
     }
 
 }

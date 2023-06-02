@@ -8,20 +8,27 @@ import { NavbarComponent } from "./navbar/navbar.component";
 import { SidebarComponent } from "./sidebar/sidebar.component";
 import { MaterialsImportModule } from "../materials-import/materials-import.module";
 import { SureDeleteComponent } from "./sure-delete/sure-delete.component";
+import { NgxChartsModule } from "@swimlane/ngx-charts";
 
 @NgModule({
-  imports: [CommonModule, RouterModule, NgbModule, MaterialsImportModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    NgbModule,
+    MaterialsImportModule,
+    NgxChartsModule,
+  ],
   declarations: [
     FooterComponent,
     NavbarComponent,
     SidebarComponent,
-    SureDeleteComponent
+    SureDeleteComponent,
   ],
   exports: [
     FooterComponent,
     NavbarComponent,
     SidebarComponent,
-    SureDeleteComponent
+    SureDeleteComponent,
   ],
 })
 export class ComponentsModule {}

@@ -4,6 +4,7 @@ import { UserService } from "../_services/user.service";
 import { ChangePasswordResponse } from "../interfaces/user/changePassword";
 import { environment } from "../../environments/environment.prod";
 import { UserResponseInfo } from "../interfaces/user/user_info_id";
+import { ErrorResponse } from "../interfaces/error/general_error";
 
 @Component({
   selector: "app-settings",
@@ -29,6 +30,9 @@ export class SettingsComponent implements OnInit {
   showErrorPhoneBool: boolean = false;
   showErrorBio: string = "";
   showErrorBioBool: boolean = false;
+
+  showErrorPasswordBool: boolean = false;
+  showErrorMessagePassword: string = "";
 
   ngOnInit(): void {
     this.uploadInfoUser();
@@ -69,14 +73,33 @@ export class SettingsComponent implements OnInit {
       this.userService.changePhone(this.phone).subscribe({
         next: (updatePhone) => {
           this.phone == updatePhone;
-          this.showErrorBioBool = false;
+          this.showErrorPhoneBool = false;
           this.showSuccesUpload = true;
           setTimeout(() => {
             this.showSuccesUpload = false;
           }, 1500);
         },
         error: (err) => {
-          this.showErrorPhone = err.error.message;
+          const error: ErrorResponse = {
+            statusCode: err.error.statusCode,
+            date: Date(),
+            message: err.error.message,
+            path: err.error.path,
+            status: err.error.status,
+            subErrors: err.error.subErrors ?? [],
+          };
+
+          if (error.subErrors) {
+            for (let index = 0; index < error.subErrors.length; index++) {
+              const errorMessage = error.subErrors[index].message;
+              if (this.showErrorPhone != errorMessage) {
+                this.showErrorPhone += errorMessage + " ";
+              }
+            }
+          } else {
+            this.showErrorPhoneBool = err.error.message;
+          }
+
           this.showErrorPhoneBool = true;
         },
       });
@@ -86,12 +109,43 @@ export class SettingsComponent implements OnInit {
       this.newPassword != "" &&
       this.verifyPassword != ""
     ) {
-      let changePassword: ChangePasswordResponse = {
+      const changePassword: ChangePasswordResponse = {
         oldPassword: this.oldPassword,
         newPassword: this.newPassword,
         verifyNewPassword: this.verifyPassword,
       };
-      this.userService.changePassword(changePassword).subscribe(() => {});
+      this.userService.changePassword(changePassword).subscribe({
+        next: (updatePassword) => {
+          console.log(changePassword);
+          this.showSuccesUpload = true;
+          setTimeout(() => {
+            this.showSuccesUpload = false;
+          }, 1500);
+        },
+        error: (err) => {
+          const error: ErrorResponse = {
+            statusCode: err.error.statusCode,
+            date: Date(),
+            message: err.error.message,
+            path: err.error.path,
+            status: err.error.status,
+            subErrors: err.error.subErrors ?? [],
+          };
+
+          if (error.subErrors) {
+            for (let index = 0; index < error.subErrors.length; index++) {
+              const errorMessage = error.subErrors[index].message;
+              if (this.showErrorMessagePassword != errorMessage) {
+                this.showErrorMessagePassword += errorMessage + " ";
+              }
+            }
+          } else {
+            this.showErrorMessagePassword = err.error.message;
+          }
+
+          this.showErrorPasswordBool = true;
+        },
+      });
     }
 
     if (this.file) {

@@ -1,0 +1,13 @@
+.parent-container {
+  height: 600px;
+  display: flex;
+  margin-top: 2em;
+  padding: 1em;
+  flex-direction: column;
+  background-color: white;
+}
+.first-container {
+  height: 670px;
+  background-color: rgba(162, 214, 238, 0.699);
+  padding: 1em;
+}

@@ -314,7 +314,6 @@ public class UserController {
                     description = "No estas logeado u autenticado",
                     content = @Content)
     })
-
     @PostMapping("/auth/login")
     @JsonView(viewUser.UserInfo.class)
     public ResponseEntity<UserResponse> login(@Parameter(name = "Usuario",
@@ -599,6 +598,44 @@ public class UserController {
             description = "Se debe ingresar el ID del usuario a cambiar el rol")
                                                            @PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.addAdminRoleToUser(id));
+    }
+
+
+    @Operation(summary = "Este método lo que hace es cambiar tu contraseña")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "{Se ha cambiado la contraseña con éxito}",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ChangePasswordRequest.class),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            [
+                                                {
+                                                  "username": "wbeetham0",
+                                                  "avatar": "avatar.png",
+                                                  "enabled": true,
+                                                  "roles": [
+                                                      "ADMIN",
+                                                      "USER"
+                                                  ]
+                                                }
+                                            ]
+                                             """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "401",
+                    description = "No estas logeado",
+                    content = @Content),
+            @ApiResponse(responseCode = "400",
+                    description = "Estas otorgando datos erróneos",
+                    content = @Content)
+    })
+    @PutMapping("/user/changePassword")
+    @JsonView(viewUser.UserResponse.class)
+    public UserResponse changePassword(@Parameter(name = "ChangePasswordRequest",
+            description = "Se debe proporcionar la contraseña antigua y las dos nuevas respectivamente", content = @Content, allowEmptyValue = true)
+                                       @Valid @RequestBody ChangePasswordRequest changePasswordRequest, @AuthenticationPrincipal User user) {
+        return userService.editPassword(user, changePasswordRequest);
     }
 
 

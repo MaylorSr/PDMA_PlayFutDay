@@ -5,6 +5,7 @@
   padding: 1em;
   flex-direction: column;
   background-color: white;
+  overflow: scroll;
 }
 .first-container {
   height: 670px;

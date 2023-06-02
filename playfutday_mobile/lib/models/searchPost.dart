@@ -1,9 +1,10 @@
 // ignore_for_file: file_names
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:playfutday_flutter/blocs/search/search_bloc.dart';
-import 'package:playfutday_flutter/pages/search/search_page.dart';
 import 'package:playfutday_flutter/services/post_service/post_service.dart';
 
 import '../blocs/blocs.dart';
@@ -14,7 +15,9 @@ class SearchPost extends SearchDelegate {
   String? get searchFieldLabel => "Search post by tag";
   @override
   List<Widget>? buildActions(BuildContext context) {
-    return [IconButton(onPressed: () => query = '', icon: const Icon(Icons.clear))];
+    return [
+      IconButton(onPressed: () => query = '', icon: const Icon(Icons.clear))
+    ];
   }
 
   @override
@@ -23,7 +26,11 @@ class SearchPost extends SearchDelegate {
         onPressed: () {
           close(context, null);
         },
-        icon: const Icon(Icons.arrow_back_ios_new_rounded));
+        icon: Icon(
+            Platform.isAndroid
+                ? Icons.arrow_back_rounded
+                : Icons.arrow_back_ios_new_rounded,
+            size: 25));
   }
 
   late final _blocProvider =

@@ -1,14 +1,13 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { UserListResponse, UserResponse } from "../interfaces/user/user_list";
+import { UserListResponse} from "../interfaces/user/user_list";
 import { environment } from "../../environments/environment.prod";
 import { UserResponseInfo } from "../interfaces/user/user_info_id";
 import { UserFollowResponse } from "../interfaces/user/user_follow";
 import { LastThreeCommentaries } from "../interfaces/commentaries/last_three_commentaries";
 import { PostListByUserName } from "../interfaces/post/post_user_by_username";
 import { ChangePasswordResponse } from "../interfaces/user/changePassword";
-// import { environment } from '../../environments/environment';
 import { ChangeDataUser } from "../interfaces/user/change_data";
 import { TokenStorageService } from "./token-storage.service";
 const API_URL = environment.api_hosting + "/";
@@ -122,12 +121,8 @@ export class UserService {
     return this.http.put<String>(`${API_URL}edit/phone`, body);
   }
 
-  changePassword(
-    body: ChangePasswordResponse
-  ): Observable<ChangePasswordResponse> {
-    return this.http.put<ChangePasswordResponse>(
-      `${API_URL}user/changePassword`,
-      body
-    );
+  changePassword(body: ChangePasswordResponse): Observable<ChangePasswordResponse> {
+    console.log(body);
+    return this.http.put<ChangePasswordResponse>(`${API_URL}user/changePassword`,body);
   }
 }

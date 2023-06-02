@@ -6,13 +6,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.util.Locale;
+
 @Configuration
 public class ValidationConfig {
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:messages/errors");
-        messageSource.setDefaultEncoding("ISO-8859-1");
+        messageSource.setBasename("classpath:messages/error");
+        messageSource.setDefaultLocale(new Locale("us"));
         return messageSource;
     }
 

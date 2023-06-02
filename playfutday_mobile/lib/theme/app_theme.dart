@@ -7,6 +7,10 @@ class AppTheme {
   static const Color transparent = Colors.transparent;
   static const Color grey = Colors.grey;
   static const Color successEvent = Color.fromARGB(255, 6, 121, 9);
+
+  static const Color themeColor =  Color.fromARGB(255, 0, 38, 100);
+  
+  static const Color themeD = Colors.black12;
   //**STYLES TITLE GOOGLE FONTS */
 
   static TextStyle tittleApp = GoogleFonts.adamina(
