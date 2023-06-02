@@ -64,7 +64,7 @@ public class ChatService {
                                     .stream()
                                     .map(Message::getBody)
                                     .reduce((first, second) -> second)
-                                    .orElse(null);
+                                    .orElse("");
 
                             return ChatResponse.of(chat, otherUserName, otherUserAvatar, lastMessageBody, idUserDestiny);
                         }).toList(), pageable, myChats == null || myChats.isEmpty() ? 0 : myChats.getTotalPages());
