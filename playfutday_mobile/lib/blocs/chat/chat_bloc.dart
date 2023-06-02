@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:playfutday_flutter/blocs/blocs.dart';
 import 'package:stream_transform/stream_transform.dart';
 import '../../services/user_service/user_service.dart';
 import 'chat_event.dart';
@@ -20,6 +23,7 @@ class ChatBloc extends Bloc<AllChatEvent, AllChatState> {
       _onAllChatFetched,
       transformer: throttleDroppable(throttleDuration),
     );
+    on<OnRefreshChat>(_onRefreshChat);
   }
   final UserService _userService;
 
@@ -48,5 +52,15 @@ class ChatBloc extends Bloc<AllChatEvent, AllChatState> {
     } catch (e) {
       emitter(state.copyWith(status: AllChatStatus.failure));
     }
+  }
+
+  Future<void> _onRefreshChat(
+      OnRefreshChat event, Emitter<AllChatState> emit) async {
+    emit(state.copyWith(
+      status: AllChatStatus.initial,
+      hasReachedMax: false,
+    ));
+
+    add(AllChatFetched());
   }
 }

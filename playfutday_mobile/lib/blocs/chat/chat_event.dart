@@ -6,3 +6,6 @@ abstract class AllChatEvent extends Equatable {
 }
 
 class AllChatFetched extends AllChatEvent {}
+
+
+class OnRefreshChat extends AllChatEvent {}

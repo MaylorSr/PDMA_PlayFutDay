@@ -40,6 +40,9 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    // ignore: prefer_typing_uninitialized_variables
+    var contextToDelete;
     void displayDialogAndroid(BuildContext context, int idMessage) {
       showDialog(
         context: context,
@@ -74,7 +77,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      BlocProvider.of<MessagesBloc>(context).add(
+                      BlocProvider.of<MessagesBloc>(contextToDelete).add(
                         OnDeleteMessage(
                           idMessage,
                         ),
@@ -118,7 +121,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      BlocProvider.of<MessagesBloc>(context).add(
+                      BlocProvider.of<MessagesBloc>(contextToDelete).add(
                         OnDeleteMessage(
                           idMessage,
                         ),
@@ -143,6 +146,7 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                   color: const Color.fromARGB(255, 6, 49, 122), size: 45),
             );
           case AllMessagesStatus.success:
+          contextToDelete = context;
             return Column(
               children: [
                 Expanded(
@@ -154,9 +158,10 @@ class _MessagePageScreenState extends State<MessagePageScreen> {
                     ),
                     itemBuilder: (BuildContext context, int index) {
                       if (index >= state.allMessages.length) {
-                        return LoadingAnimationWidget.twoRotatingArc(
-                            color: const Color.fromARGB(255, 6, 49, 122),
-                            size: 45);
+                        // return LoadingAnimationWidget.twoRotatingArc(
+                        //     color: const Color.fromARGB(255, 6, 49, 122),
+                        //     size: 45);
+                        return const SizedBox();
                       } else {
                         return state.allMessages[index]
                                     .usernameWhoSendMessage ==

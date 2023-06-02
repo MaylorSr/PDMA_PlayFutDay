@@ -152,8 +152,6 @@ class UserService {
     String? token = _localStorageService.getFromDisk("user_token");
     if (token != null) {
       _userRepository.sendMessageToUser(body, idUser);
-      // Message response =
-      // return response;
     }
     return null;
   }

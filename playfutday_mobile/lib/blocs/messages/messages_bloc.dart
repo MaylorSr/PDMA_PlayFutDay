@@ -21,17 +21,14 @@ class MessagesBloc extends Bloc<AllMessagesEvent, AllMessagesState> {
       : super(const AllMessagesState()) {
     on<AllMessagesFetched>(
       _onAllMessagesFetched,
-      transformer: throttleDroppable(throttleDuration),
     );
 
     on<RefreshMessages>(
       _sendMessage,
-      transformer: throttleDroppable(throttleDuration),
     );
 
     on<OnDeleteMessage>(
       _onDeleteMessage,
-      transformer: throttleDroppable(throttleDuration),
     );
   }
   final UserService _userService;
@@ -75,17 +72,18 @@ class MessagesBloc extends Bloc<AllMessagesEvent, AllMessagesState> {
 
   Future<void> _onDeleteMessage(
       OnDeleteMessage event, Emitter<AllMessagesState> emitter) async {
-    final deleteInProgress = state.allMessages.map((message) {
-      // ignore: unrelated_type_equality_checks
-      return message.id == event.idMessage ? state.copyWith() : message;
-    }).toList();
+    // final deleteInProgress = state.allMessages.map((message) {
+    //   // ignore: unrelated_type_equality_checks
+    //   return message.id == event.idMessage ? state.copyWith() : message;
+    // }).toList();
 
-    print(deleteInProgress);
     // ignore: invalid_use_of_visible_for_testing_member
-    emitter(state.copyWith(
-        status: AllMessagesStatus.success,
-        allMessages: state.allMessages,
-        hasReachedMax: false));
+    emitter(
+      state.copyWith(
+          status: AllMessagesStatus.success,
+          allMessages: state.allMessages,
+          hasReachedMax: false),
+    );
 
     unawaited(
       _userService.deleteMessage(event.idMessage).then((_) {

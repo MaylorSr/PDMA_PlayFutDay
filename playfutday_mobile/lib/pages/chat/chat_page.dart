@@ -61,31 +61,43 @@ class _ChatPageState extends State<ChatPage> {
               );
             }
             return Expanded(
-              child: ListView.separated(
-                separatorBuilder: (context, index) => const Divider(
-                  color: AppTheme.primary,
-                  indent: 15,
-                  endIndent: 15,
-                  thickness: 0.5,
-                ),
-                physics: const BouncingScrollPhysics(
-                  parent: BouncingScrollPhysics(
-                      decelerationRate: ScrollDecelerationRate.normal),
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return index >= state.allChat.length
-                      ? LoadingAnimationWidget.twoRotatingArc(
-                          color: const Color.fromARGB(255, 6, 49, 122),
-                          size: 45)
-                      : CardChatScreen(
-                          chat: state.allChat[index],
-                        );
+              child: RefreshIndicator(
+                edgeOffset: 0,
+                backgroundColor: AppTheme.grey,
+                color: AppTheme.successEvent,
+                strokeWidth: 3.5,
+                triggerMode: RefreshIndicatorTriggerMode.onEdge,
+                onRefresh: () async {
+                  BlocProvider.of<ChatBloc>(context).add(
+                    OnRefreshChat(),
+                  );
                 },
-                scrollDirection: Axis.vertical,
-                itemCount: state.hasReachedMax
-                    ? state.allChat.length
-                    : state.allChat.length + 1,
-                controller: _scrollController,
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => const Divider(
+                    color: AppTheme.primary,
+                    indent: 15,
+                    endIndent: 15,
+                    thickness: 0.5,
+                  ),
+                  physics: const BouncingScrollPhysics(
+                    parent: BouncingScrollPhysics(
+                        decelerationRate: ScrollDecelerationRate.normal),
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    return index >= state.allChat.length
+                        ? LoadingAnimationWidget.twoRotatingArc(
+                            color: const Color.fromARGB(255, 6, 49, 122),
+                            size: 45)
+                        : CardChatScreen(
+                            chat: state.allChat[index],
+                          );
+                  },
+                  scrollDirection: Axis.vertical,
+                  itemCount: state.hasReachedMax
+                      ? state.allChat.length
+                      : state.allChat.length + 1,
+                  controller: _scrollController,
+                ),
               ),
             );
           case AllChatStatus.initial:

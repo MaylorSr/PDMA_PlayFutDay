@@ -59,8 +59,7 @@ class _AllPostListState extends State<AllPostListBySearch> {
                       decelerationRate: ScrollDecelerationRate.normal)),
               itemBuilder: (BuildContext context, int index) {
                 return index >= state.allPost.length
-                    ? LoadingAnimationWidget.twoRotatingArc(
-                        color: const Color.fromARGB(255, 6, 49, 122), size: 45)
+                    ? const SizedBox()
                     : CardScreenPost(
                         post: state.allPost[index],
                         user: widget.user,

@@ -83,7 +83,7 @@ class _AllPostListState extends State<MyPostList> {
                         decelerationRate: ScrollDecelerationRate.fast)),
                 itemBuilder: (BuildContext context, int index) {
                   return index >= state.allPost.length
-                      ? const BottomLoader()
+                      ? const SizedBox()
                       : CardScreenPost(
                           post: state.allPost[index],
                           user: widget.user,

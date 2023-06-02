@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
+import 'package:playfutday_flutter/blocs/chat/chat.dart';
 import 'package:playfutday_flutter/blocs/messages/messages.dart';
 import 'package:playfutday_flutter/pages/pages.dart';
 import 'package:playfutday_flutter/services/user_service/user_service.dart';
@@ -65,6 +66,7 @@ class _ScreenMessageState extends State<ScreenMessage> {
               elevation: MaterialStatePropertyAll(0)),
           onPressed: () {
             if (widget.uuidOtherUser.isNotEmpty &&
+                // ignore: unnecessary_null_comparison
                 widget.uuidOtherUser != null &&
                 widget.otherUserName != "Unknown") {
               Navigator.push(
@@ -122,9 +124,11 @@ class _ScreenMessageState extends State<ScreenMessage> {
         ),
       ),
       body: BlocProvider(
-        create: (context) => MessagesBloc(UserService(), widget.uuidOtherUser.toString())
-          ..add(AllMessagesFetched()),
-        child: MessagePageScreen(user: widget.user, uuid: widget.uuidOtherUser.toString()),
+        create: (context) =>
+            MessagesBloc(UserService(), widget.uuidOtherUser.toString())
+              ..add(AllMessagesFetched()),
+        child: MessagePageScreen(
+            user: widget.user, uuid: widget.uuidOtherUser.toString()),
       ),
     );
   }

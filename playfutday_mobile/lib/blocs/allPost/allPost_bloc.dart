@@ -132,12 +132,15 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
               post.commentaries = updatedPost?.commentaries)
           : post;
     }).toList();
-    print(commentInProgress);
 
-    emit(state.copyWith(
-        status: AllPostStatus.success,
-        allPost: commentInProgress,
-        hasReachedMax: false));
+    print(updatedPost?.commentaries);
+
+    emit(
+      state.copyWith(
+          status: AllPostStatus.success,
+          allPost: commentInProgress,
+          hasReachedMax: false),
+    );
   }
 
   Future<UserFollowResponse?> getFollowers(int page, String uuid) async {

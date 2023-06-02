@@ -61,6 +61,7 @@ class CommentaryScreen extends StatelessWidget {
                 iconPadding: EdgeInsets.all(10),
                 padding: EdgeInsets.all(32)),
             builder: (context, properties) => ListView.separated(
+              shrinkWrap: true,
               physics: const BouncingScrollPhysics(
                 parent: BouncingScrollPhysics(
                     decelerationRate: ScrollDecelerationRate.fast),

@@ -11,8 +11,6 @@ import 'package:playfutday_flutter/blocs/post_grid_user/post_grid_event.dart';
 import 'package:playfutday_flutter/blocs/userProfile/user_profile.dart';
 import 'package:playfutday_flutter/models/infoUser.dart';
 import 'package:playfutday_flutter/models/models.dart';
-import 'package:playfutday_flutter/pages/user/post_user.dart';
-import 'package:playfutday_flutter/pages/user/post_view_grid_user/post_grid_view.dart';
 import 'package:playfutday_flutter/rest/rest.dart';
 import 'package:playfutday_flutter/services/post_service/post_service.dart';
 import 'package:playfutday_flutter/services/user_service/user_service.dart';
@@ -27,7 +25,6 @@ import '../../blocs/post_grid_user/post_grid_bloc.dart';
 import '../../theme/app_theme.dart';
 import '../pages.dart';
 import '../post/myFavPost/post_pageFav.dart';
-import 'option_follow.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({Key? key, this.user, required this.userLoger})
@@ -90,7 +87,9 @@ class _UserScreenState extends State<UserScreen> {
       appBar: AppBar(
         leading: widget.user!.id != widget.userLoger.id
             ? IconButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
                 icon: Icon(
                     Platform.isAndroid
                         ? Icons.arrow_back_rounded

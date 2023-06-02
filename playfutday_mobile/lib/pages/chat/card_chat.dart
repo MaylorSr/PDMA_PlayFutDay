@@ -2,14 +2,10 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_bloc/flutter_form_bloc.dart';
-import 'package:playfutday_flutter/blocs/messages/messages.dart';
-import 'package:playfutday_flutter/blocs/messages/messages_bloc.dart';
 import 'package:playfutday_flutter/models/models.dart';
 import 'package:playfutday_flutter/pages/pages.dart';
-import 'package:playfutday_flutter/services/user_service/user_service.dart';
 import 'package:playfutday_flutter/theme/app_theme.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:intl/intl.dart';
 
 import '../../blocs/blocs.dart';
 import '../../rest/rest_client.dart';
