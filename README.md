@@ -1,5 +1,5 @@
 # PLAYFUTDAY
-<img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/playfutday/uploads/logo_app.jpg" width="100" alt="Logo"/>
+<img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/playfutday/uploads/logo_app-removebg.png" width="225" alt="Logo"/>
 
 ***
 
