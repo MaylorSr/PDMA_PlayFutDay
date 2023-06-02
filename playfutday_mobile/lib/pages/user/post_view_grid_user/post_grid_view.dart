@@ -1,7 +1,7 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:playfutday_flutter/rest/rest.dart';
 
@@ -48,16 +48,34 @@ class _PostGridImageScreenState extends State<PostGridImageScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),
                             ),
-                            child: CachedNetworkImage(
-                                placeholderFadeInDuration:
-                                    const Duration(seconds: 10),
-                                placeholder: (context, url) =>
-                                    Image.asset('assets/images/reload.gif'),
-                                errorWidget: (context, url, error) =>
+                            // child: CachedNetworkImage(
+                            //     placeholderFadeInDuration:
+                            //         const Duration(seconds: 10),
+                            //     placeholder: (context, url) =>
+                            //         Image.asset('assets/images/reload.gif'),
+                            //     errorWidget: (context, url, error) =>
+                            //         Image.asset(
+                            //             'assets/images/image_notfound.png'),
+                            //     imageUrl:
+                            //         '$urlBase/download/${state.imagePostGrid[index].image}'),
+                            child: InstaImageViewer(
+                              child: Image(
+                                image: Image.network(
+                                        '$urlBase/download/${state.imagePostGrid[index].image}')
+                                    .image,
+                                errorBuilder: (context, error, stackTrace) =>
                                     Image.asset(
                                         'assets/images/image_notfound.png'),
-                                imageUrl:
-                                    '$urlBase/download/${state.imagePostGrid[index].image}'),
+                              ),
+                              // imageUrl:
+                              //     '$urlBase/download/${state.imagePostGrid[index].image}',
+                              // placeholder: (BuildContext context) =>
+                              //     Image.asset('assets/images/reload.gif'),
+                              // errorWidget:
+                              //     (BuildContext context, Object error) =>
+                              //         Image.asset(
+                              //             'assets/images/image_notfound.png'),
+                            ),
                           ),
                         ),
                       )),

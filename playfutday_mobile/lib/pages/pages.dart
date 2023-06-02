@@ -10,3 +10,10 @@ export 'user/user.dart';
 
 /*SEARCH VIEW*/
 export 'search/search_page.dart';
+
+/*CHAT VIEW*/
+export 'chat/chat_.dart';
+
+
+/*MESSAGES VIEW*/
+export 'messages/messages.dart';

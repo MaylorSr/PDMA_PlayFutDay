@@ -110,9 +110,13 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
     //     hasReachedMax: false));
   }
 
-  FutureOr<void> _onRefreshElements(
+  Future<void> _onRefreshElements(
       OnRefresh event, Emitter<AllPostState> emit) async {
-    emit(state.copyWith(status: AllPostStatus.initial, allPost: null));
+    emit(state.copyWith(
+      status: AllPostStatus.initial,
+      hasReachedMax: false,
+    ));
+
     add(AllPostFetched());
   }
 
@@ -129,10 +133,14 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
           : post;
     }).toList();
 
-    emit(state.copyWith(
-        status: AllPostStatus.success,
-        allPost: commentInProgress,
-        hasReachedMax: false));
+    print(updatedPost?.commentaries);
+
+    emit(
+      state.copyWith(
+          status: AllPostStatus.success,
+          allPost: commentInProgress,
+          hasReachedMax: false),
+    );
   }
 
   Future<UserFollowResponse?> getFollowers(int page, String uuid) async {
@@ -143,5 +151,4 @@ class AllPostBloc extends Bloc<AllPostEvent, AllPostState> {
       return null;
     }
   }
-
 }
