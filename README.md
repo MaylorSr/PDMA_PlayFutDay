@@ -91,7 +91,7 @@ LAS FUNCIONALIDADES LAS ENCONTRARÁS DENTRO DE CADA CARPETA CON SU RESPECTIVA DO
 
  <img src="https://niixer.com/wp-content/uploads/2020/11/spring-boot.png" width="500" alt="Spring Logo"/>
 
-Puedes encontrar toda la información necesaria en: [PlayFutDay](https://github.com/MaylorSr/PDMA_PlayFutDay/tree/develop_api/playfutday)
+Puedes encontrar toda la información necesaria en: [PlayFutDay](https://github.com/MaylorSr/PDMA_PlayFutDay/tree/main/playfutday)
 ___
 ### MOBILE - FLUTTER :pushpin:
 
@@ -100,13 +100,13 @@ ___
 
 <img src="https://docs.flutter.dev/assets/images/shared/brand/flutter/logo/flutter-lockup.png" width="500" alt="Flutter Logo"/>
 
-Puedes encontrar toda la información necesaria en: [Playfutday_mobile](https://github.com/MaylorSr/PDMA_PlayFutDay/tree/develop_mobile/playfutday_mobile)
+Puedes encontrar toda la información necesaria en: [Playfutday_mobile](https://github.com/MaylorSr/PDMA_PlayFutDay/tree/main/playfutday_mobile)
 ___
 ### WEB - ANGULAR :pushpin:
 ![Angular Compiler Version](https://img.shields.io/badge/Angular_Compiler-v13.2.6-blue)
 <img src="https://user-images.githubusercontent.com/93126452/228478221-9fdd0b24-7755-4506-99cb-278dd1a4ee36.png" width="250" alt="Angular Logo"/>
 
-Puedes encontrar toda la información necesaria en: [PlayFutDay_web](https://github.com/MaylorSr/PDMA_PlayFutDay/tree/develop_web/playfutday_web) <br>
+Puedes encontrar toda la información necesaria en: [PlayFutDay_web](https://github.com/MaylorSr/PDMA_PlayFutDay/tree/main/playfutday_web) <br>
 ___
 
 
