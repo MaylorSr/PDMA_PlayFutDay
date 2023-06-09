@@ -28,17 +28,22 @@ ___
 ## **EJECUCIÓN DEL PROYECTO** :speech_balloon:
 Para llevar a cabo la ejecución del proyecto, necesitarás las versiones mencionadas anteriormente. 
 Una vez clonado el repositorio, tienes dos opciones para iniciar el proyecto:
-* MODO "DESPLIEGUE"
-* MODO "LOCAL"
+* MODO "PROD"
+* MODO "DEV"
 
 <br>
 
-Para ejecutar el proyecto en modo despliegue tendrás en la raíz del proyecto un archivo tipo docker-compose.yml. De modo que necesitarás abrir primeramente **Docker** , posteriormente deberás abrir tu terminal y en la raíz del proyecto escribir el comando "**docker-compose up -d**" y esto levantará la **API REST** junto con el db Posgretsql y levantará Angular en el puerto **4200**. <br>
+Para ejecutar el proyecto en modo **prod** tendrás en la raíz del proyecto un archivo tipo docker-compose.yml. De modo que necesitarás abrir primeramente **Docker** , posteriormente deberás abrir tu terminal y seguir los siguientes instrucciones:<br></br>
+* Deberás dirigirte a la carpeta **playfutday** y en su raíz escribir el comando: ```docker build -t playfutday:1.0 . ``` esto servirá para crear la imágen.
+* Posteriormente deberás dirigirte a **playfutday_web** y en su raíz escribir el comando: ```docker build -t playfutday_web:1.0 . ``` esto servirá para crear la imágen.
+* Una vez creada las imágenes, deberás irte a la raíz del proyecto **PDMA_PLAYFUTDAY** y en su raíz abrir el terminal y escribir ``` docker-compose up -d ```.
+ Una vez realizado esto ya podrás abrir en tu navegador favorito **localhost**
 
 Por otro lado para ejecutar el proyecto en Flutter necesitarás irte a la carpeta **playfutday_mobile**, abrir un terminal y en dicha raíz hacer un **flutter pub get** para instalar las dependencias, una vez instalada puedes seleccionar tu dispositivo y ejecutar el comando **flutter run** .<br>
 
-Para ejecutar el proyecto en modo local o usando la bd de H2, deberás irte a la carpeta  **playfutday** , tener el Docker abierto, y deberás seguir las siguientes instruccinoes:<br>
+Para ejecutar el proyecto en modo dev o usando la bd de H2, deberás irte a la carpeta  **playfutday** , tener el Docker abierto, y deberás seguir las siguientes instruccinoes:<br>
 - En la properties general de Spring Boot, deberás cambiar el environment de prod a **dev**.
+
 ```
  spring.profiles.active=dev
  
