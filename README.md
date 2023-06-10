@@ -51,14 +51,6 @@ Para ejecutar el proyecto en modo dev o usando la bd de H2, deberás irte a la c
 **DEBERÁ VERSE DE LA SIGUIENTE MANERA:**<br>
 <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/install_help/properties.png" alt="Captura de pantalla de como debe verse las properties"/>
 
-- En el archivo DOCKERFILE que se encuentra en la raíz del proyecto, deberás comentar cualquier línea que no coíncida con la siguiente **(se recomienda no cambiar el puerto, debido que lo tendrás que cambiar tanto en Angular, Postman, Flutter...)**: <br>
-```
-FROM openjdk:17-jdk-alpine
-COPY "./target/playfutday-0.0.1-SNAPSHOT.jar" "app.jar"
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app.jar"]
-
-```
 <br>Una vez realizado los pasos anteriores deberemos abrir nuestro terminal en dicha raíz y ejecutar los siguientes comandos de forma ordenada, esto servirá para crear la imágen y levantar la API_REST en bd h2.<br>
 ```
 docker build --tag=message-server:latest .  
