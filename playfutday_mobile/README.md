@@ -30,3 +30,137 @@ USERS: usuario: alejandro  - password: A1b2345 || usuario: laura  - password: L1
 Deberás ingresar en la carpeta **playfutday_mobile** , una vez dentro deberás de abrir el terminal en dicha raíz y escribir **flutter pub get** para instalar todas las dependencias necesarias y posteriormente deberás realizar **flutter run** con un dispositivo seleccionado.<br>
 
 **ACCIONES QUE SERÁS CAPAZ DE REALIZAR :**
+* Obtener todos los posts:
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/all_post.gif"/>
+</p>
+
+* Cambiar contraseña
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/change_password.gif"/>
+</p>
+
+* Comentar y dar like a un todos los posts (excepto desde search)
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/comment_like_all_post.gif"/>
+</p>
+
+* Eliminar mi cuenta de usuario
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/delete_account.gif"/>
+</p>
+
+* Eliminar mi post
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/delete_post.gif"/>
+</p>
+
+* Editar mi fecha de cumpleaños y número de teléfono
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/edit_phone_birthday.gif"/>
+</p>
+
+* Editar foto de perfil y bio
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/edit_photo_bio.gif"/>
+</p>
+
+* Follow / unFollow y enviar mensaje a un usuario
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/follow_send_message.gif"/>
+</p>
+
+* Ver Followers y Follows tanto mios como de otro usuario
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/follower_follow.gif"/>
+</p>
+
+* Ver mis chats
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/get_chats.gif"/>
+</p>
+
+* Ir al perfil de un usuario, ver sus posts, y refrescar la lista de post del usuario
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/go_to_profile_view_post_refres_post.gif"/>
+</p>
+
+* Logearte
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/login.gif"/>
+</p>
+
+* Ver mis post a los que le di fav
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/my_fav_post.gif"/>
+</p>
+
+* Ver mi perfil
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/my_profile.gif"/>
+</p>
+
+
+* Subir un post
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/new_post.gif"/>
+</p>
+
+
+* Refrescar la lista de todos los posts
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/refresh_all_post.gif"/>
+</p>
+
+
+* Buscar post por tag, ya sea en minúscula o mayúscula
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/search_by_tag.gif"/>
+</p>
+
+
+* Buscar post por tag, ya sea en minúscula o mayúscula
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/search_by_tag.gif"/>
+</p>
+
+* Registrarse con código de verificación
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/sing_up_email.gif"/>
+</p>
+
+
+* Código de verificación
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/verify_code.gif"/>
+</p>
+
+* Lógin luego de código de verificación
+<p>
+  <img src="https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/screen_flutter_mobile/login_after_sing_up.gif"/>
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
