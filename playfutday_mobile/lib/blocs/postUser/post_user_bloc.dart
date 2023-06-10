@@ -102,7 +102,7 @@ class MyPostBloc extends Bloc<AllPostEvent, AllPostState> {
 
   FutureOr<void> _onRefreshElements(
       OnRefresh event, Emitter<AllPostState> emit) async {
-    emit(state.copyWith(status: AllPostStatus.initial, allPost: null));
+    emit(state.copyWith(status: AllPostStatus.initial, hasReachedMax: false));
     add(AllPostFetched());
   }
 

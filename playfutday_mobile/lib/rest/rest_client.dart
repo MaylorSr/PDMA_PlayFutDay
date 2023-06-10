@@ -18,7 +18,9 @@ import 'package:http_parser/http_parser.dart';
 import '../main.dart';
 
 class ApiConstants {
-  static String baseUrl = /*"http://localhost:8080" */ "http://10.0.2.2:8080";
+  static String baseUrl = /*"http://localhost:8080" */  /* "http://192.168.0.193:8080" */ "http://10.0.2.2:8080";
+  // static String baseUrl = "http://192.168.0.193:8080";
+
 }
 
 class HeadersApiInterceptor implements InterceptorContract {
@@ -213,8 +215,6 @@ class RestClient {
 
     final response = await _httpClient!.send(request);
     return response;
-    // final response = await _httpClient!.send(request);
-    // return response;
   }
 
   Future<http.Response> singUpPost(String url, dynamic body) async {

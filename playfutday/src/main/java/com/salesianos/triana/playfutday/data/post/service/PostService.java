@@ -23,9 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -37,6 +35,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,15 +60,21 @@ public class PostService {
     }
 
     public List<PostResponse> findAllPostGridByUserName(String username) {
-        return userRepository.findFirstByUsername(username).map(
-                user -> {
+        return userRepository.findFirstByUsername(username)
+                .map(user -> {
                     if (user.getMyPost() == null) {
                         throw new GlobalEntityListNotFounException(messageSource.getMessage("exception.user.noPost", null, LocaleContextHolder.getLocale()));
                     }
-                    return user.getMyPost().stream().map(PostResponse::of).toList();
-                }
-        ).orElseThrow(() -> new GlobalEntityNotFounException(messageSource.getMessage("exception.user.notExists", null, LocaleContextHolder.getLocale())));
+
+                    List<Post> sortedPosts = user.getMyPost().stream()
+                            .sorted(Comparator.comparing(Post::getUploadDate).reversed())
+                            .collect(Collectors.toList());
+
+                    return sortedPosts.stream().map(PostResponse::of).toList();
+                })
+                .orElseThrow(() -> new GlobalEntityNotFounException(messageSource.getMessage("exception.user.notExists", null, LocaleContextHolder.getLocale())));
     }
+
 
 
     public PageResponse<CommentaryResponse> pageableCommentary(Long id, Pageable pageable) {
@@ -140,19 +145,28 @@ public class PostService {
 
     public PageResponse<PostResponse> findAllPost(String s, Pageable pageable) {
         List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
-        PageResponse<PostResponse> res = search(params, pageable);
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "uploadDate");
+        Pageable pageableWithSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        PageResponse<PostResponse> res = search(params, pageableWithSort);
+
         if (res.getContent().isEmpty()) {
             throw new GlobalEntityListNotFounException(
                     messageSource.getMessage("exception.post.isEmpty", null, LocaleContextHolder.getLocale())
             );
         }
+
         return res;
     }
+
 
     public PageResponse<PostResponse> search(List<SearchCriteria> params, Pageable pageable) {
         GenericSpecificationBuilder genericSpecificationBuilder = new GenericSpecificationBuilder(params);
         Specification<Post> spec = genericSpecificationBuilder.build();
-        Page<PostResponse> postResponsePage = repo.findAll(spec, pageable).map(PostResponse::of);
+//        Page<PostResponse> postResponsePage = repo.findAll(spec, pageable).map(PostResponse::of);
+        Sort sort = Sort.by(Sort.Direction.DESC, "uploadDate");
+        Page<PostResponse> postResponsePage = repo.findAll(spec, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort)).map(PostResponse::of);
         return new PageResponse<>(postResponsePage);
     }
 

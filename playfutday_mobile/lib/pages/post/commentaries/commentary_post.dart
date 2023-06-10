@@ -61,6 +61,7 @@ class CommentaryScreen extends StatelessWidget {
                 iconPadding: EdgeInsets.all(10),
                 padding: EdgeInsets.all(32)),
             builder: (context, properties) => ListView.separated(
+              shrinkWrap: true,
               physics: const BouncingScrollPhysics(
                 parent: BouncingScrollPhysics(
                     decelerationRate: ScrollDecelerationRate.fast),
@@ -150,7 +151,7 @@ class FormFieldCommentary extends StatelessWidget {
             autofocus: true,
             controller: _commentController,
             style: const TextStyle(fontSize: 16, color: Colors.black),
-            maxLength: 50,
+            maxLength: 80,
             textInputAction: TextInputAction.send,
             decoration: InputDecoration(
               contentPadding:

@@ -39,6 +39,11 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
     List<Post> findOnIlikePost(@Param("id") UUID id);
 
     @Query("""
+            SELECT c FROM Post p JOIN p.commentaries c WHERE c.author= :author
+            """)
+    List<Commentary> findAllCommentariesWhereIWrite(@Param("author") String author);
+
+    @Query("""
             SELECT c FROM Post p JOIN p.commentaries c WHERE p.id =:id
             """)
     Page<Commentary> findAllCommentariesByPostId(@Param("id") Long id, Pageable pageable);

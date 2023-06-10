@@ -33,9 +33,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -122,10 +120,16 @@ public class UserService {
                             List<Post> myLikes = postRepository.findOnIlikePost(oldUser.getId());
                             /** LISTA DE MENSAJES QUE ESCRIBE EL USUARIO **/
                             List<Message> messagesWhereIsend = messageRepository.findAllMessagesByUserId(idU.toString());
+                            List<Commentary> commentariesWhereIWrite = postRepository.findAllCommentariesWhereIWrite(oldUser.getUsername());
 
                             for (Post p : myLikes) {
                                 postService.giveLikeByUser(p.getId(), oldUser);
                             }
+
+                            for (Commentary c : commentariesWhereIWrite) {
+                                postService.deleteCommentary(c.getId());
+                            }
+
                             for (Message m : messagesWhereIsend) {
                                 m.setIdUser(null);
                                 m.setAvatar(null);
@@ -153,7 +157,11 @@ public class UserService {
 
     public PageResponse<UserResponse> findAll(String s, Pageable pageable) {
         List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
-        PageResponse<UserResponse> res = search(params, pageable);
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Pageable pageableWithSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        PageResponse<UserResponse> res = search(params, pageableWithSort);
         if (res.getContent().isEmpty()) {
             throw new GlobalEntityListNotFounException(
                     messageSource.getMessage("exception.user.isEmpty", null, LocaleContextHolder.getLocale()));
@@ -163,8 +171,12 @@ public class UserService {
 
     public PageResponse<UserResponse> search(List<SearchCriteria> params, Pageable pageable) {
         GenericSpecificationBuilder genericSpecificationBuilder = new GenericSpecificationBuilder(params);
+//        Specification<User> spec = genericSpecificationBuilder.build();
         Specification<User> spec = genericSpecificationBuilder.build();
-        Page<UserResponse> userResponsePage = userRepository.findAll(spec, pageable).map(UserResponse::fromUser);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+//        Page<UserResponse> userResponsePage = userRepository.findAll(spec, pageable).map(UserResponse::fromUser);
+        Page<UserResponse> userResponsePage = userRepository.findAll(spec, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort)).map(UserResponse::fromUser);
+
         return new PageResponse<>(userResponsePage);
     }
 

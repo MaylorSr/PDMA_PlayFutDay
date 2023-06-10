@@ -8,7 +8,6 @@ import 'package:flutter_form_bloc/flutter_form_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:playfutday_flutter/blocs/userProfile/user_profile.dart';
-import 'package:playfutday_flutter/models/apiError.dart';
 import 'package:playfutday_flutter/models/editProfile.dart';
 import 'package:playfutday_flutter/models/infoUser.dart';
 import 'package:playfutday_flutter/pages/user/change_password/change_password_screen.dart';
@@ -421,11 +420,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         filled: true, // habilitar el relleno
                         fillColor: Colors.white,
                         hintText: 'Put your phone number',
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 12,
                         ),
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ),

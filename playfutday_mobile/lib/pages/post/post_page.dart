@@ -44,43 +44,50 @@ class _AllPostListState extends State<AllPostList> {
                   errorMessage: "The list of post is empty");
             }
             return Expanded(
-                child: RefreshIndicator(
-              onRefresh: () async {
-                BlocProvider.of<AllPostBloc>(context).add(OnRefresh());
-              },
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(
-                    parent: BouncingScrollPhysics(
-                        decelerationRate: ScrollDecelerationRate.normal)),
-                itemBuilder: (BuildContext context, int index) {
-                  return index >= state.allPost.length
-                      ? LoadingAnimationWidget.twoRotatingArc(
-                          color: const Color.fromARGB(255, 6, 49, 122),
-                          size: 45)
-                      : CardScreenPost(
-                          post: state.allPost[index],
-                          user: widget.user,
-                          onDeletePressed: (id) {
-                            context
-                                .read<AllPostBloc>()
-                                .add(DeletePost(id, widget.user.id.toString()));
-                          },
-                          onLikePressed: (id) {
-                            context.read<AllPostBloc>().add(GiveLike(id));
-                          },
-                          onCommentPressed: (id, message) {
-                            context
-                                .read<AllPostBloc>()
-                                .add(SendComment(id, message));
-                          });
+              child: RefreshIndicator(
+                edgeOffset: 0,
+                backgroundColor: AppTheme.grey,
+                color: AppTheme.successEvent,
+                strokeWidth: 3.5,
+                triggerMode: RefreshIndicatorTriggerMode.onEdge,
+                onRefresh: () async {
+                  BlocProvider.of<AllPostBloc>(context).add(
+                    OnRefresh(),
+                  );
                 },
-                scrollDirection: Axis.vertical,
-                itemCount: state.hasReachedMax
-                    ? state.allPost.length
-                    : state.allPost.length + 1,
-                controller: _scrollController,
+                child: ListView.builder(
+                  physics: const BouncingScrollPhysics(
+                    parent: BouncingScrollPhysics(
+                        decelerationRate: ScrollDecelerationRate.normal),
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    return index >= state.allPost.length
+                        ? const SizedBox()
+                        : CardScreenPost(
+                            post: state.allPost[index],
+                            user: widget.user,
+                            onDeletePressed: (id) {
+                              context.read<AllPostBloc>().add(
+                                  DeletePost(id, widget.user.id.toString()));
+                            },
+                            onLikePressed: (id) {
+                              context.read<AllPostBloc>().add(GiveLike(id));
+                            },
+                            onCommentPressed: (id, message) {
+                              context.read<AllPostBloc>().add(
+                                    SendComment(id, message),
+                                  );
+                            },
+                          );
+                  },
+                  scrollDirection: Axis.vertical,
+                  itemCount: state.hasReachedMax
+                      ? state.allPost.length
+                      : state.allPost.length + 1,
+                  controller: _scrollController,
+                ),
               ),
-            ));
+            );
           case AllPostStatus.initial:
             return Center(
               child: LoadingAnimationWidget.twoRotatingArc(

@@ -92,11 +92,18 @@ public class MessageService {
     }
 
 
-    public PageResponse<MessageResponse> findAllMessagesByChatId(Long id, Pageable pageable) {
-        chatRepo.findById(id).orElseThrow(() -> new GlobalEntityListNotFounException(
-                messageSource.getMessage("exception.chat.notExists.id", null, LocaleContextHolder.getLocale()
-                )));
-        PageResponse<MessageResponse> res = pageableUser(id, pageable);
+    public PageResponse<MessageResponse> findAllMessagesByChatId(UUID idUser, User user, Pageable pageable) {
+//        chatRepo.findById(id).orElseThrow(() -> new GlobalEntityListNotFounException(
+//                messageSource.getMessage("exception.chat.notExists.id", null, LocaleContextHolder.getLocale()
+//                )));
+        Chat c = chatRepo.findChatByUserIds(user.getId(), idUser);
+
+        if (c == null) {
+            throw new GlobalEntityListNotFounException(
+                    messageSource.getMessage("exception.chat.notExists.id", null, LocaleContextHolder.getLocale()
+                    ));
+        }
+        PageResponse<MessageResponse> res = pageableUser(c.getId(), pageable);
         if (res.getContent().isEmpty()) {
             throw new GlobalEntityListNotFounException(
                     messageSource.getMessage("exception.chat.isEmpty", null, LocaleContextHolder.getLocale()
