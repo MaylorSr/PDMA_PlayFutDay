@@ -1,0 +1,41 @@
+version: '3'
+services:
+  postgres:
+    image: 'postgres:14-alpine'
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=spring_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    ports:
+      - 5432:5432
+  client:
+      image: 'dpage/pgadmin4'
+      container_name: client
+      restart: always
+      environment:
+        - PGADMIN_DEFAULT_EMAIL=admin@gmail.com
+        - PGADMIN_DEFAULT_PASSWORD=admin
+        - SPRING.PROFILES.ACTIVE=dev
+      depends_on:
+        - postgres
+      ports:
+        - "1717:80"
+
+  playfutday:
+    image: playfutday:1.0
+    container_name: playfutday_backend
+    environment:
+      - SPRING.PROFILES.ACTIVE=dev
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+  
+  frontend:
+    image: playfutday_web:1.0
+    container_name: playfutday_web
+    ports:
+      - "80:80"
+    depends_on:
+      - playfutday
