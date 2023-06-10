@@ -23,6 +23,8 @@ DOCKER (recomendada última versión)
 * Web: Enfocada principalmente en los usuarios administradores, esta parte permite controlar la aplicación a través de una interfaz web.
 
 * Mobile: Esta parte consiste en una aplicación móvil dirigida a los usuarios finales.
+
+* Trello: Se ha utilizado el sistema **trello** para llevar a cabo las distintas tareas a realizar, para una mejor organización y optimización del tiempo del mismo para el proyecto. [trello](https://trello.com/invite/b/mN3xkYOA/ATTI026898970a2a39ced1101d99d04bf29bDE0E5A96/playfutday) 
 ___
 
 ## **EJECUCIÓN DEL PROYECTO** :speech_balloon:
