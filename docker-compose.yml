@@ -1,40 +1,14 @@
-version: '3.9'
-
+version: '3'
 services:
-  angular_app:
-    container_name: angular_app
-    image: playfutday-angular_app:1.0.0
-    build:
-      context: ./playfutday_web
-      dockerfile: Dockerfile
-    restart: always
-    ports:
-      - "4300:80"
-    depends_on:
-      - java_app
-  java_app:
-    container_name: java_app
-    image: playfutday-java_app:1.0.0
-    build: 
-      context: ./playfutday
-      dockerfile: Dockerfile
-    ports:
-      - 8080:8080
-    environment:
-      - DATABASE_URL=jdbc:postgresql://java_db:5432/playfutdayDb
-      - DATABASE_USERNAME=user
-      - DATABASE_PASSWORD=1234
-    depends_on:
-      - java_db
-  java_db:
-    container_name: java_db
+  postgres:
     image: 'postgres:14-alpine'
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=spring_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
     ports:
       - 5432:5432
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: playfutdayDb
   client:
       image: 'dpage/pgadmin4'
       container_name: client
@@ -42,7 +16,26 @@ services:
       environment:
         - PGADMIN_DEFAULT_EMAIL=admin@gmail.com
         - PGADMIN_DEFAULT_PASSWORD=admin
+        - SPRING.PROFILES.ACTIVE=dev
       depends_on:
-        - java_db
+        - postgres
       ports:
         - "1717:80"
+
+  playfutday:
+    image: playfutday:1.0
+    container_name: playfutday_backend
+    environment:
+      - SPRING.PROFILES.ACTIVE=dev
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+  
+  frontend:
+    image: playfutday_web:1.0
+    container_name: playfutday_web
+    ports:
+      - "80:80"
+    depends_on:
+      - playfutday

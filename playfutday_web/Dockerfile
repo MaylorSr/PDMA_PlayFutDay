@@ -1,32 +1,13 @@
-# Dockerfile de Angular
-FROM node:16.17.1alpine as build-stage
-
-WORKDIR /app
-
-# Copiar el archivo package.json y package-lock.json
-COPY package*.json ./
-
-# Instalar dependencias
+FROM node:16.17.1 as build-step
+RUN mkdir -p /usr/local/app
+WORKDIR /usr/local/app
+COPY ./ /usr/local/app
 RUN npm install
+RUN npm run build --prod
 
-# Instalar Angular CLI
-RUN npm install -g @angular/cli
+FROM nginx:latest
+RUN rm -rf /usr/share/nginx/html*
+COPY --from=build-step /usr/local/app/dist /usr/share/nginx/html
 
-# Copiar el resto de los archivos de la aplicación
-COPY . .
-
-# Construir la aplicación Angular
-RUN ng build
-
-# Configurar Nginx para servir la aplicación construida
-FROM nginx:1.21.1-alpine
-
-# Copiar el archivo de configuración de Nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copiar los archivos generados de la aplicación
-COPY --from=build-stage /app/dist/PDMA_PlayFutDay /usr/share/nginx/html
 
 EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
