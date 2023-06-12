@@ -82,7 +82,6 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
           },
         });
     }, 1000);
-    console.log(this.dataSource);
   }
 
   ngAfterViewInit() {
@@ -143,31 +142,31 @@ export class UserInfoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // deleteCommentary(id_comment: string) {
-  //   return this.postService.deleteCommentarie(id_comment);
-  // }
-
-
   openDialogDelete(commentarie_emit: ListAllCommentaries) {
-    console.log(commentarie_emit);
-
     this.dialog.open(SureDeleteComponent, {
       width: "450px",
       height: "120px",
       data: {
         dataInfo: commentarie_emit,
       },
-    });
+    }).afterClosed().subscribe(res => {
+      if (res === "delete") {
+        this.getLasThreeCommentariesByUserId();
+      }
+    }) ;
   }
 
   openDialogDeletePost(post_emit: PostResponse) {
-    console.log(post_emit);
     this.dialog.open(SureDeleteComponent, {
       width: "450px",
       height: "120px",
       data: {
         dataInfo: post_emit,
       },
+    }).afterClosed().subscribe(res => {
+      if (res === "delete") {
+        this.showListPost(this.pageIndex);
+      }
     });
   }
 

@@ -26,9 +26,10 @@ export class PostService {
     return this.http.get<PostListResponse>(`${API_URL}post/?page=${page}`);
   }
 
-  deletePost(id_post: any, id_user: any) {
-    console.log("llama al metodo");
-    return this.http.delete(`${API_URL}post/user/${id_post}/user/${id_user}`);
+  deletePost(id_post: any, id_user: any): Observable<void> {
+    return this.http.delete<void>(
+      `${API_URL}post/user/${id_post}/user/${id_user}`
+    );
   }
 
   getListPostOfUser(page: number, username: string) {
@@ -59,8 +60,6 @@ export class PostService {
     // imageBlob,
     formData.append("image", image); // Especificar el nombre del archivo y el tipo de archivo
     formData.append("post", blobBody);
-
-    console.log("FormData.getAll():", formData.getAll("image")); // Obtener todos los valores del FormData
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,

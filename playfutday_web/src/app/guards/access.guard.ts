@@ -29,7 +29,6 @@ export class AccessGuard implements CanActivate {
   }
 
   checkUserLoginAdmin(route: ActivatedRouteSnapshot): boolean {
-    console.log(this.tokenService.getUser());
     const { roles = [] } = this.tokenService.getUser();
 
     if (this.tokenService.getToken() == null) {

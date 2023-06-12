@@ -128,7 +128,6 @@ export class PostInfoComponent implements OnInit, AfterViewInit {
           },
         });
     }, 1000);
-    console.log(this.dataSource);
   }
 
   ngAfterViewInit() {
@@ -153,14 +152,16 @@ export class PostInfoComponent implements OnInit, AfterViewInit {
   }
 
   openDialogDelete(commentarie_emit: ListAllCommentaries) {
-    console.log(commentarie_emit);
-
     this.dialog.open(SureDeleteComponent, {
       width: "450px",
       height: "120px",
       data: {
         dataInfo: commentarie_emit,
       },
+    }).afterClosed().subscribe(res => {
+      if (res === "delete") {
+        this.showListCommentariesByPostId();
+      }
     });
   }
 }

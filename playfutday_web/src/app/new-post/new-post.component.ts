@@ -35,7 +35,6 @@ export class NewPostComponent {
       this.imageUrl = e.target.result;
     };
     reader.readAsDataURL(this.file);
-    console.log("the file is: ", this.file);
   }
 
   updatePost() {
@@ -45,16 +44,17 @@ export class NewPostComponent {
 
     if (fileInput.files && fileInput.files.length > 0) {
       const file = fileInput.files[0];
-      this.postService.requestPost(tag, description, file).subscribe(
-        () => {
+      this.postService.requestPost(tag, description, file).subscribe({
+        next(_) {
           this.hide = false;
+          window.location.reload();
         },
-        (error) => {
-          console.log(error);
+        error(error) {
           this.hide = true;
           this.errorMessage = error.message;
-        }
-      );
+        },
+      });
+  
     } else {
       this.hide = true;
       this.errorMessage = "No file selected";
