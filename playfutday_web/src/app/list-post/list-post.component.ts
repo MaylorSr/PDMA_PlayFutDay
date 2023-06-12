@@ -82,13 +82,16 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
 
   openDialogDelete(post_emit: PostResponse) {
-    console.log(post_emit);
     this.dialog.open(SureDeleteComponent, {
       width: "450px",
       height: "120px",
       data: {
         dataInfo: post_emit,
       },
+    }).afterClosed().subscribe(res => {
+      if (res === "delete") {
+        this.showListPost(this.pageIndex);
+      }
     });
   }
 }

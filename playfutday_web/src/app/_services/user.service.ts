@@ -57,7 +57,6 @@ export class UserService {
    */
 
   banUser(id_user: string) {
-    console.log("lo llama");
     return this.http.post(`${API_URL}banUserByAdmin/${id_user}`, null);
   }
 
@@ -67,7 +66,6 @@ export class UserService {
   }
 
   deleteUser(id_user: string) {
-    console.log("llama al metodo");
     return this.http.delete(`${API_URL}user/${id_user}`);
   }
 
@@ -122,7 +120,6 @@ export class UserService {
   }
 
   changePassword(body: ChangePasswordResponse): Observable<ChangePasswordResponse> {
-    console.log(body);
     return this.http.put<ChangePasswordResponse>(`${API_URL}user/changePassword`,body);
   }
 }

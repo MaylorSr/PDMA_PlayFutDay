@@ -44,11 +44,10 @@ export class SureDeleteComponent implements OnInit {
     if (this.data.dataInfo.username) {
       this.userService.deleteUser(this.data.dataInfo.id).subscribe(
         (response) => {
-          // Aquí puedes manejar la respuesta exitosa si es necesario
-          console.log("Usuario eliminado:", response);
+          this.dialogRef.close("delete");
+
         },
         (error) => {
-          // Aquí puedes manejar el error si ocurre
           console.log(error);
         }
       );
@@ -57,18 +56,17 @@ export class SureDeleteComponent implements OnInit {
         .deletePost(this.data.dataInfo.id, this.data.dataInfo.idAuthor)
         .subscribe(
           (response) => {
-            // Aquí puedes manejar la respuesta exitosa si es necesario
-            console.log("Post eliminado:", response);
+            this.dialogRef.close("delete");
           },
           (error) => {
-            // Aquí puedes manejar el error si ocurre
             console.log(error);
           }
         );
     } else {
       this.postService.deleteCommentarie(this.data.dataInfo.id).subscribe(
         (response) => {
-          console.log("Comentario eliminado");
+          this.dialogRef.close("delete");
+
         },
         (error) => {
           console.log(error.message);

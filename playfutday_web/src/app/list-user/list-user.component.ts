@@ -119,14 +119,19 @@ export class ListUserComponent implements OnInit, AfterViewInit {
   }
 
   openDialogDelete(user_emit: UserResponse) {
-    console.log(user_emit);
-
-    this.dialog.open(SureDeleteComponent, {
-      width: "450px",
-      height: "120px",
-      data: {
-        dataInfo: user_emit,
-      },
-    });
+    this.dialog
+      .open(SureDeleteComponent, {
+        width: "450px",
+        height: "120px",
+        data: {
+          dataInfo: user_emit,
+        },
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res === "delete") {
+          this.showListUser(this.pageIndex);
+        }
+      });
   }
 }

@@ -44,7 +44,6 @@ export class SettingsComponent implements OnInit {
       this.imageUrl = e.target.result;
     };
     reader.readAsDataURL(this.file);
-    console.log("the file is: ", this.file);
   }
 
   constructor(
@@ -116,7 +115,6 @@ export class SettingsComponent implements OnInit {
       };
       this.userService.changePassword(changePassword).subscribe({
         next: (updatePassword) => {
-          console.log(changePassword);
           this.showSuccesUpload = true;
           setTimeout(() => {
             this.showSuccesUpload = false;
@@ -159,6 +157,7 @@ export class SettingsComponent implements OnInit {
         error: (err) => {},
       });
     }
+    window.location.reload();
   }
 
   uploadInfoUser() {
