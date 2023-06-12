@@ -34,4 +34,4 @@ USERS: usuario: alejandro  - password: A1b2345 || usuario: laura  - password: L1
 ```
  <br>En el import.sql encontrarás más usuarios si así deseas probar más, las contraseñas de cada usuario se econtrará comentada por encima del insert de cada uno de estos.
  
-
+ * FUNCIONALIDADES QUE SERÁS CAPAZ DE REALIZAR, [pulsa aquí](https://github.com/MaylorSr/PDMA_PlayFutDay/blob/main/PlanEmpresa/FUNCIONALIDADES%20DE%20LA%20API%20REST%20-%20SPRING%20BOOT.pdf)
