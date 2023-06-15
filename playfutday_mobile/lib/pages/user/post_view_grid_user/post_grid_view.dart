@@ -29,7 +29,7 @@ class _PostGridImageScreenState extends State<PostGridImageScreen> {
           case ImagePostStatus.success:
             if (state.imagePostGrid.isEmpty) {
               return const Center(
-                child: Text('You not have any user to view'),
+                child: Text('You not have any post to view'),
               );
             }
             return GridView.count(
