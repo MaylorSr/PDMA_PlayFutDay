@@ -54,7 +54,7 @@ class _ScreenMessageState extends State<ScreenMessage> {
         elevation: 0,
         centerTitle: true,
         toolbarHeight: MediaQuery.of(context).size.height * 0.10,
-        clipBehavior: Clip.antiAlias,
+        // clipBehavior: Clip.antiAlias,
         shape: ContinuousRectangleBorder(
           borderRadius: BorderRadius.circular(60),
         ),
