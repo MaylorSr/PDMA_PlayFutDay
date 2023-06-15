@@ -1,11 +1,11 @@
 {
 	"info": {
-		"_postman_id": "f32f77ef-d8db-40e3-9877-e567f64c18a6",
+		"_postman_id": "1b4bdf18-6e35-4f45-80ef-811d19fa8089",
 		"name": "PlayFutDay",
 		"description": "_**En esta carpeta se encuentran todas las carpetas y subcarpetas con las peticiones que se harán tanto para la página web diseñada en Angular como para la aplicación móvil diseñada en Flutter.**_",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23783409",
-		"_collection_link": "https://solar-moon-618513.postman.co/workspace/My-Workspace~20b5227c-21c3-4bfd-81d6-a2bcf7efd1fb/collection/23783409-f32f77ef-d8db-40e3-9877-e567f64c18a6?action=share&creator=23783409&source=collection_link"
+		"_collection_link": "https://solar-moon-618513.postman.co/workspace/My-Workspace~20b5227c-21c3-4bfd-81d6-a2bcf7efd1fb/collection/23783409-1b4bdf18-6e35-4f45-80ef-811d19fa8089?action=share&creator=23783409&source=collection_link"
 	},
 	"item": [
 		{
@@ -1388,6 +1388,55 @@
 					"name": "POST",
 					"item": [
 						{
+							"name": "MESSAGE",
+							"item": [
+								{
+									"name": "NEW_MESSAGE",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"bodyMessage\":\"Hola, ¿qué tal?\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/message/{{id_user}}",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"message",
+												"{{id_user}}"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "0",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
 							"name": "LIKE_POST",
 							"request": {
 								"auth": {
@@ -1702,6 +1751,101 @@
 										"follow",
 										"user",
 										"{{id_user}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET_ALL_MESSAGES",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/message/7495ac21-9cef-4655-a816-29a1eee80841?page=0",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"message",
+										"7495ac21-9cef-4655-a816-29a1eee80841"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET_ALL_CHATS",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/chat/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"chat",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "DELETE",
+					"item": [
+						{
+							"name": "DELETE_MESSAGE",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/message/1001",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"message",
+										"1001"
 									]
 								}
 							},
