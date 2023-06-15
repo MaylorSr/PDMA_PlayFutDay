@@ -85,7 +85,7 @@ class _CardChatScreenState extends State<CardChatScreen> {
               maxLines: 1,
               style: AppTheme.deleteSure,
               overflow: TextOverflow.ellipsis,
-              widget.chat.lastMessage.toString(),
+              widget.chat.lastMessage != null ? widget.chat.lastMessage.toString() : '',
             ),
             Container(
               alignment: Alignment.centerRight,
